@@ -23,15 +23,20 @@
         </div>
         
         <!--the left panel section-->
-        <div id="panel">
+        <div id="queryPanel">
             <p>
                 <!--update input according to the change of #slider-range-->
-                <label for="amount" style = "padding-right: 3px;">Population range:</label>
-                <input type="text" id="amount" readonly style="border:0; color:lightskyblue; font-weight:bold; width: 140px; font-family: verdana;">
+                <label for="amount" style = "padding-right: 3px; font-size: 13px;" >Population range:</label>
+                <input type="text" id="amount" readonly style="border:0; color:lightskyblue; font-weight:bold; width: 130px; font-family: verdana; font-size: 13px;">
             </p>
             
             <!--filter pop with two inputs, i.e., min and max-->
             <div id="slider-range"></div>
+            
+        </div>
+        
+        <!--the right panel section-->
+        <div id="infoPanel">
             
             <!--chart section-->
             <div id='chart-div'></div>
