@@ -594,30 +594,6 @@ function createPopup(properties, attribute, layer, radius){
     });
 };
 
-// search box for location
-// function createSearchLocation(map, layer, response) {
-//   data = response.features
-//   	var controlSearch = new L.Control.Search({
-//   		position:'topright',
-//   		layer: layer,
-//   		initial: false,
-//   		zoom: 12,
-//   		marker: false
-//   	});
-//   	map.addControl( controlSearch );
-//     for(i in data) {
-//       loc = data[i].geometry.coordinates
-//   		var title = data[i].properties.Cities,	//value searched
-//   			loc = data[i].geometry.coordinates		//position found
-//   			marker = new L.Marker(new L.latLng(loc), {title: title} );//se property searched
-//   		layer.bindPopup('title: '+ title );
-//   		layer.addLayer(marker);
-//   	}
-//
-//
-//
-// };
-
 //https://github.com/stefanocudini/leaflet-search/blob/master/examples/geojson-layer.html
 //https://labs.easyblog.it/maps/leaflet-search/examples/geojson-layer.html
 function createSearchLocation(map, layer, response){
@@ -626,24 +602,28 @@ function createSearchLocation(map, layer, response){
   		layer: layer,
   		propertyName: 'Cities',
   		marker: false,
+      container: 'findbox',
   		moveToLocation: function(latlng, title, map) {
-  			//map.fitBounds( latlng.layer.getBounds() );
+        //Get latlng for zoom after searching
         corner1 = latlng.layer._pxBounds.max
         corner2 = latlng.layer._pxBounds.min
         corner1 = map.layerPointToLatLng(corner1);
         corner2 = map.layerPointToLatLng(corner2);
 
         bounds = L.latLngBounds(corner1, corner2);
-        console.log(corner1)
+
   			var zoom = map.getBoundsZoom(bounds);
     			map.setView(latlng, zoom); // access the zoom
   		}
   	});
-  	searchControl.on('search:locationfound', function(e) {
 
+    //
+  	searchControl.on('search:locationfound', function(e) {
+      //To make marker green
   		//console.log('search:locationfound', );
   		//map.removeLayer(this._markerSearch)
   		// e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+
   		if(e.layer._popup)
   			e.layer.openPopup();
   	}).on('search:collapsed', function(e) {
