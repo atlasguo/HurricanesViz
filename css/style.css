@@ -8,6 +8,18 @@ h4 {
     margin-bottom: 10px;
 }
 
+
+#findbox {
+	background: #eee;
+	border-radius:.125em;
+	border:2px solid #1978cf;
+	box-shadow: 0 0 8px #999;
+	margin-bottom: 10px;
+	padding: 2px 0;
+	width: 600px;
+	height: 26px;
+}
+
 .navbar-brand{
     margin-left: 0px;
     margin-right: 0px;

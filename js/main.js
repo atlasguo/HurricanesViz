@@ -12,6 +12,8 @@ var curLayer;
 var curMap;
 var curResponse;
 var curAttrs;
+
+var curSearch;
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
@@ -19,14 +21,14 @@ function createMap(){
         center: [35,-95.7129],
         zoom: 4
     });
-    
+
     curMap = map;
-    
+
     // add basemap tilelayer
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }).addTo(curMap);
-    
+
     //add OSM base tilelayer
     /*L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -47,27 +49,30 @@ function getData(map){
         success: function(response){
             // create an attributes array
             var attributes = processData(response);
-            
+
             // update global variables curAttrs and curResponse
             curAttrs = attributes;
             curResponse = response;
-            
+
             // create initial chart on the left panel with average data
             createChart(response,attributes);
-            
+
             // create proportional symbols, with initial index as 0, i.e., 2010
             curLayer = createPropSymbols(response, map, attributes, 0);
             map.addLayer(curLayer);
-            
+
             // create sequential control over the 7 years
             createSequenceControls(response, map, attributes); //add response here
-            
+
             // create legend
             createLegend(map);
-            
+
             // update legend
             updateLegend(map, attributes[0]);
-            
+
+            //  create search location
+            createSearchLocation(map, curLayer, response);
+
         }
     });
 
@@ -103,15 +108,15 @@ function createChart(response,attrs){
         [attrs[4],7694],
         [attrs[5],7721],
         [attrs[6],7518]
-    ] 
-    
-    // create an array with the 7 years' pop 
+    ]
+
+    // create an array with the 7 years' pop
     var arr = featureValues.map(function(value,index) { return value[1]; });
-    
+
     // record the min and max of the 7 years' pop
     var min = Math.min.apply( null, arr );
     var max = Math.max.apply( null, arr );
-    
+
     // build the chartData var with certain settings
     var chartData ={
         type: 'line',
@@ -184,7 +189,7 @@ function createPropSymbols(data, map, attrs, idx){
         filter: function(feature, layer) {
             return filterMinMax(feature, layer, idx);
         },
-        // create circle markers for the metro points 
+        // create circle markers for the metro points
         pointToLayer: function(feature, latlng){
             return pointToLayer(feature, latlng, attrs, idx);
         }
@@ -192,13 +197,13 @@ function createPropSymbols(data, map, attrs, idx){
     return geoJsonLayer;
 };
 
-// create circle markers for the metro points 
+// create circle markers for the metro points
 function pointToLayer(feature, latlng, attrs, idx){
     // Assign the current attribute based on the first index of the attributes array
     var attribute = attrs[idx];
     //check
     //console.log(attribute);
-    
+
     //create marker options
     var options = {
         fillColor: "#add8e6",
@@ -207,13 +212,13 @@ function pointToLayer(feature, latlng, attrs, idx){
         opacity: 1,
         fillOpacity: 0.6
     };
-    
+
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(feature.properties[attribute]);
 
     //create circle marker layer
     var layer = L.circleMarker(latlng, options);
-    
+
     // create pop up for features
     createPopup(feature.properties, attribute, layer, options.radius);
 
@@ -227,7 +232,7 @@ function pointToLayer(feature, latlng, attrs, idx){
         },
         // update the chart on click
         click: function(){
-            
+
             var featureValues = [
                 [attrs[0],feature.properties[attrs[0]]],
                 [attrs[1],feature.properties[attrs[1]]],
@@ -290,7 +295,7 @@ function pointToLayer(feature, latlng, attrs, idx){
                       "speed":50,
                     }
                 },
-                
+
             };
             zingchart.render({
                 id: 'chart-div',
@@ -321,11 +326,11 @@ $( function() {
             $( "#amount" ).val(numberWithCommas(ui.values[0]) + " - " + numberWithCommas(ui.values[1]));
             inputMin = ui.values[0];
             inputMax = ui.values[1];
-            
+
             var index = $('.range-slider').val();
             curLayer = createPropSymbols(curResponse, curMap, curAttrs, index);
             curMap.addLayer(curLayer);
-        
+
             updatePropSymbols(curMap, curAttrs[index]);
             updateLegend(curMap, curAttrs[index]);
         }
@@ -337,7 +342,7 @@ $( function() {
 function filterMinMax(feature, layer, idx){
     var year = '201'+idx;
     //console.log(year);
-    
+
     return (feature.properties[year] >= inputMin && feature.properties[year] <= inputMax);
 }
 
@@ -355,20 +360,20 @@ function createSequenceControls(response, map, attrs){
             //create range input element (slider)
             $(container).append('<label class="sequence-text" for="sequence-control-container"><b>Year: 2010</b></label>');
             $(container).append('<input class="range-slider" type="range">');
-            
+
             //add skip buttons
             $(container).append('<button class="skip" id="reverse" title="Reverse">Reverse</button>');
             $(container).append('<button class="skip" id="forward" title="Forward">Skip</button>');
 
             //disable any mouse event listeners for the container
             L.DomEvent.disableClickPropagation(container);
-            
+
             return container;
         }
     });
-    
+
     map.addControl(new SequenceControl());
-    
+
 	//set slider attributes
     $('.range-slider').attr({
         max: 6,
@@ -376,16 +381,16 @@ function createSequenceControls(response, map, attrs){
         value: 0,
         step: 1
     });
-	
+
 	// replace button content with images
     $('#reverse').html('<img src="img/reverse.png" style = "height:35px">');
     $('#forward').html('<img src="img/forward.png" style = "height:35px">');
-	
+
     // click listener for buttons
     $('.skip').click(function(){
         //get the old index value
         var index = $('.range-slider').val();
-        
+
         // increment or decrement depending on button clicked
         if ($(this).attr('id') == 'forward'){
             index++;
@@ -400,12 +405,12 @@ function createSequenceControls(response, map, attrs){
         // update slider
         $('.range-slider').val(index);
         $('.sequence-text').html('<label class="sequence-text" for="sequence-control-container"><b>Year: 201' + index +'</b></label>');
-		
+
         // Called in both skip button and slider event listener handlers
         // pass new attribute to update symbols
         curLayer = createPropSymbols(response, map, attrs, index);
         map.addLayer(curLayer);
-        
+
 		updatePropSymbols(map, attrs[index]);
         updateLegend(map, attrs[index]);
     });
@@ -416,12 +421,12 @@ function createSequenceControls(response, map, attrs){
         var index = $(this).val();
         // update slider text
         $('.sequence-text').html('<label class="sequence-text" for="sequence-control-container"><b>Year: 201' + index +'</b></label>');
-		
+
         // Called in both skip button and slider event listener handlers
 		// pass new attribute to update symbols
         curLayer = createPropSymbols(response, map, attrs, index);
         map.addLayer(curLayer);
-        
+
 		updatePropSymbols(map, attrs[index]);
 		updateLegend(map, attrs[index]);
     });
@@ -444,13 +449,13 @@ function createLegend(map){
 
             // start attribute legend svg string
             var svg = '<svg id="attribute-legend" width="250px" height="180px">';
-            
+
             var circles = {
                 max: 30,
                 mean: 80,
                 min: 150
             };
-            
+
             //loop to add each circle and text to svg string
             for (var circle in circles){
                 //circle string
@@ -459,7 +464,7 @@ function createLegend(map){
                 //text string
                 svg += '<text id="' + circle + '-text" x="180" y="' + circles[circle] + '"></text>';
             };
-            
+
             //close svg string
             svg += "</svg>";
 
@@ -533,7 +538,7 @@ function updateLegend(map, attribute){
         }else{
             $('#'+key+'-text').text(numberWithCommas(Math.round(circleValues[key]/100)*100));
         }
-        
+
     };
 };
 
@@ -548,14 +553,15 @@ function updatePropSymbols(map, attribute){
         //Example 3.16 line 4
         if (layer.feature && layer.feature.properties[attribute]){
             //access feature properties
+            console.log(layer.feature.properties)
             var props = layer.feature.properties;
 
             //update each feature's radius based on new attribute values
             var radius = calcPropRadius(props[attribute]);
-            
+
             // this is for circle marker
             layer.setRadius(radius);
-            
+
             createPopup(props, attribute, layer, radius);
         };
     });
@@ -576,7 +582,7 @@ function calcPropRadius(attValue) {
 
 // a consolidated popup-creation function
 function createPopup(properties, attribute, layer, radius){
-    
+
     //popup content is now just the city name
     var popupContent = properties.Cities;
     //add formatted attribute to panel content string
@@ -584,8 +590,50 @@ function createPopup(properties, attribute, layer, radius){
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
         offset: new L.Point(0,-radius),
-        closeButton: false 
+        closeButton: false
     });
 };
+
+//https://github.com/stefanocudini/leaflet-search/blob/master/examples/geojson-layer.html
+//https://labs.easyblog.it/maps/leaflet-search/examples/geojson-layer.html
+function createSearchLocation(map, layer, response){
+
+  	var searchControl = new L.Control.Search({
+  		layer: layer,
+  		propertyName: 'Cities',
+  		marker: false,
+      container: 'findbox',
+  		moveToLocation: function(latlng, title, map) {
+        //Get latlng for zoom after searching
+        corner1 = latlng.layer._pxBounds.max
+        corner2 = latlng.layer._pxBounds.min
+        corner1 = map.layerPointToLatLng(corner1);
+        corner2 = map.layerPointToLatLng(corner2);
+
+        bounds = L.latLngBounds(corner1, corner2);
+
+  			var zoom = map.getBoundsZoom(bounds);
+    			map.setView(latlng, zoom); // access the zoom
+  		}
+  	});
+
+    //
+  	searchControl.on('search:locationfound', function(e) {
+      //To make marker green
+  		//console.log('search:locationfound', );
+  		//map.removeLayer(this._markerSearch)
+  		// e.layer.setStyle({fillColor: '#3f0', color: '#0f0'});
+
+  		if(e.layer._popup)
+  			e.layer.openPopup();
+  	}).on('search:collapsed', function(e) {
+  		featuresLayer.eachLayer(function(layer) {	//restore feature color
+  			featuresLayer.resetStyle(layer);
+  		});
+  	});
+    map.addControl( searchControl );  //inizialize search control
+
+
+}
 
 $(document).ready(createMap);
