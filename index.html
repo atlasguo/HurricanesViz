@@ -7,9 +7,7 @@
         <link href="img/hurricane.png" rel="icon" >
 
 		<!--put your external stylesheet links here-->
-				<link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="lib/leaflet/leaflet.css">
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="css/style.css">
 
 		<!--[if IE<9]>
@@ -26,17 +24,32 @@
 
         <!--the left panel section-->
         <div id="queryPanel">
-            <p>
-                <!--update input according to the change of #slider-range-->
-                <label for="amount" style = "padding-right: 3px; font-size: 13px;" >Population range:</label>
-                <input type="text" id="amount" readonly style="border:0; color:lightskyblue; font-weight:bold; width: 130px; font-family: verdana; font-size: 13px;">
-            </p>
 
-            <!--filter pop with two inputs, i.e., min and max-->
-            <div id="slider-range"></div>
-
-
-						<div id="findbox"></div>
+            <!--select by location-->
+            <div id="locationFillIn">
+                <p>
+                    Location:
+                </p>
+                <!--Make sure the form has the autocomplete function switched off:-->
+                <form autocomplete="off" action="/action_page.php">
+                    <div class="autocomplete" style="width:300px;">
+                        <input id="locationInput" type="text" name="location" placeholder="Select a state or city">
+                    </div>
+                    <!--<input type="submit">-->
+                </form>
+                
+                <p>
+                    Hurricane:
+                </p>
+                <form autocomplete="off" action="/action_page.php">
+                    <div class="autocomplete" style="width:300px;">
+                        <input id="hurricaneInput" type="text" name="location" placeholder="Select one hurricane by name">
+                    </div>
+                    <!--<input type="submit">-->
+                </form>
+            </div>
+            <!--<div id="slider-range"></div>-->
+			<!--<div id="findbox"></div>-->
 
         </div>
 
@@ -45,13 +58,10 @@
             <!--chart section-->
             <div id='chart-div'></div>
 
-            <!--a link back to the initial chart showing the average pop for the 7 years-->
-            <a class="back" href="../index.html" style='text-align:center;'>back to average info</a>
-
             <!--metadata section-->
             <div id='metadata'>
-                <p style='font-size:12px;margin-top: 30px;'><b>Background: </b>This industry group comprises establishments engaged in conducting original investigation undertaken on a systematic basis to gain new knowledge (research) and/or the application of research findings or other scientific knowledge for the creation of new or significantly improved products or processes (experimental development). The industries within this industry group are defined on the basis of the domain of research; that is, on the scientific expertise of the establishment.</p>
-                <p style='font-size:12px'><b>Data Source: </b>American FactFinder, 2012 NAICS code</p>
+                <p style='font-size:12px;margin-top: 150px;'><b>Background: </b></p>
+                <p style='font-size:12px;margin-top: 10px;'><b>Data Source: </b></p>
             </div>
         </div>
 
@@ -64,11 +74,7 @@
 		<!--put your external script links here; put main.js at the end-->
 
         <script type="text/javascript" src="lib/jquery-3.3.1.js"></script>
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script type="text/javascript" src= "lib/zingchart.min.js"></script>
-				<script type="text/javascript" src="lib/leaflet/leaflet-src.js"></script>
-				<script type="text/javascript" src="lib/leaflet-search.js"></script>
-				<script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="lib/leaflet/leaflet-src.js"></script>
+        <script type="text/javascript" src="js/main_0423_byMeiliu.js"></script>
 	</body>
 </html>

@@ -1,4 +1,4 @@
-// Javascripts by Meiliu Wu, 2019
+// Javascripts by Meiliu,Jamp,Atlas 2019
 
 /*eslint-env jquery*/
 /*eslint-disable no-extra-semi*/
@@ -6,7 +6,7 @@
 /*eslint-disable no-undef*/
 /*eslint-disable no-console*/
 
-/* Map of GeoJSON data from Pop.geojson */
+/* Map of GeoJSON data from line.geojson */
 
 var curLayer;
 var curMap;
@@ -14,6 +14,7 @@ var curResponse;
 var curAttrs;
 
 var curSearch;
+
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
@@ -29,13 +30,6 @@ function createMap(){
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }).addTo(curMap);
 
-    //add OSM base tilelayer
-    /*L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 19
-    }).addTo(curMap);*/
-
     //call getData function
     getData(curMap);
 
@@ -44,31 +38,8 @@ function createMap(){
 //function to retrieve the data and place it on the map
 function getData(map){
     
-    // load states to map
-    /*$.getJSON("data/states.geojson",function(data){
-        // add GeoJSON layer to the map once the file is loaded
-        var dataLayer = L.geoJson(data ,{
-            onEachFeature: function(feature, featureLayer) {
-                featureLayer.bindPopup(feature.properties.NAME);
-            }
-        }).addTo(map);
-        map.fitBounds(dataLayer.getBounds());
-    });*/
-    
-    $.ajax("data/states.geojson", {
-        dataType: "json",
-        success: function(response){
-            var dataLayer = L.geoJson(response ,{
-                onEachFeature: function(feature, featureLayer) {
-                    featureLayer.bindPopup(feature.properties.NAME);
-                }
-            }).addTo(map);
-            map.fitBounds(dataLayer.getBounds());
-        }
-    });
-    
     //load the data
-    /*$.ajax("data/pop.geojson", {
+    $.ajax("data/pop.geojson", {
         dataType: "json",
         success: function(response){
             // create an attributes array
@@ -98,7 +69,7 @@ function getData(map){
             createSearchLocation(map, curLayer, response);
 
         }
-    });*/
+    });
 
 };
 
@@ -335,7 +306,7 @@ function pointToLayer(feature, latlng, attrs, idx){
 };
 
 // initial global min and max for slider-range
-var inputMin = 500;
+/*var inputMin = 500;
 var inputMax = 50000;
 
 // function to update min and max for filtering
@@ -360,7 +331,7 @@ $( function() {
         }
     });
     $( "#amount" ).val(numberWithCommas(inputMin) + " - " + numberWithCommas(inputMax) );
-} );
+} );*/
 
 // for filtering with min and max
 function filterMinMax(feature, layer, idx){
@@ -620,7 +591,7 @@ function createPopup(properties, attribute, layer, radius){
 
 //https://github.com/stefanocudini/leaflet-search/blob/master/examples/geojson-layer.html
 //https://labs.easyblog.it/maps/leaflet-search/examples/geojson-layer.html
-function createSearchLocation(map, layer, response){
+/*function createSearchLocation(map, layer, response){
 
   	var searchControl = new L.Control.Search({
   		layer: layer,
@@ -658,6 +629,6 @@ function createSearchLocation(map, layer, response){
     map.addControl( searchControl );  //inizialize search control
 
 
-}
+}*/
 
 $(document).ready(createMap);
