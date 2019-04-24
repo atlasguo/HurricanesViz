@@ -43,8 +43,32 @@ function createMap(){
 
 //function to retrieve the data and place it on the map
 function getData(map){
+    
+    // load states to map
+    /*$.getJSON("data/states.geojson",function(data){
+        // add GeoJSON layer to the map once the file is loaded
+        var dataLayer = L.geoJson(data ,{
+            onEachFeature: function(feature, featureLayer) {
+                featureLayer.bindPopup(feature.properties.NAME);
+            }
+        }).addTo(map);
+        map.fitBounds(dataLayer.getBounds());
+    });*/
+    
+    $.ajax("data/states.geojson", {
+        dataType: "json",
+        success: function(response){
+            var dataLayer = L.geoJson(response ,{
+                onEachFeature: function(feature, featureLayer) {
+                    featureLayer.bindPopup(feature.properties.NAME);
+                }
+            }).addTo(map);
+            map.fitBounds(dataLayer.getBounds());
+        }
+    });
+    
     //load the data
-    $.ajax("data/pop.geojson", {
+    /*$.ajax("data/pop.geojson", {
         dataType: "json",
         success: function(response){
             // create an attributes array
@@ -74,7 +98,7 @@ function getData(map){
             createSearchLocation(map, curLayer, response);
 
         }
-    });
+    });*/
 
 };
 
