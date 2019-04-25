@@ -19,6 +19,7 @@ var curPointLayer;
 var curMap;
 
 var curLocation;
+var curLocationJSON;
 var curHurricane;
 var curCategory;
 
@@ -105,11 +106,6 @@ function getData(map){
         }
     });
 
-    /*$.getJSON('data/line_4326.json', function (data) {
-        // Define the geojson layer and add it to the map
-        L.geoJson(data).addTo(map);
-    });*/
-
 };
 
 function stateStyle(feature) {
@@ -123,6 +119,7 @@ function stateStyle(feature) {
 }
 
 function selectedStyle(feature) {
+    curLocation = feature.properties.Name;
     return {
         fillColor: 'blue',
         weight: 0.5,
@@ -142,9 +139,10 @@ function urbanStyle(feature) {
     };
 }
 
-function filterStateByName(feature, layer){
-    return feature.properties.NAME == 'Ohio'; // the selected state
-}
+// for visualization we don't need to get rid of other states
+/*function filterStateByName(feature, layer){
+    return feature.properties.NAME == curLocation; // the selected state
+}*/
 
 function stateOnEachFeature(feature, layer){
 
@@ -359,6 +357,9 @@ function initializeSiders(){
     }
 }
 
+var curHurIDs = [];
+var curSegmentLayer;
+
 function applySetting(){
 
     // Apply setting after click the button
@@ -385,48 +386,45 @@ function applySetting(){
         else{
             var found = false;
 
-            hurricanes.forEach(function(element) {
-                if (element == curHurricane) {
+            if (checkValue(curHrricane,hurricanes)) {
+                found = true;
+                // TODO: map it
+                // load the lines
+                $.ajax("data/line.json", {
+                    dataType: "json",
+                    success: function(data){
+                        // remove current layer if exists
+                        if (curLineLayer){
+                            curMap.removeLayer(curLineLayer);
+                        };
 
-                    found = true;
-                    // TODO: map it
-                    // load the lines
-                    $.ajax("data/line.json", {
-                        dataType: "json",
-                        success: function(data){
-                            // remove current layer if exists
-                            if (curLineLayer){
-                                curMap.removeLayer(curLineLayer);
-                            };
-
-                            // Define the geojson layer and add it to the map
-                            curLineLayer = L.geoJson(data, {
-                                /*style: lineStyle,*/
-                                // filter by name
-                                filter: function(feature, layer){
-                                    return filterHurByName(feature, layer);
-                                }/*,
-                                // on each feature of states
-                                onEachFeature: lineOnEachFeature*/
-                            });
-                            curMap.addLayer(curLineLayer);
-                        }
-                    });
-                }
-            })
-            if (found == false){
+                        // Define the geojson layer and add it to the map
+                        curLineLayer = L.geoJson(data, {
+                            /*style: lineStyle,*/
+                            // filter by name
+                            filter: function(feature, layer){
+                                return filterHurByName(feature, layer);
+                            }/*,
+                            // on each feature of states
+                            onEachFeature: lineOnEachFeature*/
+                        });
+                        curMap.addLayer(curLineLayer);
+                    }
+                });
+            
+            }
+            else{
                     alert("No hurricane named " + curHurricane + "!");
             }
         }
     }
     // 1. if hurricane name is disabled, then check checkboxes;
     else{
+        // "values" is a vector containing all the selected categories
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
         Array.prototype.forEach.call(checkboxes, function(el) {
             values.push(el.value);
         });
-        
-        console.log(values);
 
         // 2. check if curLocation has input, if no location specified:
         if (curLocation == "") {
@@ -440,61 +438,80 @@ function applySetting(){
                     if (curLineLayer){
                         curMap.removeLayer(curLineLayer);
                     };
-
+                    
+                    curHurIDs = [];
+                    
                     // Define the geojson layer and add it to the map
-                    curLineLayer = L.geoJson(data, {
+                    curSegmentLayer = L.geoJson(data, {
                         /*style: lineStyle,*/
                         // filter by name
                         filter: function(feature, layer){
-                            return filterHurByCY(feature, layer, values);
+                            return filterSegByCat(feature, layer, values);
                         }/*,
                         // on each feature of states
                         onEachFeature: lineOnEachFeature*/
                     });
+                    
+                    curLineLayer = L.geoJson(data, {
+                        /*style: lineStyle,*/
+                        // filter by name
+                        filter: function(feature, layer){
+                            return filterHurByCY(feature, layer, curHurIDs);
+                        }/*,
+                        // on each feature of states
+                        onEachFeature: lineOnEachFeature*/
+                    });
+                    
                     curMap.addLayer(curLineLayer);
                 }
             });
         }
-        // if one location is specified: check 
+        // if one location is specified: check if there is matching location
         else{
             found = false;
-            locations.forEach(function(element) {
-                if (element == curLocation) {
-                    // TODO: map the hurricanes with selected categories within the location and the year range
-                    // load the lines
-                    $.ajax("data/line.json", {
-                        dataType: "json",
-                        success: function(data){
-                            // remove current layer if exists
-                            if (curLineLayer){
-                                curMap.removeLayer(curLineLayer);
-                            };
-
-                            var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
-                            Array.prototype.forEach.call(checkboxes, function(el) {
-                                values.push(el.value);
-                            })
-
-                            console.log(values);
-
-                            // Define the geojson layer and add it to the map
-                            curLineLayer = L.geoJson(data, {
-                                /*style: lineStyle,*/
-                                // filter by name
-                                filter: function(feature, layer){
-                                    return filterHurByCY(feature, layer, values);
-                                }/*,
-                                // on each feature of states
-                                onEachFeature: lineOnEachFeature*/
-                            });
-                            curMap.addLayer(curLineLayer);
-                        }
-                    });
-                    
-                    found = true;
-                }
-            });
-            if (found == false){
+            // if found: 
+            if (checkValue(curLocation, locations)){
+                found = true;
+                
+                // TODO: map the hurricanes with selected categories within the location and the year range
+                // load the lines
+                $.ajax("data/line.json", {
+                    dataType: "json",
+                    success: function(data){
+                        // remove current layer if exists
+                        if (curLineLayer){
+                            curMap.removeLayer(curLineLayer);
+                        };
+                        
+                        curHurIDs = [];
+                        
+                        // Define the geojson layer and add it to the map
+                        curSegmentLayer = L.geoJson(data, {
+                            /*style: lineStyle,*/
+                            // filter by name
+                            filter: function(feature, layer){
+                                return filterSegByCat(feature, layer, values);
+                            }/*,
+                            // on each feature of states
+                            onEachFeature: lineOnEachFeature*/
+                        });
+                        
+                        curLineLayer = L.geoJson(data, {
+                            /*style: lineStyle,*/
+                            // filter by name
+                            filter: function(feature, layer){
+                                return filterHurByLCY(feature, layer, curHurIDs);
+                            }/*,
+                            // on each feature of states
+                            onEachFeature: lineOnEachFeature*/
+                        });
+                        
+                        curMap.addLayer(curLineLayer);
+                    }
+                });
+            
+            }
+            else{
                 alert("No location named " + curLocation + "!");
             }
         }
@@ -507,15 +524,54 @@ function filterHurByName(feature, layer){
     return (feature.properties.hurName == curHurricane)
 }
 
-function filterHurByCY(feature, layer, values){
-    /*console.log(values);*/
-    // line does not have h1 h2 h3 h4 h5...
-    return (checkValue(feature.properties.State, values) &&
-            feature.properties.YYYY >= curYearMin &&
-            feature.properties.YYYY <= curYearMax)
-
+function filterSegByCat(feature, layer, values){
+    // "values" is a vector containing all the selected categories
+    if (checkValue(feature.properties.Cat, values)){
+        if (!checkValue(feature.properties.HurID,curHurIDs)){
+            curHurIDs.push(feature.properties.HurID);
+        }
+    }
+    return checkValue(feature.properties.Cat, values);
 }
 
+function filterHurByCY(feature, layer, valuesHurID){
+    
+    // find all the hurricanes that have at least one segment which meets the selected categories and the selected year range
+    
+    return (checkValue(feature.properties.HurID, valuesHurID) &&
+            feature.properties.YYYY >= curYearMin &&
+            feature.properties.YYYY <= curYearMax);
+}
+
+function filterHurByLCY(feature, layer, valuesHurID){
+    // find all the hurricanes that have at least one segment which meets the selected categories, crossing the selected location, and within the selected year range
+    
+    $.ajax("data/polygons.json", {
+        dataType: "json",
+        success: function(data){
+            // Define the geojson layer and add it to the map
+            L.geoJson(data, {
+                // filter by location
+                filter: function(feature, layer){
+                    return filterHurByL(feature, layer);
+                }
+            });
+        }
+    });
+
+    //turf.booleanCross(feature, curLocationJSON);
+    return (checkValue(feature.properties.HurID, valuesHurID) && 
+            turf.booleanCrosses(feature, curLocationJSON) &&
+            feature.properties.YYYY >= curYearMin &&
+            feature.properties.YYYY <= curYearMax);
+}
+
+function filterHurByL(feature, layer){
+    if (feature.properties.NAME == curLocation) {
+        curLocationJSON = feature;
+    }
+    return feature.properties.NAME == curLocation;
+}
 
 function checkValue(value,arr){
   var status = false;
@@ -532,11 +588,11 @@ function checkValue(value,arr){
 }
 
 function getCheckedCheckboxesFor() {
+    // "values" is a vector containing all the selected categories
     var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
     Array.prototype.forEach.call(checkboxes, function(el) {
         values.push(el.value);
     });
-    //console.log(values);
     if (values.length == 0) {
         document.getElementById("hurricaneInput").disabled = false;
     }
