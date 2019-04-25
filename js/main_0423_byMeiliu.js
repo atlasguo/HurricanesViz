@@ -391,7 +391,7 @@ function applySetting(){
                     found = true;
                     // TODO: map it
                     // load the lines
-                    $.ajax("data/line_4326_named.json", {
+                    $.ajax("data/line.json", {
                         dataType: "json",
                         success: function(data){
                             // remove current layer if exists
@@ -431,7 +431,7 @@ function applySetting(){
             // alert("Empty location, but it's ok!");
             // map the hurricanes with selected categories and year range
             // load the lines
-            $.ajax("data/line_4326_named.json", {
+            $.ajax("data/line.json", {
                 dataType: "json",
                 success: function(data){
                     // remove current layer if exists
