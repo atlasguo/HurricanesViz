@@ -23,6 +23,18 @@ function createMap(){
         zoom: 4
     });
 
+
+    var southWest = L.latLng(-89.98155760646617, -180),
+    northEast = L.latLng(89.99346179538875, 180);
+    var bounds = L.latLngBounds(southWest, northEast);
+
+    map.setMaxBounds(bounds);
+    map.on('drag', function() {
+        map.panInsideBounds(bounds, { animate: false });
+    });
+
+
+
     curMap = map;
 
     // add basemap tilelayer
@@ -37,7 +49,7 @@ function createMap(){
 
 //function to retrieve the data and place it on the map
 function getData(map){
-    
+
     //load the data
     $.ajax("data/pop.geojson", {
         dataType: "json",
