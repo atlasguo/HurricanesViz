@@ -33,6 +33,16 @@ function createMap(){
         zoom: 4
     });
 
+    // set map boundaries to restrict panning out of bounds
+    var southWest = L.latLng(24.7433195, -124.7844079),
+    northEast = L.latLng(49.3457868, -66.9513812);
+    var bounds = L.latLngBounds(southWest, northEast);
+
+    map.setMaxBounds(bounds);
+    map.on('drag', function() {
+        map.panInsideBounds(bounds, { animate: false });
+    });
+
     curMap = map;
 
     // add basemap tilelayer
@@ -48,7 +58,7 @@ function createMap(){
 
 //function to retrieve the data and place it on the map
 function getData(map){
-    
+
     // load the states
     $.ajax("data/state_4326_map.json", {
         dataType: "json",
@@ -57,7 +67,7 @@ function getData(map){
             if (curStateLayer){
                 map.removeLayer(curStateLayer);
             };
-            
+
             // Define the geojson layer and add it to the map
             curStateLayer = L.geoJson(data, {
                 style: stateStyle,
@@ -71,7 +81,7 @@ function getData(map){
             map.addLayer(curStateLayer);
         }
     });
-    
+
     // load the urban
     $.ajax("data/urban_4326_map.json", {
         dataType: "json",
@@ -80,7 +90,7 @@ function getData(map){
             if (curUrbanLayer){
                 map.removeLayer(curUrbanLayer);
             };
-            
+
             // Define the geojson layer and add it to the map
             curUrbanLayer = L.geoJson(data, {
                 style: urbanStyle,
@@ -94,12 +104,12 @@ function getData(map){
             map.addLayer(curUrbanLayer);
         }
     });
-    
+
     /*$.getJSON('data/line_4326.json', function (data) {
         // Define the geojson layer and add it to the map
         L.geoJson(data).addTo(map);
     });*/
-    
+
 };
 
 function stateStyle(feature) {
@@ -133,20 +143,20 @@ function urbanStyle(feature) {
 }
 
 function filterStateByName(feature, layer){
-    return feature.properties.NAME == 'Ohio'; // the selected state 
+    return feature.properties.NAME == 'Ohio'; // the selected state
 }
 
 function stateOnEachFeature(feature, layer){
-    
+
     //popup content is now just the city name
     var popupContent = feature.properties.NAME;
-    
+
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
         /*offset: new L.Point(0,0),*/
         closeButton: false
     });
-    
+
     layer.on({
         /*mouseover: function(){
             this.openPopup();
@@ -156,10 +166,10 @@ function stateOnEachFeature(feature, layer){
         },
         click: function(e) {
             this.openPopup();
-            if (selection) {            
+            if (selection) {
                 selectedLayer.resetStyle(selection);
             }
-            
+
             /*zoom in*/
             /*deselect??*/
             /*coordinate with chart*/
@@ -173,16 +183,16 @@ function stateOnEachFeature(feature, layer){
 }
 
 function urbanOnEachFeature(feature, layer){
-    
+
     //popup content is now just the city name
     var popupContent = "<b>City</b>: " + feature.properties.NAME;
-    
+
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
         offset: new L.Point(0,0),
         closeButton: false
     });
-    
+
     layer.on({
         mouseover: function(){
             this.openPopup();
@@ -191,10 +201,10 @@ function urbanOnEachFeature(feature, layer){
             this.closePopup();
         },
         click: function(e) {
-            if (selection) {            
+            if (selection) {
                 selectedLayer.resetStyle(selection);
             }
-            
+
             /*zoom in*/
             /*deselect??*/
             /*coordinate with chart*/
@@ -323,13 +333,13 @@ function getVals(){
     var slide2 = parseFloat( slides[1].value );
     // Neither slider will clip the other, so make sure we determine which is larger
     if( slide1 > slide2 ){ var tmp = slide2; slide2 = slide1; slide1 = tmp; }
-  
+
     curYearMin = slide1;
     curYearMax = slide2;
-    
+
 /*    console.log(curYearMax);
     console.log(curYearMin);*/
-    
+
     var displayElement = parent.getElementsByClassName("rangeValues")[0];
     displayElement.innerHTML = slide1 + " - " + slide2;
 }
@@ -350,23 +360,23 @@ function initializeSiders(){
 }
 
 function applySetting(){
-    
+
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-    
+
     // 0. check if hurricane name is disabled, if yes, jump to option 1, if not, then check if it is empty
     //      0-yes, empty input of hurricane name!
-    //      0-no, then check if hurricane name matches any one 
+    //      0-no, then check if hurricane name matches any one
     //          0.1-yes, show it
     //          0.2-no, no such specific hurricane!
-    // 1. if hurricane name is disabled, then check checkboxes; 
-    // 2. check if curLocation has input  
+    // 1. if hurricane name is disabled, then check checkboxes;
+    // 2. check if curLocation has input
     //      2-yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation within the selected years
     //          2.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within the year range and within that location
     //          2.2-no: report window pops up - no such location
     //      2-no: then empty location, show all the hurricanes within the year range
-    
+
     // 0. if hurricane name is abled, check if it is empty
     if (document.getElementById("hurricaneInput").disabled == false) {
         if (curHurricane == ""){
@@ -374,12 +384,12 @@ function applySetting(){
         }
         else{
             var found = false;
-                 
+
             hurricanes.forEach(function(element) {
                 if (element == curHurricane) {
-                    
+
                     found = true;
-                    // TODO: map it 
+                    // TODO: map it
                     // load the lines
                     $.ajax("data/line_4326_named.json", {
                         dataType: "json",
@@ -409,14 +419,14 @@ function applySetting(){
             }
         }
     }
-    // 1. if hurricane name is disabled, then check checkboxes; 
+    // 1. if hurricane name is disabled, then check checkboxes;
     else{
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
         Array.prototype.forEach.call(checkboxes, function(el) {
             values.push(el.value);
         });
-        
-        // 2. check if curLocation has input 
+
+        // 2. check if curLocation has input
         if (curLocation == "") {
             // alert("Empty location, but it's ok!");
             // map the hurricanes with selected categories and year range
@@ -428,14 +438,14 @@ function applySetting(){
                     if (curLineLayer){
                         curMap.removeLayer(curLineLayer);
                     };
-                    
+
                     var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
                     Array.prototype.forEach.call(checkboxes, function(el) {
                         values.push(el.value);
                     })
-                    
+
                     console.log(values);
-                    
+
                     // Define the geojson layer and add it to the map
                     curLineLayer = L.geoJson(data, {
                         /*style: lineStyle,*/
@@ -450,7 +460,7 @@ function applySetting(){
                 }
             });
         }
-        
+
         else{
             found = false;
             for (i in locations){
@@ -464,7 +474,7 @@ function applySetting(){
                 alert("No location named " + curLocation + "!");
             }
         }
-        
+
     }
 
 }
@@ -476,16 +486,16 @@ function filterHurByName(feature, layer){
 function filterHurByCY(feature, layer, values){
     /*console.log(values);*/
     // line does not have h1 h2 h3 h4 h5...
-    return (checkValue(feature.properties.State, values) && 
-            feature.properties.YYYY >= curYearMin && 
+    return (checkValue(feature.properties.State, values) &&
+            feature.properties.YYYY >= curYearMin &&
             feature.properties.YYYY <= curYearMax)
-    
+
 }
 
 
 function checkValue(value,arr){
   var status = false;
- 
+
   for(var i=0; i<arr.length; i++){
     var name = arr[i];
     if(name == value){
