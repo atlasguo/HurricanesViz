@@ -35,8 +35,8 @@ function createMap(){
     });
 
     // set map boundaries to restrict panning out of bounds
-    var southWest = L.latLng(24.7433195, -124.7844079),
-    northEast = L.latLng(49.3457868, -66.9513812);
+    var southWest = L.latLng(0, -170),
+    northEast = L.latLng(80, -10);
     var bounds = L.latLngBounds(southWest, northEast);
 
     map.setMaxBounds(bounds);
@@ -386,7 +386,7 @@ function applySetting(){
         else{
             var found = false;
 
-            if (checkValue(curHrricane,hurricanes)) {
+            if (checkValue(curHurricane,hurricanes)) {
                 found = true;
                 // TODO: map it
                 // load the lines
@@ -473,43 +473,56 @@ function applySetting(){
             if (checkValue(curLocation, locations)){
                 found = true;
                 
-                // TODO: map the hurricanes with selected categories within the location and the year range
-                // load the lines
-                $.ajax("data/line.json", {
+                $.ajax("data/polygons.json", {
                     dataType: "json",
                     success: function(data){
-                        // remove current layer if exists
-                        if (curLineLayer){
-                            curMap.removeLayer(curLineLayer);
-                        };
-                        
-                        curHurIDs = [];
-                        
                         // Define the geojson layer and add it to the map
-                        curSegmentLayer = L.geoJson(data, {
-                            /*style: lineStyle,*/
-                            // filter by name
+                        L.geoJson(data, {
+                            // filter by location
                             filter: function(feature, layer){
-                                return filterSegByCat(feature, layer, values);
-                            }/*,
-                            // on each feature of states
-                            onEachFeature: lineOnEachFeature*/
+                                return filterHurByL(feature, layer);
+                            }
                         });
                         
-                        curLineLayer = L.geoJson(data, {
-                            /*style: lineStyle,*/
-                            // filter by name
-                            filter: function(feature, layer){
-                                return filterHurByLCY(feature, layer, curHurIDs);
-                            }/*,
-                            // on each feature of states
-                            onEachFeature: lineOnEachFeature*/
+                        // TODO: map the hurricanes with selected categories within the location and the year range
+                        // load the lines
+                        $.ajax("data/line.json", {
+                            dataType: "json",
+                            success: function(line){
+                                // remove current layer if exists
+                                if (curLineLayer){
+                                    curMap.removeLayer(curLineLayer);
+                                };
+
+                                curHurIDs = [];
+
+                                // Define the geojson layer and add it to the map
+                                curSegmentLayer = L.geoJson(line, {
+                                    /*style: lineStyle,*/
+                                    // filter by name
+                                    filter: function(feature, layer){
+                                        return filterSegByCat(feature, layer, values);
+                                    }/*,
+                                    // on each feature of states
+                                    onEachFeature: lineOnEachFeature*/
+                                });
+
+                                curLineLayer = L.geoJson(line, {
+                                    /*style: lineStyle,*/
+                                    // filter by name
+                                    filter: function(feature, layer){
+                                        return filterHurByLCY(feature, layer, curHurIDs);
+                                    }/*,
+                                    // on each feature of states
+                                    onEachFeature: lineOnEachFeature*/
+                                });
+
+                                curMap.addLayer(curLineLayer);
+                            }
                         });
-                        
-                        curMap.addLayer(curLineLayer);
                     }
                 });
-            
+
             }
             else{
                 alert("No location named " + curLocation + "!");
@@ -546,24 +559,14 @@ function filterHurByCY(feature, layer, valuesHurID){
 function filterHurByLCY(feature, layer, valuesHurID){
     // find all the hurricanes that have at least one segment which meets the selected categories, crossing the selected location, and within the selected year range
     
-    $.ajax("data/polygons.json", {
-        dataType: "json",
-        success: function(data){
-            // Define the geojson layer and add it to the map
-            L.geoJson(data, {
-                // filter by location
-                filter: function(feature, layer){
-                    return filterHurByL(feature, layer);
-                }
-            });
-        }
-    });
-
+    /*console.log(feature, curLocationJSON);*/
+    
+    var bufferedLine = turf.buffer(feature, 1, {units: 'miles'});
+    
+    var CY = filterHurByCY(feature, layer, valuesHurID);
+    
     //turf.booleanCross(feature, curLocationJSON);
-    return (checkValue(feature.properties.HurID, valuesHurID) && 
-            turf.booleanCrosses(feature, curLocationJSON) &&
-            feature.properties.YYYY >= curYearMin &&
-            feature.properties.YYYY <= curYearMax);
+    return (CY && turf.booleanOverlap(bufferedLine, curLocationJSON));
 }
 
 function filterHurByL(feature, layer){
