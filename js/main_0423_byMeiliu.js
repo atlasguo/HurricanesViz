@@ -463,13 +463,12 @@ function applySetting(){
 
         else{
             found = false;
-            for (i in locations){
-                if (i == curLocation) {
+            locations.forEach(function(element) {
+                if (element == curLocation) {
                     // TODO: map the hurricanes with selected categories within the location and the year range
                     found = true;
-                    break;
                 }
-            }
+            });
             if (found == false){
                 alert("No location named " + curLocation + "!");
             }
