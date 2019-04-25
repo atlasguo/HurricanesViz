@@ -18,9 +18,12 @@ var curPointLayer;
 
 var curMap;
 
+var curLocation;
 var curHurricane;
 var curCategory;
-var curTimeRange;
+
+var curYearMin;
+var curYearMax;
 
 //function to instantiate the Leaflet map
 function createMap(){
@@ -34,7 +37,7 @@ function createMap(){
 
     // add basemap tilelayer
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        maxZoom: 18,
+        minZoom: 3,
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
     }).addTo(curMap);
 
@@ -60,7 +63,7 @@ function getData(map){
                 style: stateStyle,
                 // filter by location
                 /*filter: function(feature, layer){
-                    return filterStateByLocation(feature, layer);
+                    return filterStateByName(feature, layer);
                 },*/
                 // on each feature of states
                 onEachFeature: stateOnEachFeature
@@ -83,7 +86,7 @@ function getData(map){
                 style: urbanStyle,
                 // filter by location
                 /*filter: function(feature, layer){
-                    return filterStateByLocation(feature, layer);
+                    return filterUrbanByName(feature, layer);
                 },*/
                 // on each feature of states
                 onEachFeature: urbanOnEachFeature
@@ -129,7 +132,7 @@ function urbanStyle(feature) {
     };
 }
 
-function filterStateByLocation(feature, layer){
+function filterStateByName(feature, layer){
     return feature.properties.NAME == 'Ohio'; // the selected state 
 }
 
@@ -172,7 +175,7 @@ function stateOnEachFeature(feature, layer){
 function urbanOnEachFeature(feature, layer){
     
     //popup content is now just the city name
-    var popupContent = feature.properties.NAME;
+    var popupContent = "<b>City</b>: " + feature.properties.NAME;
     
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
@@ -311,4 +314,202 @@ function autocomplete(inp, arr) {
   });
 }
 
+
+function getVals(){
+  // Get slider values
+    var parent = this.parentNode;
+    var slides = parent.getElementsByTagName("input");
+    var slide1 = parseFloat( slides[0].value );
+    var slide2 = parseFloat( slides[1].value );
+    // Neither slider will clip the other, so make sure we determine which is larger
+    if( slide1 > slide2 ){ var tmp = slide2; slide2 = slide1; slide1 = tmp; }
+  
+    curYearMin = slide1;
+    curYearMax = slide2;
+    
+/*    console.log(curYearMax);
+    console.log(curYearMin);*/
+    
+    var displayElement = parent.getElementsByClassName("rangeValues")[0];
+    displayElement.innerHTML = slide1 + " - " + slide2;
+}
+
+function initializeSiders(){
+  // Initialize Sliders
+    var sliderSections = document.getElementsByClassName("range-slider");
+    for( var x = 0; x < sliderSections.length; x++ ){
+        var sliders = sliderSections[x].getElementsByTagName("input");
+        for( var y = 0; y < sliders.length; y++ ){
+            if( sliders[y].type ==="range" ){
+                sliders[y].oninput = getVals;
+                // Manually trigger event first time to display values
+                sliders[y].oninput();
+            }
+        }
+    }
+}
+
+function applySetting(){
+    
+    // Apply setting after click the button
+    curLocation = document.getElementById("locationInput").value;
+    curHurricane = document.getElementById("hurricaneInput").value;
+    
+    // 0. check if hurricane name is disabled, if yes, jump to option 1, if not, then check if it is empty
+    //      0-yes, empty input of hurricane name!
+    //      0-no, then check if hurricane name matches any one 
+    //          0.1-yes, show it
+    //          0.2-no, no such specific hurricane!
+    // 1. if hurricane name is disabled, then check checkboxes; 
+    // 2. check if curLocation has input  
+    //      2-yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation within the selected years
+    //          2.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within the year range and within that location
+    //          2.2-no: report window pops up - no such location
+    //      2-no: then empty location, show all the hurricanes within the year range
+    
+    // 0. if hurricane name is abled, check if it is empty
+    if (document.getElementById("hurricaneInput").disabled == false) {
+        if (curHurricane == ""){
+            alert("Empty input of hurricane name!");
+        }
+        else{
+            var found = false;
+                 
+            hurricanes.forEach(function(element) {
+                if (element == curHurricane) {
+                    
+                    found = true;
+                    // TODO: map it 
+                    // load the lines
+                    $.ajax("data/line_4326_named.json", {
+                        dataType: "json",
+                        success: function(data){
+                            // remove current layer if exists
+                            if (curLineLayer){
+                                curMap.removeLayer(curLineLayer);
+                            };
+
+                            // Define the geojson layer and add it to the map
+                            curLineLayer = L.geoJson(data, {
+                                /*style: lineStyle,*/
+                                // filter by name
+                                filter: function(feature, layer){
+                                    return filterHurByName(feature, layer);
+                                }/*,
+                                // on each feature of states
+                                onEachFeature: lineOnEachFeature*/
+                            });
+                            curMap.addLayer(curLineLayer);
+                        }
+                    });
+                }
+            })
+            if (found == false){
+                    alert("No hurricane named " + curHurricane + "!");
+            }
+        }
+    }
+    // 1. if hurricane name is disabled, then check checkboxes; 
+    else{
+        var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
+        Array.prototype.forEach.call(checkboxes, function(el) {
+            values.push(el.value);
+        });
+        
+        // 2. check if curLocation has input 
+        if (curLocation == "") {
+            // alert("Empty location, but it's ok!");
+            // map the hurricanes with selected categories and year range
+            // load the lines
+            $.ajax("data/line_4326_named.json", {
+                dataType: "json",
+                success: function(data){
+                    // remove current layer if exists
+                    if (curLineLayer){
+                        curMap.removeLayer(curLineLayer);
+                    };
+                    
+                    var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
+                    Array.prototype.forEach.call(checkboxes, function(el) {
+                        values.push(el.value);
+                    })
+                    
+                    console.log(values);
+                    
+                    // Define the geojson layer and add it to the map
+                    curLineLayer = L.geoJson(data, {
+                        /*style: lineStyle,*/
+                        // filter by name
+                        filter: function(feature, layer){
+                            return filterHurByCY(feature, layer, values);
+                        }/*,
+                        // on each feature of states
+                        onEachFeature: lineOnEachFeature*/
+                    });
+                    curMap.addLayer(curLineLayer);
+                }
+            });
+        }
+        
+        else{
+            found = false;
+            for (i in locations){
+                if (i == curLocation) {
+                    // TODO: map the hurricanes with selected categories within the location and the year range
+                    found = true;
+                    break;
+                }
+            }
+            if (found == false){
+                alert("No location named " + curLocation + "!");
+            }
+        }
+        
+    }
+
+}
+
+function filterHurByName(feature, layer){
+    return (feature.properties.hurName == curHurricane)
+}
+
+function filterHurByCY(feature, layer, values){
+    /*console.log(values);*/
+    // line does not have h1 h2 h3 h4 h5...
+    return (checkValue(feature.properties.State, values) && 
+            feature.properties.YYYY >= curYearMin && 
+            feature.properties.YYYY <= curYearMax)
+    
+}
+
+
+function checkValue(value,arr){
+  var status = false;
+ 
+  for(var i=0; i<arr.length; i++){
+    var name = arr[i];
+    if(name == value){
+      status = true;
+      break;
+    }
+  }
+
+  return status;
+}
+
+function getCheckedCheckboxesFor() {
+    var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
+    Array.prototype.forEach.call(checkboxes, function(el) {
+        values.push(el.value);
+    });
+    //console.log(values);
+    if (values.length == 0) {
+        document.getElementById("hurricaneInput").disabled = false;
+    }
+    else{
+        document.getElementById("hurricaneInput").disabled = true;
+    }
+}
+
+window.onload = initializeSiders();
 $(document).ready(createMap);
