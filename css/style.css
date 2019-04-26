@@ -248,6 +248,14 @@ section.range-slider input[type=range]::-moz-focus-outer {
   color: white;
 }
 
+#img {
+    margin: 0;
+    position: relative;
+    height: 640px;
+    width: 57%;
+    display: inline-block;
+}
+
 #mapid {
     margin: 0;
     position: relative;

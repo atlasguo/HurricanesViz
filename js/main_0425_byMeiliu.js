@@ -359,7 +359,10 @@ function initializeSiders(){
 var curHurIDs = [];
 
 function applySetting(){
-
+    
+    $('#mapid').hide();
+    $('#img').show();
+    
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
@@ -406,13 +409,15 @@ function applySetting(){
                             // on each feature of states
                             onEachFeature: lineOnEachFeature*/
                         });
+                        $('#img').hide();
+                        $('#mapid').show();
                         curMap.addLayer(curLineLayer);
                     }
                 });
             
             }
             else{
-                    alert("No hurricane named " + curHurricane + "!");
+                alert("No hurricane named " + curHurricane + "!");
             }
         }
     }
@@ -522,7 +527,8 @@ function applySetting(){
                                             // on each feature of states
                                             //onEachFeature: lineOnEachFeature
                                         });
-
+                                        $('#img').hide();
+                                        $('#mapid').show();
                                         curMap.addLayer(curLineLayer);
                                     }
                                 });
@@ -537,6 +543,8 @@ function applySetting(){
                 }
                 // if locationInput is empty, directly map this curLineLayer
                 else{
+                    $('#img').hide();
+                    $('#mapid').show();
                     curMap.addLayer(curLineLayer);
                 }
             }
