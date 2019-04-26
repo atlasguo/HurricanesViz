@@ -470,12 +470,9 @@ function applySetting(){
                 // 2. check if curLocation has input, if a location is specified:
                 if (curLocation != "") {
 
-                    found = false;
                     // if found: 
                     if (checkValue(curLocation, locations)){
                         console.log("Location: "+curLocation);
-
-                        found = true;
 
                         // map the hurricanes with selected categories and year range + within the specific location!!!
 
