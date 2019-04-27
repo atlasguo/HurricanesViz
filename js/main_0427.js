@@ -440,6 +440,9 @@ function applySetting(){
 
                                 // Define the geojson layer and add it to the map
                                 curPointLayer = L.geoJson(data, {
+                                    style: function(feature,layer){
+                                        return pointStyle(feature,layer);
+                                    },
                                     // filter by name
                                     filter: function(feature, layer){
                                         return filterPointByByName(feature, layer);
@@ -597,6 +600,29 @@ function applySetting(){
 
     }
 
+}
+
+function pointStyle(feature,layer){
+    
+    if (feature.properties.ponden < 3) {
+        return {fillcolor: "#ef3837",color:transparent};
+    }
+    else{
+        return {fillcolor: "#fee676",color:transparent};
+    }
+    
+    
+    /*switch (feature.properties.ponden) {
+        case 'H5': return {color: "#ef3837","weight": 1};
+        case 'H4': return {color: "#f78f27","weight": 1};
+        case 'H3': return {color: "#fec140","weight": 1};
+        case 'H2': return {color: "#fee676","weight": 1};
+        case 'H1': return {color: "#fcf9ce","weight": 1};
+        case 'TS': return {color: "#58e095","weight": 1};
+        case 'TD': return {color: "#70b5e4","weight": 1};
+        case 'EX': return {color: "#cccccb","weight": 1};
+        default: return {color: "#ffffff","weight": 1};
+    }*/
 }
 
 function filterPointByByName(feature, layer){
