@@ -8,6 +8,35 @@ h4 {
     margin-bottom: 10px;
 }
 
+label {
+  color: #FFFFFF;
+}
+
+h3 {
+  color: #FFFFFF;
+}
+
+.rangeValues {
+  color: #FFFFFF;
+}
+
+.legend-control-container {
+  color: #FFFFFF;
+  width: 120px;
+  background-color: rgba(0,0,0,0.6);
+  outline: 2px solid white;
+  padding: 10px;
+  text-align: center;
+  /* bottom: 0;
+  left: 0;
+  border: solid black 1px;
+  display: table-cell;
+  white-space: nowrap;
+  font-family: Arial;
+  font-weight: bold; */
+
+}
+
 .navbar-brand{
     margin:0;
     display: inline-block;
@@ -39,7 +68,7 @@ h4 {
     font-family: verdana;
     text-align:left;
     line-height: 15px;
-    background-color: lightblue;
+    background-color: rgba(0,0,0,0.9);
 }
 
 .autocomplete {
@@ -82,17 +111,17 @@ input[type=text]:disabled {
 .autocomplete-items div {
     padding: 5px;
     cursor: pointer;
-    background-color: #fff; 
-    border-bottom: 1px solid #d4d4d4; 
+    background-color: #fff;
+    border-bottom: 1px solid #d4d4d4;
 }
 .autocomplete-items div:hover {
     /*when hovering an item:*/
-    background-color: #e9e9e9; 
+    background-color: #e9e9e9;
 }
 .autocomplete-active {
     /*when navigating through the items using the arrow keys:*/
-    background-color: DodgerBlue !important; 
-    color: #ffffff; 
+    background-color: DodgerBlue !important;
+    color: #ffffff;
 }
 
 /* The container */
@@ -173,7 +202,7 @@ section.range-slider {
     width: 250px;
     height: 35px;
     text-align: center;
-	
+
 }
 section.range-slider input {
     pointer-events: none;
@@ -275,5 +304,5 @@ section.range-slider input[type=range]::-moz-focus-outer {
     font-family: verdana;
     text-align:left;
     line-height: 15px;
-    background-color: lightblue;
+    background-color: rgba(0,0,0,0.9);
 }
