@@ -445,7 +445,7 @@ function applySetting(){
                                         return filterPointByByName(feature, layer);
                                     },
                                     // on each feature of states
-                                    pointToLayer: function(feature, layer){
+                                    pointToLayer: function(feature, latlng){
                                         return pointToLayer(feature, latlng);
                                     }
                                 });
@@ -598,8 +598,78 @@ function filterPointByByName(feature, layer){
 }
 
 function pointToLayer(feature, latlng){
+    //create marker options
+    var options = {
+        fillColor: "#add8e6",
+        /*color: "#000",*/
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.4
+    };
+    
+    //Give each feature's circle marker a radius based on its attribute value
+    options.radius = calcPropRadius(feature.properties.Wind);
+    
+    //create circle marker layer
+    var layer = L.circleMarker(latlng, options);
+    
+    // create pop up for features
+    createPointPopup(feature, layer, options.radius);
 
+    ///event listeners to open popup on hover and update the chart in panel on click
+    layer.on({
+        mouseover: function(){
+            this.openPopup();
+        },
+        mouseout: function(){
+            this.closePopup();
+        },
+        // update the line graph on clicking the points
+        click: function(){
+            //hightlightLineGraphPoints();
+        }
+        
+    });
+    
+    //return the circle marker to the L.geoJson pointToLayer option
+    return layer;
 }
+
+// proportional symbols
+// calculate the radius of each proportional symbol
+function calcPropRadius(attValue) {
+    //scale factor to adjust symbol size evenly
+    var scaleFactor = 1;
+    //area based on attribute value and scale factor
+    var area = attValue * scaleFactor;
+    //radius calculated based on area
+    var radius = Math.sqrt(area/Math.PI);
+
+    return radius;
+};
+
+// a consolidated popup-creation function
+function createPointPopup(feature, layer, radius){
+    
+    //popup content is now just the city name
+    var hurName = feature.properties.hurName;
+
+    var YYYY = feature.properties.YYYY;
+    var MM = feature.properties.MM;
+    var DD = feature.properties.DD;
+    var HH = feature.properties.HH;
+    var State = feature.properties.State;
+    var Wind = feature.properties.Wind;
+    var popden = feature.properties.popden;
+    
+    //add formatted attribute to panel content string
+    var popupContent = "<p><b>Hurricane-affected Population density: " + popden + "</b></p>";
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0,-radius),
+        closeButton: false 
+    });
+};
 
 function lineStyle(feature,layer){
     switch (feature.properties.Cat) {
