@@ -392,16 +392,18 @@ function applySetting(){
             alert("Empty input of hurricane name!");
         }
         else{
-            var found = false;
-
+            // if found
             if (checkValue(curHurricane,hurricanes)) {
-                found = true;
+                
                 // TODO: map it
                 // load the lines
                 $.ajax("data/line.json", {
                     dataType: "json",
                     success: function(data){
                         // remove current layer if exists
+                        if (curPointLayer){
+                            curMap.removeLayer(curPointLayer);
+                        };
                         if (curLineLayer){
                             curMap.removeLayer(curLineLayer);
                         };
@@ -460,6 +462,7 @@ function applySetting(){
                 });
 
             }
+            // if not found:
             else{
                 alert("No hurricane named " + curHurricane + "!");
             }
@@ -485,24 +488,25 @@ function applySetting(){
             dataType: "json",
             success: function(data){
                 // remove current layer if exists
+                if (curPointLayer){
+                    curMap.removeLayer(curPointLayer);
+                };
                 if (curLineLayer){
                     curMap.removeLayer(curLineLayer);
                 };
 
                 // update curHurIDsByCat values
-                var curSegmentLayer = L.geoJson(data, {
+                L.geoJson(data, {
                     filter: function(feature, layer){
                         return filterSegByCat(feature, layer, values);
                     }
                 });
-                
-                var curSegmentLayerJSON = curSegmentLayer.toGeoJSON();
 
                 // update curHurIDsByCY values
-                curLineLayer = L.geoJson(curSegmentLayerJSON, {
+                curLineLayer = L.geoJson(data, {
                     style: function (feature,layer) {
-                                return lineStyle(feature,layer);
-                            },
+                        return lineStyle(feature,layer);
+                    },
                     // filter by name
                     filter: function(feature, layer){
                         return filterHurByCY(feature, layer);
