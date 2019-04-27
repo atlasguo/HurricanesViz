@@ -652,9 +652,8 @@ function createLegend(map){
         // $(container).append(info);        //$('#panel').append('<input class="range-slider" type="range">');
 
         //Append the legend symbols
-        // var svg = '<svg id="attribute-legend">';
         var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> city area</text><br>'
-        // var stateBoundary = '<img src = img/SVG/cityArea.svg width=45></img><text>city area</text><br>'
+        var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> state boundary</text><br>'
 
 
         var hCategory = '<text>Hurricane Categories</text><br>'
@@ -676,41 +675,13 @@ function createLegend(map){
         hCategory += '<text> EX</text><br>'
 
         var hPressure = '<text>Hurricane Pressures</text>'
-        //text string
+
+        //add attribute legend to container
         $(container).append(cityArea);
+        $(container).append(stateBoundary);
         $(container).append(hCategory);
         $(container).append(hPressure);
 
-        // $(container).append(image2);
-        // $(container).append(image3);
-
-        //Append the slider to control the year
-        // $(container).append('<input class="range-slider" type="range">');
-        //
-        // //Initialize the slider value to 0
-        //  var index = 0
-        //  //Get the slider html object
-        //  var slider = container.getElementsByClassName('range-slider')
-        //  //retrieving the value of the slider
-        //  $(slider).on('input', function(){
-        //      //get the new index value
-        //     index = $(this).val();
-        //     //Update the global year index value so the attribute filter can adjust accordingly
-        //      curYearIndex = index
-        //       //Update the symbols and legend on the map
-        //       updatePropSymbols(map, attributes[index], curFilter);
-        //       updateLegend(map, attributes[index]);
-        //  });
-        //
-        // //set slider attributes
-        // $(slider).attr({
-        //     max: 15,
-        //     min: 0,
-        //     value: 0,
-        //     step: 1
-        // });
-        //Prevent the mouse to move the map when moving the slider
-        // L.DomEvent.disableClickPropagation(container);
         return container;
       }
     });

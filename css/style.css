@@ -22,11 +22,11 @@ h3 {
 
 .legend-control-container {
   color: #FFFFFF;
-  width: 120px;
+  width: 130px;
   background-color: rgba(0,0,0,0.6);
   outline: 2px solid white;
   padding: 10px;
-  text-align: center;
+  text-align: left;
   /* bottom: 0;
   left: 0;
   border: solid black 1px;
