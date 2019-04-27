@@ -389,6 +389,8 @@ function applySetting(){
     // Scenario #1: if hurricane name is abled, check if it is empty
     if (document.getElementById("hurricaneInput").disabled == false) {
         if (curHurricane == ""){
+            $('#img').hide();
+            $('#mapid').show();
             alert("Empty input of hurricane name!");
         }
         else{
@@ -460,6 +462,8 @@ function applySetting(){
             }
             // if not found:
             else{
+                $('#img').hide();
+                $('#mapid').show();
                 alert("No hurricane named " + curHurricane + "!");
             }
         }
@@ -576,6 +580,8 @@ function applySetting(){
                     }
                     // if not found:
                     else{
+                        $('#img').hide();
+                        $('#mapid').show();
                         alert("No location named " + curLocation + "!");
                     }
                 }
