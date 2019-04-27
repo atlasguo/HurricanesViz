@@ -335,9 +335,6 @@ function getVals(){
     curYearMin = slide1;
     curYearMax = slide2;
 
-/*    console.log(curYearMax);
-    console.log(curYearMin);*/
-
     var displayElement = parent.getElementsByClassName("rangeValues")[0];
     displayElement.innerHTML = slide1 + " - " + slide2;
 }
@@ -357,18 +354,18 @@ function initializeSiders(){
     }
 }
 
-var curHurIDs = [];
-
-var countC3;
-var countC2;
+var curHurIDsByCat = [];
+var curHurIDsByCY = [];
+var curHurIDsByLCY = [];
 
 function applySetting(){
 
     $('#mapid').hide();
     $('#img').show();
     
-    countC2 = 0;
-    countC3 = 0;
+    curHurIDsByCat = [];
+    curHurIDsByCY = [];
+    curHurIDsByLCY = [];
     
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
@@ -443,16 +440,14 @@ function applySetting(){
 
                                 // Define the geojson layer and add it to the map
                                 curPointLayer = L.geoJson(data, {
-                                    // set up the line style
-                                    style: function (feature,layer) {
-                                        return pointStyle(feature,layer);
-                                    },
                                     // filter by name
                                     filter: function(feature, layer){
-                                        return filterPointByHurID(feature, layer);
-                                    }/*,
+                                        return filterPointByByName(feature, layer);
+                                    },
                                     // on each feature of states
-                                    onEachFeature: pointOnEachFeature*/
+                                    pointToLayer: function(feature, layer){
+                                        return pointToLayer(feature, latlng);
+                                    }
                                 });
                                 $('#img').hide();
                                 $('#mapid').show();
@@ -479,7 +474,7 @@ function applySetting(){
         });
 
         /*change the order here:
-        1. filterHurByCY
+        1. filter hurricanes by categories and year range
         2. check location
         3. if location matched, then filterHurByL, update curLineLayer
         4. add curLineLayer to curMap
@@ -494,16 +489,17 @@ function applySetting(){
                     curMap.removeLayer(curLineLayer);
                 };
 
-                // to get the curHurIDs
-                curHurIDs = [];
-                L.geoJson(data, {
+                // update curHurIDsByCat values
+                var curSegmentLayer = L.geoJson(data, {
                     filter: function(feature, layer){
                         return filterSegByCat(feature, layer, values);
                     }
                 });
+                
+                var curSegmentLayerJSON = curSegmentLayer.toGeoJSON();
 
-                // Define the geojson layer and add it to the map
-                curLineLayer = L.geoJson(data, {
+                // update curHurIDsByCY values
+                curLineLayer = L.geoJson(curSegmentLayerJSON, {
                     style: function (feature,layer) {
                                 return lineStyle(feature,layer);
                             },
@@ -515,18 +511,24 @@ function applySetting(){
                     onEachFeature: lineOnEachFeature*/
                 });
 
+                console.log("# of hurricanes after cat and year: " + curHurIDsByCY.length);
+                
+                // only one hurricane selected after filtering by cat and year
+                if (curHurIDsByCY.length == 1){
+                    // Map: Zoom to the hurricane line; Add points;
+                    
+                    // Info panel: individual hurricane graph should update
+                }
+
                 // then check if curLocation has input:
                 // Scenario #3 if yes - curLocation is not empty
                 if (curLocation != "") {
-
+                    
                     // if found:
                     if (checkValue(curLocation, locations)){
-                        /*console.log("Location: "+curLocation);*/
-
+                        
                         // map the hurricanes with selected categories and year range + within the specific location!!!
-                        var curLineToGeoJSON = curLineLayer.toGeoJSON();
-                        console.log("# of segments after cat and year: " + curLineToGeoJSON.features.length);
-
+                        
                         $.ajax("data/polygons.json", {
                             dataType: "json",
                             success: function(data){
@@ -538,52 +540,36 @@ function applySetting(){
                                         return filterPolygonByL(feature, layer);
                                     }
                                 });
-
-                                /*console.log(curLocationJSON);*/
-
-                                $.ajax("data/hurID.json", {
-                                    dataType: "json",
-                                    success: function(data){
-
-                                        var curSegmentLayer = L.geoJson(data, {
-                                            filter: function(feature, layer){
-                                                // select hurricanes based on curHurIDs filtered by cat and year
-                                                return filterHurByCY(feature, layer);
-                                            }
-                                        });
-
-                                        var curSegmentLayerJSON = curSegmentLayer.toGeoJSON();
-                                        console.log("# of Hurricanes after cat and year: " + curSegmentLayerJSON.features.length);
-
-                                        // to get the curHurIDs that intersects the location
-                                        curHurIDs = [];
-                                        curSegmentLayer = L.geoJson(curSegmentLayerJSON, {
-                                            filter: function(feature, layer){
-                                                // to get the curHurIDs
-                                                return filterSegByL(feature, layer);
-                                            }
-                                        });
-
-                                        console.log(countC3 + " hurricanes within this location ");
-                                        
-                                        // TODO: map the hurricanes within the location
-
-                                        curLineLayer = L.geoJson(curLineToGeoJSON, {
-                                            style: function (feature,layer) {
-                                                return lineStyle(feature,layer);
-                                            },
-                                            // filter by name
-                                            filter: function(feature, layer){
-                                                return filterHurByLCY(feature, layer);
-                                            }//,
-                                            // on each feature of states
-                                            //onEachFeature: lineOnEachFeature
-                                        });
-                                        $('#img').hide();
-                                        $('#mapid').show();
-                                        curMap.addLayer(curLineLayer);
+                                
+                                var curLineLayerJSON = curLineLayer.toGeoJSON();
+                                
+                                // update curHurIDsByLCY
+                                L.geoJson(curLineLayerJSON, {
+                                    filter: function(feature, layer){
+                                        // to get the curHurIDsByLCY
+                                        return filterSegByL(feature, layer);
                                     }
                                 });
+
+                                console.log(curHurIDsByLCY.length + " hurricanes within this location ");
+
+                                // TODO: map the hurricanes within the location
+
+                                curLineLayer = L.geoJson(curLineLayerJSON, {
+                                    style: function (feature,layer) {
+                                        return lineStyle(feature,layer);
+                                    },
+                                    // filter by name
+                                    filter: function(feature, layer){
+                                        return filterHurByLCY(feature, layer);
+                                    }//,
+                                    // on each feature of states
+                                    //onEachFeature: lineOnEachFeature
+                                });
+                                $('#img').hide();
+                                $('#mapid').show();
+                                curMap.addLayer(curLineLayer);
+                                    
                             }
                         });
 
@@ -607,8 +593,11 @@ function applySetting(){
 
 }
 
-function pointStyle(feature,layer){
-    
+function filterPointByByName(feature, layer){
+    return (feature.properties.hurName == curHurricane);
+}
+
+function pointToLayer(feature, latlng){
 
 }
 
@@ -627,14 +616,14 @@ function lineStyle(feature,layer){
 }
 
 function filterHurByName(feature, layer){
-    return (feature.properties.hurName == curHurricane)
+    return (feature.properties.hurName == curHurricane);
 }
 
 function filterSegByCat(feature, layer, values){
     // "values" is a vector containing all the selected categories
     if (checkValue(feature.properties.Cat, values)){
-        if (!checkValue(feature.properties.HurID,curHurIDs)){
-            curHurIDs.push(feature.properties.HurID);
+        if (!checkValue(feature.properties.HurID,curHurIDsByCat)){
+            curHurIDsByCat.push(feature.properties.HurID);
         }
     }
     return false;
@@ -643,10 +632,17 @@ function filterSegByCat(feature, layer, values){
 function filterHurByCY(feature, layer){
 
     // find all the hurricanes that have at least one segment which meets the selected categories and the selected year range
-    
-    return (checkValue(feature.properties.HurID, curHurIDs) &&
+    var result = (checkValue(feature.properties.HurID, curHurIDsByCat) &&
             feature.properties.YYYY >= curYearMin &&
             feature.properties.YYYY <= curYearMax);
+    
+    if (result){
+        if (!checkValue(feature.properties.HurID,curHurIDsByCY)){
+            curHurIDsByCY.push(feature.properties.HurID);
+        }
+    }
+    
+    return result;
 }
 
 function filterPolygonByL(feature, layer){
@@ -657,14 +653,12 @@ function filterPolygonByL(feature, layer){
 }
 
 
-// hurricanes
+// feature here is filtered by cat and year already
 function filterSegByL(feature, layer){
     var isOverlap = turf.lineIntersect(feature,curLocationJSON);
     if (isOverlap.features.length > 0){
-        if (!checkValue(feature.properties.HurID,curHurIDs)){
-            countC3++;
-            /*console.log(" of hurricanes within this location ");*/
-            curHurIDs.push(feature.properties.HurID);
+        if (!checkValue(feature.properties.HurID,curHurIDsByLCY)){
+            curHurIDsByLCY.push(feature.properties.HurID);
         }
     }
     return false;
@@ -672,7 +666,7 @@ function filterSegByL(feature, layer){
 
 function filterHurByLCY(feature, layer){
     // find all the hurricanes that have at least one segment which meets the selected categories, crossing the selected location, and within the selected year range
-    return checkValue(feature.properties.HurID, curHurIDs);
+    return checkValue(feature.properties.HurID, curHurIDsByLCY);
 }
 
 
