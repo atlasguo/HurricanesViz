@@ -440,9 +440,9 @@ function applySetting(){
 
                                 // Define the geojson layer and add it to the map
                                 curPointLayer = L.geoJson(data, {
-                                    style: function(feature,layer){
+                                    /*style: function(feature,layer){
                                         return pointStyle(feature,layer);
-                                    },
+                                    },*/
                                     // filter by name
                                     filter: function(feature, layer){
                                         return filterPointByByName(feature, layer);
@@ -605,10 +605,10 @@ function applySetting(){
 function pointStyle(feature,layer){
     
     if (feature.properties.ponden < 3) {
-        return {fillcolor: "#ef3837",color:transparent};
+        return {fillcolor: "#ef3837"};
     }
     else{
-        return {fillcolor: "#fee676",color:transparent};
+        return {fillcolor: "#fee676"};
     }
     
     
