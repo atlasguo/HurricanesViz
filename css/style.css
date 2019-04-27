@@ -67,7 +67,7 @@ h3 {
     vertical-align: top;
     font-family: verdana;
     text-align:left;
-    line-height: 15px;
+    line-height: 10px;
     background-color: rgba(0,0,0,0.9);
 }
 
@@ -110,6 +110,7 @@ input[type=text]:disabled {
 }
 .autocomplete-items div {
     padding: 5px;
+    line-height: 1.2;
     cursor: pointer;
     background-color: #fff;
     border-bottom: 1px solid #d4d4d4;
@@ -156,8 +157,8 @@ input[type=text]:disabled {
   position: absolute;
   top: 0;
   left: 0;
-  height: 25px;
-  width: 25px;
+  height: 20px;
+  width: 20px;
   background-color: #eee;
 }
 
@@ -185,8 +186,8 @@ input[type=text]:disabled {
 
 /* Style the checkmark/indicator */
 .container .checkmark:after {
-  left: 9px;
-  top: 5px;
+  left: 7px;
+  top: 2px;
   width: 5px;
   height: 10px;
   border: solid white;

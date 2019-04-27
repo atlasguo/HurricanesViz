@@ -359,28 +359,37 @@ function initializeSiders(){
 
 var curHurIDs = [];
 
+var countC3;
+var countC2;
+
 function applySetting(){
 
     $('#mapid').hide();
     $('#img').show();
-
+    
+    countC2 = 0;
+    countC3 = 0;
+    
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
 
-    // 0. check if hurricane name is disabled, if yes, jump to option 1, if not, then check if it is empty
-    //      0-yes, empty input of hurricane name!
+    // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
+    //      0-yes, alert: empty input of hurricane name!
     //      0-no, then check if hurricane name matches any one
-    //          0.1-yes, show it
-    //          0.2-no, no such specific hurricane!
-    // 1. if hurricane name is disabled, then check checkboxes;
-    // 2. check if curLocation has input
-    //      2-yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation within the selected years
-    //          2.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within the year range and within that location
-    //          2.2-no: report window pops up - no such location
-    //      2-no: then empty location, show all the hurricanes within the year range
+    //          0.1-yes, map it
+    //          0.2-no, alert: no such specific hurricane!
+    // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
+    // then check if curLocation has input:
+    
+    // Scenario #3 if yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation
+    //          3.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within that location
+    //          3.2-no: alert: no such location
+    // Scenario #2 if no: then empty location, show all the hurricanes within the year range
 
-    // 0. if hurricane name is abled, check if it is empty
+
+    
+    // Scenario #1: if hurricane name is abled, check if it is empty
     if (document.getElementById("hurricaneInput").disabled == false) {
         if (curHurricane == ""){
             alert("Empty input of hurricane name!");
@@ -402,7 +411,10 @@ function applySetting(){
 
                         // Define the geojson layer and add it to the map
                         curLineLayer = L.geoJson(data, {
-                            /*style: lineStyle,*/
+                            // set up the line style
+                            style: function (feature,layer) {
+                                return lineStyle(feature,layer);
+                            },
                             // filter by name
                             filter: function(feature, layer){
                                 return filterHurByName(feature, layer);
@@ -410,9 +422,45 @@ function applySetting(){
                             // on each feature of states
                             onEachFeature: lineOnEachFeature*/
                         });
-                        $('#img').hide();
-                        $('#mapid').show();
                         curMap.addLayer(curLineLayer);
+                        
+                        // change the map extent to the hurricane
+                        
+                        
+                        
+                        // update the hurricane line graph
+                        
+                        
+                        
+                        // add the points to the map
+                        $.ajax("data/point.json", {
+                            dataType: "json",
+                            success: function(data){
+                                // remove current layer if exists
+                                if (curPointLayer){
+                                    curMap.removeLayer(curPointLayer);
+                                };
+
+                                // Define the geojson layer and add it to the map
+                                curPointLayer = L.geoJson(data, {
+                                    // set up the line style
+                                    style: function (feature,layer) {
+                                        return pointStyle(feature,layer);
+                                    },
+                                    // filter by name
+                                    filter: function(feature, layer){
+                                        return filterPointByHurID(feature, layer);
+                                    }/*,
+                                    // on each feature of states
+                                    onEachFeature: pointOnEachFeature*/
+                                });
+                                $('#img').hide();
+                                $('#mapid').show();
+                                curMap.addLayer(curPointLayer);
+                                
+                            }
+                        });
+                        
                     }
                 });
 
@@ -422,7 +470,7 @@ function applySetting(){
             }
         }
     }
-    // 1. if hurricane name is disabled, then check checkboxes and year range;
+    // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
     else{
         // "values" is a vector containing all the selected categories
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'), values = [];
@@ -456,7 +504,9 @@ function applySetting(){
 
                 // Define the geojson layer and add it to the map
                 curLineLayer = L.geoJson(data, {
-                    /*style: lineStyle,*/
+                    style: function (feature,layer) {
+                                return lineStyle(feature,layer);
+                            },
                     // filter by name
                     filter: function(feature, layer){
                         return filterHurByCY(feature, layer);
@@ -465,9 +515,8 @@ function applySetting(){
                     onEachFeature: lineOnEachFeature*/
                 });
 
-
-
-                // 2. check if curLocation has input, if a location is specified:
+                // then check if curLocation has input:
+                // Scenario #3 if yes - curLocation is not empty
                 if (curLocation != "") {
 
                     // if found:
@@ -515,12 +564,14 @@ function applySetting(){
                                             }
                                         });
 
-                                        console.log(count + " hurricanes within this location ");
-                                        count = 0;
+                                        console.log(countC3 + " hurricanes within this location ");
+                                        
                                         // TODO: map the hurricanes within the location
 
                                         curLineLayer = L.geoJson(curLineToGeoJSON, {
-                                            //style: lineStyle,
+                                            style: function (feature,layer) {
+                                                return lineStyle(feature,layer);
+                                            },
                                             // filter by name
                                             filter: function(feature, layer){
                                                 return filterHurByLCY(feature, layer);
@@ -542,7 +593,7 @@ function applySetting(){
                         alert("No location named " + curLocation + "!");
                     }
                 }
-                // if locationInput is empty, directly map this curLineLayer
+                // Scenario #2: if locationInput is empty, directly map this curLineLayer 
                 else{
                     $('#img').hide();
                     $('#mapid').show();
@@ -554,6 +605,25 @@ function applySetting(){
 
     }
 
+}
+
+function pointStyle(feature,layer){
+    
+
+}
+
+function lineStyle(feature,layer){
+    switch (feature.properties.Cat) {
+            case 'H5': return {color: "#ef3837","weight": 1};
+            case 'H4': return {color: "#f78f27","weight": 1};
+            case 'H3': return {color: "#fec140","weight": 1};
+            case 'H2': return {color: "#fee676","weight": 1};
+            case 'H1': return {color: "#fcf9ce","weight": 1};
+            case 'TS': return {color: "#58e095","weight": 1};
+            case 'TD': return {color: "#70b5e4","weight": 1};
+            case 'EX': return {color: "#cccccb","weight": 1};
+            default: return {color: "#ffffff","weight": 1};
+        }
 }
 
 function filterHurByName(feature, layer){
@@ -573,7 +643,7 @@ function filterSegByCat(feature, layer, values){
 function filterHurByCY(feature, layer){
 
     // find all the hurricanes that have at least one segment which meets the selected categories and the selected year range
-
+    
     return (checkValue(feature.properties.HurID, curHurIDs) &&
             feature.properties.YYYY >= curYearMin &&
             feature.properties.YYYY <= curYearMax);
@@ -586,13 +656,13 @@ function filterPolygonByL(feature, layer){
     return false;
 }
 
-var count = 0;
+
 // hurricanes
 function filterSegByL(feature, layer){
     var isOverlap = turf.lineIntersect(feature,curLocationJSON);
     if (isOverlap.features.length > 0){
         if (!checkValue(feature.properties.HurID,curHurIDs)){
-            count++;
+            countC3++;
             /*console.log(" of hurricanes within this location ");*/
             curHurIDs.push(feature.properties.HurID);
         }

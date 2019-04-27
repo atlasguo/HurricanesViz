@@ -30,17 +30,17 @@
 
             <!--Hurricane selection-->
             <div id="HurricaneFillIn">
-                <h3 style="margin-top: 0px;">
+                <h3 style="margin-top: 0px;margin-left: 0px;">
                     Hurricane:
                 </h3>
-                <label>Option #1: Filtered By Name</label>
+                <label style="line-height: 1.2;">Option #1: Filtered By Name <p style="margin-top:4px;margin-bottom:0;font-size:13px;">(available when all hurricane categories below are unselected)</p></label>
                 <form autocomplete="off" action="/action_page.php">
                     <div class="autocomplete" style="width:300px;">
                         <input id="hurricaneInput" type="text" name="hurricane" placeholder="Select one hurricane by name" disabled>
                     </div>
                 </form>
 
-                <label style="line-height: 1.5;">Option #2: Filtered By Category, Location, and/or Year Range</label>
+                <label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year Range</label>
                 <div id="checkBoxControl">
                     <label class="container" style="color: #ef3837; padding-top: 15px;">H5: Winds >= 157 mph
                         <input name="category" value="H5" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
@@ -51,15 +51,15 @@
                         <span class="checkmark"></span>
                     </label>
                     <label class="container" style="color: #fec140; padding-top: 5px;">H3: Winds 111-129 mph
-                        <input name="category" value="H3" type="checkbox" onclick="getCheckedCheckboxesFor()">
+                        <input name="category" value="H3" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
                         <span class="checkmark"></span>
                     </label>
                     <label class="container" style="color: #fee676; padding-top: 5px;">H2: Winds 96-110 mph
-                        <input name="category" value="H2" type="checkbox" onclick="getCheckedCheckboxesFor()">
+                        <input name="category" value="H2" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
                         <span class="checkmark"></span>
                     </label>
                     <label class="container" style="color: #fcf9ce; padding-top: 5px;">H1: Winds 74-95 mph
-                        <input name="category" value="H1" type="checkbox" onclick="getCheckedCheckboxesFor()">
+                        <input name="category" value="H1" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
                         <span class="checkmark"></span>
                     </label>
                     <label class="container" style="color: #58e095; padding-top: 5px;">TS: Tropical Storm
@@ -80,7 +80,7 @@
 
             <!--Location selection-->
             <div id="locationFillIn">
-                <h3 style="margin-bottom: 0;margin-top: 20px;">
+                <h3 style="margin-bottom:0px;margin-top: 25px;margin-left: 0px;">
                     Location:
                 </h3>
                 <!--Make sure the form has the autocomplete function switched off:-->
@@ -94,14 +94,14 @@
 
             <!--slider range for year-->
             <div id="yearRange">
-                <h3 style="margin-top: 0px;">
+                <h3 style="margin-top: 5px;margin-left: 5px;">
                     Year Range:
                 </h3>
 
                 <section class="range-slider">
                     <span class="rangeValues"></span>
-                    <input value="1998" min="1851" max="2017" step="1" type="range">
                     <input value="2000" min="1851" max="2017" step="1" type="range">
+                    <input value="2017" min="1851" max="2017" step="1" type="range">
                 </section>
             </div>
 
