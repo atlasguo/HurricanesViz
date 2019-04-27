@@ -435,10 +435,6 @@ function applySetting(){
                         $.ajax("data/point.json", {
                             dataType: "json",
                             success: function(data){
-                                // remove current layer if exists
-                                if (curPointLayer){
-                                    curMap.removeLayer(curPointLayer);
-                                };
 
                                 // Define the geojson layer and add it to the map
                                 curPointLayer = L.geoJson(data, {
