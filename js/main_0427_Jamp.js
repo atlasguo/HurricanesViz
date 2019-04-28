@@ -371,11 +371,11 @@ function updateExtent(layer)
 }
 
 function applySetting(){
-    
+
     if (selection) {
         selectedLayer.resetStyle(selection);
     }
-    
+
     $('#mapid').hide();
     $('#img').show();
 
@@ -550,7 +550,7 @@ function applySetting(){
                     }
                 });
 
-                // update curHurIDsByCY 
+                // update curHurIDsByCY
                 curLineLayer = L.geoJson(data, {
                     style: function (feature,layer) {
                         return lineStyle(feature,layer);
@@ -562,7 +562,7 @@ function applySetting(){
                     // on each feature of states
                     onEachFeature: lineOnEachFeature*/
                 });
-                
+
                 console.log("");
                 console.log(curHurIDsByCY.length + " hurricanes after cat and year");
 
@@ -581,7 +581,7 @@ function applySetting(){
                         $.ajax("data/polygons.json", {
                             dataType: "json",
                             success: function(data){
-                                
+
                                 // if it is a city
                                 if (curLocation.indexOf(',') > -1){
                                     // update curLocationJSON
@@ -611,13 +611,13 @@ function applySetting(){
                                             return filterPolygonByL(feature, layer);
                                         }
                                     });
-                                
+
                                 }
 
 								// change the map extent to the location
 								updateExtent(curLocationLayer);
                                 curMap.addLayer(curLocationLayer);
-                                
+
                                 $.ajax("data/hurID.json", {
                                     dataType: "json",
                                     success: function(data){
@@ -638,7 +638,7 @@ function applySetting(){
                                         });
 
                                         console.log(curHurIDsByLCY.length + " hurricanes within this location ");
-                                        
+
                                         if (curHurIDsByLCY.length <= 5){
                                             // Map: Zoom to the hurricane line; Add points;
                                             // Info panel: individual hurricane graph should update;
@@ -698,12 +698,12 @@ function applySetting(){
                                             // on each feature of states
                                             //onEachFeature: lineOnEachFeature
                                         });
-                                        
+
                                         $('#img').hide();
                                         $('#mapid').show();
                                         curMap.addLayer(curLineLayer);
                                     }});// ajax - hurID.json
- 
+
                                 }
                         }); // ajax - polygons.json
                     }// end of scenario #3 if location is found
@@ -766,8 +766,8 @@ function applySetting(){
                             }
                         });
                     }
-                    
-                    
+
+
                     $('#img').hide();
                     $('#mapid').show();
                     curMap.addLayer(curLineLayer);
@@ -870,7 +870,7 @@ function createPointPopup(feature, layer, radius){
 };
 
 function lineStyle(feature,layer){
-    
+
     var colorScheme = ["#ffff00","#fecc5c","#fd8d3c","#f03b20","#bd0026"]
     var thickness = [1,2,2.5,3,3.5,4,5]
 
@@ -1143,24 +1143,40 @@ function createLineGraph(data){
 
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
-      .domain(d3.extent(data, function(d) { return d.date; }))
+      .domain(d3.extent(data, function(d) {
+        return d.date;
+      }))
       .range([ 0, width ]);
+
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+      .attr("class", "axisWhite")
+      .call(d3.axisBottom(x))
+      .selectAll("text").remove();
+
+    svg.append("text")
+      .attr("text-anchor", "right")
+      .attr("fill", "white")
+      .attr("transform", "translate("+ 190 +","+ 175 +")")
+      .style("font-size", 12)
+      .text("Time");
 
     // Add Y axis
     var y = d3.scaleLinear()
       .domain( [min - 10, max+10])
       .range([ height, 0 ]);
+
     svg.append("g")
+      .attr("class", "axisWhite")
       .call(d3.axisLeft(y));
+
 
     // Add the line
     svg.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", "black")
+      .attr("stroke", "white")
+      .attr("class", "axisWhite")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
         .curve(d3.curveBasis) // Just add that to have a curve instead of segments

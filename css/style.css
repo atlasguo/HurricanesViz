@@ -16,6 +16,18 @@ h3 {
   color: #FFFFFF;
 }
 
+.axisWhite line{
+  stroke: white;
+}
+
+.axisWhite path{
+  stroke: white;
+}
+
+.axisWhite text{
+  fill: white;
+}
+
 .rangeValues {
   color: #FFFFFF;
 }
@@ -306,5 +318,5 @@ section.range-slider input[type=range]::-moz-focus-outer {
     text-align:left;
     line-height: 15px;
     /*background-color: lightcyan;*/
-    background-color: rgba(0,0,0,0.9); 
+    background-color: rgba(0,0,0,0.9);
 }
