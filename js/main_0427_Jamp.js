@@ -466,19 +466,23 @@ function applySetting(){
                                 var graphData = [];
 
                                 curPointLayer.eachLayer(function(layer){
+                                  var hour = layer.feature.properties.HH;
                                   var day = layer.feature.properties.DD;
                                   var month = layer.feature.properties.MM;
-                                  var year = layer.feature.properties.YYYY;
-                                  var date = year + "-" + month + "-" + day;
-                                  date = d3.timeParse("%Y-%m-%d")(date)
+                                  // var year = layer.feature.properties.YYYY;
+
+
+
+                                  var date = month + "-" + day;
+                                  date = d3.timeParse("%m-%d")(date)
+
                                   var cur_wind = layer.feature.properties.Wind;
 
-                                  var new_entry = {"date": date, "value": cur_wind}
+                                  var new_entry = {"date":date, "value":cur_wind, "day":day, "hour":hour, "month":month}
                                   graphData.push(new_entry)
 
 
                                 });
-                                /*console.log(graphData)；*/
 
                                 createLineGraph(graphData);
 
@@ -672,6 +676,26 @@ function applySetting(){
 
                                     }
                                 });
+
+                                console.log(curHurIDsByLCY.length + " hurricanes within this location ");
+
+                                // TODO: map the hurricanes within the location
+
+                                curLineLayer = L.geoJson(curLineLayerJSON, {
+                                    style: function (feature,layer) {
+                                        return lineStyle(feature,layer);
+                                    },
+                                    // filter by name
+                                    filter: function(feature, layer){
+                                        return filterHurByLCY(feature, layer);
+                                    }//,
+                                    // on each feature of states
+                                    //onEachFeature: lineOnEachFeature
+                                });
+                                $('#img').hide();
+                                $('#mapid').show();
+                                curMap.addLayer(curLineLayer);
+                                // createScatter(graphData);
                             }
                         });
                     }
@@ -992,7 +1016,9 @@ function createLegend(map){
 }
 
 // scatterplot
-function createScatter() {
+function createScatter(graphData) {
+  document.getElementById("scatterplot-div").innerHTML = "";
+
   // set the dimensions and margins of the graph
   var margin = {top: 10, right: 30, bottom: 30, left: 50},
       width = 300 - margin.left - margin.right,
@@ -1080,76 +1106,13 @@ function createScatter() {
   })
 }
 
-createScatter();
 
 // line graph
-// function createLineGraph(x_vals, y_vals){
-//
-//     // set the dimensions and margins of the graph
-//   var margin = {top: 10, right: 30, bottom: 30, left: 60},
-//       width = 460 - margin.left - margin.right,
-//       height = 400 - margin.top - margin.bottom;
-//
-//   // append the svg object to the body of the page
-//   var svg = d3.select("#lineGraph-div")
-//     .append("svg")
-//       .attr("width", width + margin.left + margin.right)
-//       .attr("height", height + margin.top + margin.bottom)
-//     .append("g")
-//       .attr("transform",
-//             "translate(" + margin.left + "," + margin.top + ")");
-//
-//   // Add X axis --> it is a date format
-//   var x = d3.scaleLinear()
-//     .domain([0, 6])
-//     .range([ 0, width ]);
-//   svg.append("g")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(d3.axisBottom(x));
-//
-//
-//
-//   // Add Y axis
-//   var y = d3.scaleLinear()
-//     .domain( [0, 6])
-//     .range([ height, 0 ]);
-//   svg.append("g")
-//     .call(d3.axisLeft(y));
-//   console.log(svg)
-//   //
-//   // Add the line
-//   // svg.append("path")
-//   //   .attr("fill", "none")
-//   //   .attr("stroke", "black")
-//   //   .attr("stroke-width", 1.5)
-//   //   .attr("d", d3.line()
-//   //     .curve(d3.curveBasis) // Just add that to have a curve instead of segments
-//   //     .x(x_vals)
-//   //     .y(y_vals)
-//   //     )
-//
-//       // Add the points
-//       svg
-//         .append("g")
-//         .selectAll("dot")
-//         .enter()
-//         .append("circle")
-//           .attr("class", "myCircle")
-//           .attr("cx",x(3) )
-//           .attr("cy",y(3) )
-//           .attr("r", 4)
-//           .attr("stroke", "#69b3a2")
-//           .attr("stroke-width", 3)
-//           .attr("fill", "white")
-//   //         // .on("mouseover", mouseover)
-//   //         // .on("mousemove", mousemove)
-//   //         // .on("mouseleave", mouseleave)
-//
-// }
 function createLineGraph(data){
-  //remove previous contents
   var max = Math.max.apply(Math,data.map(function(o){return o.value;}))
   var min = Math.min.apply(Math,data.map(function(o){return o.value;}))
+
+  //remove previous contents
   document.getElementById("lineGraph-div").innerHTML = "";
 
   // set the dimensions and margins of the graph
@@ -1166,16 +1129,6 @@ function createLineGraph(data){
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
 
-  //Read the data
-
-  // When reading the csv, I must format variables:
-  // function(d){
-  //   return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
-  // }
-
-  // Now I can use this dataset:
-    /*console.log(typeof(data))
-    console.log(data)*/
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
       .domain(d3.extent(data, function(d) { return d.date; }))
@@ -1183,8 +1136,8 @@ function createLineGraph(data){
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
-    //
-    // // Add Y axis
+
+    // Add Y axis
     var y = d3.scaleLinear()
       .domain( [min - 10, max+10])
       .range([ height, 0 ]);
@@ -1204,33 +1157,33 @@ function createLineGraph(data){
         )
 
     // create a tooltip
-    // var Tooltip = d3.select("#lineGraph-div")
-    //   .append("div")
-    //   .style("opacity", 0)
-    //   .attr("class", "tooltip")
-    //   .style("background-color", "white")
-    //   .style("border", "solid")
-    //   .style("border-width", "2px")
-    //   .style("border-radius", "5px")
-    //   .style("padding", "5px")
-    //
-    // // Three function that change the tooltip when user hover / move / leave a cell
-    // var mouseover = function(d) {
-    //   Tooltip
-    //     .style("opacity", 1)
-    // }
-    // var mousemove = function(d) {
-    //   Tooltip
-    //     .html("Exact value: " + d.value)
-    //     .style("left", (d3.mouse(this)[0]+70) + "px")
-    //     .style("top", (d3.mouse(this)[1]) + "px")
-    // }
-    // var mouseleave = function(d) {
-    //   Tooltip
-    //     .style("opacity", 0)
-    // }
+    var Tooltip = d3.select("#lineGraph-div")
+      .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "white")
+      .style("border", "solid")
+      .style("border-width", "2px")
+      .style("border-radius", "5px")
+      .style("padding", "5px")
 
-    // // Add the points
+    // Three function that change the tooltip when user hover / move / leave a cell
+    var mouseover = function(d) {
+      Tooltip
+        .style("opacity", 1)
+    }
+    var mousemove = function(d) {
+      Tooltip
+        .html("Month:" + d.month + " Day:" + d.day + " Hour:" + d.hour)
+        .style("left", (d3.mouse(this)[0]+70) + "px")
+        .style("top", (d3.mouse(this)[1]) + "px")
+    }
+    var mouseleave = function(d) {
+      Tooltip
+        .style("opacity", 0)
+    }
+
+    // Add the points
     svg
       .append("g")
       .selectAll("dot")
@@ -1244,40 +1197,20 @@ function createLineGraph(data){
         .attr("stroke", "#69b3a2")
         .attr("stroke-width", 3)
         .attr("fill", "white")
-    //     .on("mouseover", mouseover)
-    //     .on("mousemove", mousemove)
-    //     .on("mouseleave", mouseleave)
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
 
 }
 
 
 function selectHurricane(){
-  // workflow 2: nothing shows up
-  // create a select hurricane feedback
-  var textH = ["select a hurricane on the map"];
-
-  var selecthurricane = d3.select("#lineGraph-div")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-color", "white")
-    .style("padding", "5px")
-    .html(textH.join('<br/>'))
-    .style("color", "white")
+  var selecthurricane = d3.select("#lineGraph-div").html("<p>Select a hurricane on the map</p>")
 
   }
 
 function selectLocation(){
-  // workflow 2: nothing shows up
-  // create a select location feedback
-  var textL = ["select a location on the map"];
-
-  var selecthurricane = d3.select("#scatterplot-div")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-color", "white")
-    .style("padding", "5px")
-    .html(textL.join('<br/>'))
-    .style("color", "white")
+  var selectlocation = d3.select("#scatterplot-div").html("<p>Select a location on the map</p>")
 
   }
 
