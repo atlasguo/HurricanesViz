@@ -552,7 +552,11 @@ function applySetting(){
                     if (checkValue(curLocation, locations)){
 
                         // map the hurricanes with selected categories and year range + within the specific location!!!
+                        
+                        var curLineLayerJSON = curLineLayer.toGeoJSON();
 
+                        console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
+                        
                         $.ajax("data/polygons.json", {
                             dataType: "json",
                             success: function(data){
@@ -565,37 +569,39 @@ function applySetting(){
                                     }
                                 });
                                 
-                                /*console.log(curLocationJSON);*/
-                                var curLineLayerJSON = curLineLayer.toGeoJSON();
-                                
-                                console.log(curLineLayerJSON.features.length + " hurricanes within this location ");
-                                
-                                // update curHurIDsByLCY
-                                L.geoJson(curLineLayerJSON, {
-                                    filter: function(feature, layer){
-                                        // to get the curHurIDs
-                                        return filterSegByL(feature, layer);
+                                $.ajax("data/hurID.json", {
+                                    dataType: "json",
+                                    success: function(data){
+
+                                        // update curHurIDsByLCY
+                                        L.geoJson(data, {
+                                            filter: function(feature, layer){
+                                                // to get the curHurIDs
+                                                return filterSegByL(feature, layer);
+                                            }
+                                        });
+                                        
+                                        console.log(curHurIDsByLCY.length + " hurricanes within this location ");
+                                        
+                                        // TODO: map the hurricanes within the location
+
+                                        curLineLayer = L.geoJson(curLineLayerJSON, {
+                                            style: function (feature,layer) {
+                                                return lineStyle(feature,layer);
+                                            },
+                                            // filter by name
+                                            filter: function(feature, layer){
+                                                return filterHurByLCY(feature, layer);
+                                            }//,
+                                            // on each feature of states
+                                            //onEachFeature: lineOnEachFeature
+                                        });
+                                        $('#img').hide();
+                                        $('#mapid').show();
+                                        curMap.addLayer(curLineLayer);
+
                                     }
                                 });
-
-                                console.log(curHurIDsByLCY.length + " hurricanes within this location ");
-
-                                // TODO: map the hurricanes within the location
-
-                                curLineLayer = L.geoJson(curLineLayerJSON, {
-                                    style: function (feature,layer) {
-                                        return lineStyle(feature,layer);
-                                    },
-                                    // filter by name
-                                    filter: function(feature, layer){
-                                        return filterHurByLCY(feature, layer);
-                                    }//,
-                                    // on each feature of states
-                                    //onEachFeature: lineOnEachFeature
-                                });
-                                $('#img').hide();
-                                $('#mapid').show();
-                                curMap.addLayer(curLineLayer);
                             }
                         });
                     }
