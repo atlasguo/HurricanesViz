@@ -565,10 +565,11 @@ function applySetting(){
                                     }
                                 });
                                 
-                                console.log(curLocationJSON);
-                                
+                                /*console.log(curLocationJSON);*/
                                 var curLineLayerJSON = curLineLayer.toGeoJSON();
-
+                                
+                                console.log(curLineLayerJSON.features.length + " hurricanes within this location ");
+                                
                                 // update curHurIDsByLCY
                                 L.geoJson(curLineLayerJSON, {
                                     filter: function(feature, layer){
