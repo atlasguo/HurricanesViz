@@ -363,7 +363,7 @@ var curHurIDsByLCY = [];
 function updateExtent(layer)
 {
 	curMap.fitBounds(layer.getBounds());
-	
+
 }
 function applySetting(){
 
@@ -390,7 +390,7 @@ function applySetting(){
     //          3.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within that location
     //          3.2-no: alert: no such location
     // Scenario #2 if no: then empty location, show all the hurricanes within the year range
-	
+
 
 
 
@@ -431,10 +431,10 @@ function applySetting(){
                             // on each feature of states
                             onEachFeature: lineOnEachFeature*/
                         });
-						
-                        curMap.addLayer(curLineLayer);						
 
-						
+                        curMap.addLayer(curLineLayer);
+
+
                         // change the map extent to the hurricane
                         updateExtent(curLineLayer);
 
@@ -457,7 +457,7 @@ function applySetting(){
                                         return pointToLayer(feature, latlng);
                                     }
                                 });
-                                
+
                                 $('#img').hide();
                                 $('#mapid').show();
                                 curMap.addLayer(curPointLayer);
@@ -545,7 +545,7 @@ function applySetting(){
                     onEachFeature: lineOnEachFeature*/
                 });
 
-                console.log("# of hurricanes after cat and year: " + curHurIDsByCY.length);
+                console.log(curHurIDsByCY.length + " hurricanes after cat and year");
 
                 // only one hurricane selected after filtering by cat and year
                 if (curHurIDsByCY.length == 1){
@@ -563,30 +563,66 @@ function applySetting(){
 
                         // map the hurricanes with selected categories and year range + within the specific location!!!
 
+                        var curLineLayerJSON = curLineLayer.toGeoJSON();
+
+                        console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
+
                         $.ajax("data/polygons.json", {
                             dataType: "json",
                             success: function(data){
 
-                                // to assign the location feature to curLocationJSON
+                                // update curLocationJSON
                                 L.geoJson(data, {
                                     // filter by location
                                     filter: function(feature, layer){
                                         return filterPolygonByL(feature, layer);
                                     }
                                 });
-								
+
 								// change the map extent to the location
 								console.log(curLocationJSON);
 								curLocationLayer = L.geoJson(curLocationJSON);
 								updateExtent(curLocationLayer);
 
-                                var curLineLayerJSON = curLineLayer.toGeoJSON();
+                                $.ajax("data/hurID.json", {
+                                    dataType: "json",
+                                    success: function(data){
 
-                                // update curHurIDsByLCY
-                                L.geoJson(curLineLayerJSON, {
-                                    filter: function(feature, layer){
-                                        // to get the curHurIDs
-                                        return filterSegByL(feature, layer);
+                                        // update curHurIDsByLCY
+                                        var hurLayerByL = L.geoJson(data, {
+                                            filter: function(feature, layer){
+                                                // to get the curHurIDs
+                                                return filterLineByL(feature, layer);
+                                            }
+                                        });
+
+                                        // update curHurIDsByLCY
+                                        L.geoJson(hurLayerByL.toGeoJSON(), {
+                                            filter: function(feature, layer){
+                                                // to get the curHurIDs
+                                                return filterSegByL(feature, layer);
+                                            }
+                                        });
+
+                                        console.log(curHurIDsByLCY.length + " hurricanes within this location ");
+
+                                        // TODO: map the hurricanes within the location
+
+                                        curLineLayer = L.geoJson(curLineLayerJSON, {
+                                            style: function (feature,layer) {
+                                                return lineStyle(feature,layer);
+                                            },
+                                            // filter by curHurIDsByLCY
+                                            filter: function(feature, layer){
+                                                return filterHurByLCY(feature, layer);
+                                            }//,
+                                            // on each feature of states
+                                            //onEachFeature: lineOnEachFeature
+                                        });
+                                        $('#img').hide();
+                                        $('#mapid').show();
+                                        curMap.addLayer(curLineLayer);
+
                                     }
                                 });
 
@@ -608,7 +644,7 @@ function applySetting(){
                                 $('#img').hide();
                                 $('#mapid').show();
                                 curMap.addLayer(curLineLayer);
-								
+
 								// change the map extent to the hurricane
 								//updateExtent(curLineLayer);
                             }
@@ -626,7 +662,7 @@ function applySetting(){
                     $('#img').hide();
                     $('#mapid').show();
                     curMap.addLayer(curLineLayer);
-					
+
 					// change the map extent to the hurricane
                     updateExtent(curLineLayer);
                 }
@@ -638,29 +674,6 @@ function applySetting(){
 
 }
 
-function pointStyle(feature,layer){
-
-    if (feature.properties.ponden < 3) {
-        return {fillcolor: "#ef3837"};
-    }
-    else{
-        return {fillcolor: "#fee676"};
-    }
-
-
-    /*switch (feature.properties.ponden) {
-        case 'H5': return {color: "#ef3837","weight": 1};
-        case 'H4': return {color: "#f78f27","weight": 1};
-        case 'H3': return {color: "#fec140","weight": 1};
-        case 'H2': return {color: "#fee676","weight": 1};
-        case 'H1': return {color: "#fcf9ce","weight": 1};
-        case 'TS': return {color: "#58e095","weight": 1};
-        case 'TD': return {color: "#70b5e4","weight": 1};
-        case 'EX': return {color: "#cccccb","weight": 1};
-        default: return {color: "#ffffff","weight": 1};
-    }*/
-}
-
 function filterPointByByName(feature, layer){
     return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
 }
@@ -669,10 +682,10 @@ function pointToLayer(feature, latlng){
     //create marker options
     var options = {
         fillColor: "#add8e6",
-        color: "#000",
-        weight: 0,
-        opacity: 0,
-        fillOpacity: 0.6
+        color: "red",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0
     };
 
     //Give each feature's circle marker a radius based on its attribute value
@@ -726,7 +739,7 @@ function createPointPopup(feature, layer, radius){
     var MM = feature.properties.MM;
     var DD = feature.properties.DD;
     var HH = feature.properties.HH;
-    var State = feature.properties.State;
+    //var State = feature.properties.State;
     var Wind = feature.properties.Wind;
     var popden = feature.properties.popden;
 
@@ -740,16 +753,19 @@ function createPointPopup(feature, layer, radius){
 };
 
 function lineStyle(feature,layer){
+
+    var thickness = [0.5,1,2,3,4,5]
+
     switch (feature.properties.Cat) {
-            case 'H5': return {color: "#ef3837","weight": 1};
-            case 'H4': return {color: "#f78f27","weight": 1};
-            case 'H3': return {color: "#fec140","weight": 1};
-            case 'H2': return {color: "#fee676","weight": 1};
-            case 'H1': return {color: "#fcf9ce","weight": 1};
-            case 'TS': return {color: "#58e095","weight": 1};
-            case 'TD': return {color: "#70b5e4","weight": 1};
-            case 'EX': return {color: "#cccccb","weight": 1};
-            default: return {color: "#ffffff","weight": 1};
+            case 'H5': return {color: "#ef3837","weight": thickness[5]};
+            case 'H4': return {color: "#f78f27","weight": thickness[4]};
+            case 'H3': return {color: "#fec140","weight": thickness[3]};
+            case 'H2': return {color: "#fee676","weight": thickness[2]};
+            case 'H1': return {color: "#fcf9ce","weight": thickness[1]};
+            case 'TS': return {color: "#58e095","weight": thickness[1]};
+            case 'TD': return {color: "#70b5e4","weight": thickness[1]};
+            case 'EX': return {color: "#cccccb","weight": thickness[1]};
+            default: return {color: "#ffffff","weight": thickness[0]};
         }
 }
 
@@ -794,7 +810,9 @@ function filterPolygonByL(feature, layer){
     return false;
 }
 
+function filterLineByL(feature, layer){
 
+}
 // feature here is filtered by cat and year already
 function filterSegByL(feature, layer){
     var isOverlap = turf.lineIntersect(feature,curLocationJSON);
