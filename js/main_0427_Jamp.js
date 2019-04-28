@@ -617,29 +617,6 @@ function applySetting(){
 
 }
 
-function pointStyle(feature,layer){
-
-    if (feature.properties.ponden < 3) {
-        return {fillcolor: "#ef3837"};
-    }
-    else{
-        return {fillcolor: "#fee676"};
-    }
-
-
-    /*switch (feature.properties.ponden) {
-        case 'H5': return {color: "#ef3837","weight": 1};
-        case 'H4': return {color: "#f78f27","weight": 1};
-        case 'H3': return {color: "#fec140","weight": 1};
-        case 'H2': return {color: "#fee676","weight": 1};
-        case 'H1': return {color: "#fcf9ce","weight": 1};
-        case 'TS': return {color: "#58e095","weight": 1};
-        case 'TD': return {color: "#70b5e4","weight": 1};
-        case 'EX': return {color: "#cccccb","weight": 1};
-        default: return {color: "#ffffff","weight": 1};
-    }*/
-}
-
 function filterPointByByName(feature, layer){
     return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
 }
@@ -648,10 +625,10 @@ function pointToLayer(feature, latlng){
     //create marker options
     var options = {
         fillColor: "#add8e6",
-        color: "#000",
-        weight: 0,
-        opacity: 0,
-        fillOpacity: 0.6
+        color: "red",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0
     };
 
     //Give each feature's circle marker a radius based on its attribute value
@@ -705,7 +682,7 @@ function createPointPopup(feature, layer, radius){
     var MM = feature.properties.MM;
     var DD = feature.properties.DD;
     var HH = feature.properties.HH;
-    var State = feature.properties.State;
+    //var State = feature.properties.State;
     var Wind = feature.properties.Wind;
     var popden = feature.properties.popden;
 
@@ -720,15 +697,15 @@ function createPointPopup(feature, layer, radius){
 
 function lineStyle(feature,layer){
     switch (feature.properties.Cat) {
-            case 'H5': return {color: "#ef3837","weight": 1};
-            case 'H4': return {color: "#f78f27","weight": 1};
-            case 'H3': return {color: "#fec140","weight": 1};
-            case 'H2': return {color: "#fee676","weight": 1};
-            case 'H1': return {color: "#fcf9ce","weight": 1};
-            case 'TS': return {color: "#58e095","weight": 1};
-            case 'TD': return {color: "#70b5e4","weight": 1};
-            case 'EX': return {color: "#cccccb","weight": 1};
-            default: return {color: "#ffffff","weight": 1};
+            case 'H5': return {color: "#ef3837","weight": 2};
+            case 'H4': return {color: "#f78f27","weight": 2};
+            case 'H3': return {color: "#fec140","weight": 2};
+            case 'H2': return {color: "#fee676","weight": 2};
+            case 'H1': return {color: "#fcf9ce","weight": 2};
+            case 'TS': return {color: "#58e095","weight": 2};
+            case 'TD': return {color: "#70b5e4","weight": 2};
+            case 'EX': return {color: "#cccccb","weight": 2};
+            default: return {color: "#ffffff","weight": 2};
         }
 }
 
