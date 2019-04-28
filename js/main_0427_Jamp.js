@@ -564,7 +564,9 @@ function applySetting(){
                                         return filterPolygonByL(feature, layer);
                                     }
                                 });
-
+                                
+                                console.log(curLocationJSON);
+                                
                                 var curLineLayerJSON = curLineLayer.toGeoJSON();
 
                                 // update curHurIDsByLCY
@@ -696,16 +698,19 @@ function createPointPopup(feature, layer, radius){
 };
 
 function lineStyle(feature,layer){
+    
+    var thickness = [0.5,1,2,3,4,5]
+    
     switch (feature.properties.Cat) {
-            case 'H5': return {color: "#ef3837","weight": 2};
-            case 'H4': return {color: "#f78f27","weight": 2};
-            case 'H3': return {color: "#fec140","weight": 2};
-            case 'H2': return {color: "#fee676","weight": 2};
-            case 'H1': return {color: "#fcf9ce","weight": 2};
-            case 'TS': return {color: "#58e095","weight": 2};
-            case 'TD': return {color: "#70b5e4","weight": 2};
-            case 'EX': return {color: "#cccccb","weight": 2};
-            default: return {color: "#ffffff","weight": 2};
+            case 'H5': return {color: "#ef3837","weight": thickness[5]};
+            case 'H4': return {color: "#f78f27","weight": thickness[4]};
+            case 'H3': return {color: "#fec140","weight": thickness[3]};
+            case 'H2': return {color: "#fee676","weight": thickness[2]};
+            case 'H1': return {color: "#fcf9ce","weight": thickness[1]};
+            case 'TS': return {color: "#58e095","weight": thickness[1]};
+            case 'TD': return {color: "#70b5e4","weight": thickness[1]};
+            case 'EX': return {color: "#cccccb","weight": thickness[1]};
+            default: return {color: "#ffffff","weight": thickness[0]};
         }
 }
 
