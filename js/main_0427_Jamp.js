@@ -485,7 +485,6 @@ function applySetting(){
 
                             }
                         });
-
                     }
                 });
 
@@ -548,13 +547,6 @@ function applySetting(){
                 console.log("");
                 console.log(curHurIDsByCY.length + " hurricanes after cat and year");
 
-                // only one hurricane selected after filtering by cat and year
-                if (curHurIDsByCY.length == 1){
-                    // Map: Zoom to the hurricane line; Add points;
-
-                    // Info panel: individual hurricane graph should update
-                }
-
                 // then check if curLocation has input:
                 // Scenario #3 if yes - curLocation is not empty
                 if (curLocation != "") {
@@ -605,7 +597,62 @@ function applySetting(){
                                         });
 
                                         console.log(curHurIDsByLCY.length + " hurricanes within this location ");
+                                        
+                                        if (curHurIDsByCY.length <= 5){
+                                            // Map: Zoom to the hurricane line; Add points;
+                                            // Info panel: individual hurricane graph should update;
+                                            // add the points to the map
+                                            $.ajax("data/point.json", {
+                                                dataType: "json",
+                                                success: function(data){
 
+                                                    // Define the geojson layer and add it to the map
+                                                    curPointLayer = L.geoJson(data, {
+                                                        /*style: function(feature,layer){
+                                                            return pointStyle(feature,layer);
+                                                        },*/
+                                                        // filter by name
+                                                        filter: function(feature, layer){
+                                                            return filterPointByByIDs(feature, layer);
+                                                        },
+                                                        // on each feature of states
+                                                        pointToLayer: function(feature, latlng){
+                                                            return pointToLayer(feature, latlng);
+                                                        }
+                                                    });
+
+                                                    curMap.addLayer(curPointLayer);
+
+
+                                                    var graphData = [];
+
+                                                    curPointLayer.eachLayer(function(layer){
+                                                      var day = layer.feature.properties.DD;
+                                                      var month = layer.feature.properties.MM;
+                                                      var year = layer.feature.properties.YYYY;
+                                                      var date = year + "-" + month + "-" + day;
+                                                      date = d3.timeParse("%Y-%m-%d")(date)
+                                                      var cur_wind = layer.feature.properties.Wind;
+
+                                                      var new_entry = {"date": date, "value": cur_wind}
+                                                      graphData.push(new_entry)
+
+
+                                                    });
+                                                    /*console.log(graphData)；*/
+
+                                                    createLineGraph(graphData);
+
+
+                                                }
+                                            });
+                                        }
+
+                                        
+                                        
+                                        
+                                        
+                                        
                                         // TODO: map the hurricanes within the location
 
                                         curLineLayer = L.geoJson(curLineLayerJSON, {
@@ -637,6 +684,59 @@ function applySetting(){
                 }
                 // Scenario #2: if locationInput is empty, directly map this curLineLayer
                 else{
+                    // only one hurricane selected after filtering by cat and year
+                    if (curHurIDsByCY.length == 1){
+                        // Map: Zoom to the hurricane line; Add points;
+                        // Info panel: individual hurricane graph should update;
+                        // add the points to the map
+                        $.ajax("data/point.json", {
+                            dataType: "json",
+                            success: function(data){
+
+                                // Define the geojson layer and add it to the map
+                                curPointLayer = L.geoJson(data, {
+                                    /*style: function(feature,layer){
+                                        return pointStyle(feature,layer);
+                                    },*/
+                                    // filter by name
+                                    filter: function(feature, layer){
+                                        return filterPointByByName(feature, layer);
+                                    },
+                                    // on each feature of states
+                                    pointToLayer: function(feature, latlng){
+                                        return pointToLayer(feature, latlng);
+                                    }
+                                });
+
+                                curMap.addLayer(curPointLayer);
+
+
+                                var graphData = [];
+
+                                curPointLayer.eachLayer(function(layer){
+                                  var day = layer.feature.properties.DD;
+                                  var month = layer.feature.properties.MM;
+                                  var year = layer.feature.properties.YYYY;
+                                  var date = year + "-" + month + "-" + day;
+                                  date = d3.timeParse("%Y-%m-%d")(date)
+                                  var cur_wind = layer.feature.properties.Wind;
+
+                                  var new_entry = {"date": date, "value": cur_wind}
+                                  graphData.push(new_entry)
+
+
+                                });
+                                /*console.log(graphData)；*/
+
+                                createLineGraph(graphData);
+
+
+                            }
+                        });
+                    }
+                    
+                    
+                    
                     $('#img').hide();
                     $('#mapid').show();
                     curMap.addLayer(curLineLayer);
@@ -654,6 +754,11 @@ function applySetting(){
 
 function filterPointByByName(feature, layer){
     return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
+}
+
+function filterPointByByIDs(feature, layer){
+    return (checkValue(feature.properties.HurID, curHurIDsByLCY) && feature.properties.popden > 0);
+
 }
 
 function pointToLayer(feature, latlng){
