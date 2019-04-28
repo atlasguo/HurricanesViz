@@ -612,9 +612,9 @@ function applySetting(){
 
                                                     // Define the geojson layer and add it to the map
                                                     curPointLayer = L.geoJson(data, {
-                                                        /*style: function(feature,layer){
-                                                            return pointStyle(feature,layer);
-                                                        },*/
+                                                        //style: function(feature,layer){
+                                                        //    return pointStyle(feature,layer);
+                                                        //},
                                                         // filter by name
                                                         filter: function(feature, layer){
                                                             return filterPointByByIDs(feature, layer);
@@ -627,30 +627,26 @@ function applySetting(){
 
                                                     curMap.addLayer(curPointLayer);
 
+                                                    if (curHurIDsByLCY.length == 1){
+                                                        var graphData = [];
 
-                                                    var graphData = [];
+                                                        curPointLayer.eachLayer(function(layer){
+                                                              var day = layer.feature.properties.DD;
+                                                              var month = layer.feature.properties.MM;
+                                                              var year = layer.feature.properties.YYYY;
+                                                              var date = year + "-" + month + "-" + day;
+                                                              date = d3.timeParse("%Y-%m-%d")(date)
+                                                              var cur_wind = layer.feature.properties.Wind;
 
-                                                    curPointLayer.eachLayer(function(layer){
-                                                      var day = layer.feature.properties.DD;
-                                                      var month = layer.feature.properties.MM;
-                                                      var year = layer.feature.properties.YYYY;
-                                                      var date = year + "-" + month + "-" + day;
-                                                      date = d3.timeParse("%Y-%m-%d")(date)
-                                                      var cur_wind = layer.feature.properties.Wind;
+                                                              var new_entry = {"date": date, "value": cur_wind}
+                                                              graphData.push(new_entry)
+                                                        });
 
-                                                      var new_entry = {"date": date, "value": cur_wind}
-                                                      graphData.push(new_entry)
-
-
-                                                    });
-                                                    /*console.log(graphData)；*/
-
-                                                    createLineGraph(graphData);
-
-
+                                                        createLineGraph(graphData);
+                                                    }
                                                 }
-                                            });
-                                        }
+                                            }); // end of ajax - points.json
+                                        }// end of adding points in scenario #3 when the # of hurricanes is <= 5
 
                                         // TODO: map the hurricanes within the location
 
@@ -665,15 +661,15 @@ function applySetting(){
                                             // on each feature of states
                                             //onEachFeature: lineOnEachFeature
                                         });
+                                        
                                         $('#img').hide();
                                         $('#mapid').show();
                                         curMap.addLayer(curLineLayer);
-
-                                    }
-                                });
-                            }
-                        });
-                    }
+                                    }});// ajax - hurID.json
+ 
+                                }
+                        }); // ajax - polygons.json
+                    }// end of scenario #3 if location is found
                     // if not found:
                     else{
                         $('#img').hide();
