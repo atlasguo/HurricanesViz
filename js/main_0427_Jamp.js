@@ -535,7 +535,7 @@ function applySetting(){
                     onEachFeature: lineOnEachFeature*/
                 });
 
-                console.log("# of hurricanes after cat and year: " + curHurIDsByCY.length);
+                console.log(curHurIDsByCY.length + " hurricanes after cat and year");
 
                 // only one hurricane selected after filtering by cat and year
                 if (curHurIDsByCY.length == 1){
@@ -561,7 +561,7 @@ function applySetting(){
                             dataType: "json",
                             success: function(data){
 
-                                // to assign the location feature to curLocationJSON
+                                // update curLocationJSON
                                 L.geoJson(data, {
                                     // filter by location
                                     filter: function(feature, layer){
@@ -572,9 +572,17 @@ function applySetting(){
                                 $.ajax("data/hurID.json", {
                                     dataType: "json",
                                     success: function(data){
-
+                                        
                                         // update curHurIDsByLCY
-                                        L.geoJson(data, {
+                                        var hurLayerByL = L.geoJson(data, {
+                                            filter: function(feature, layer){
+                                                // to get the curHurIDs
+                                                return filterLineByL(feature, layer);
+                                            }
+                                        });
+                                        
+                                        // update curHurIDsByLCY
+                                        L.geoJson(hurLayerByL.toGeoJSON(), {
                                             filter: function(feature, layer){
                                                 // to get the curHurIDs
                                                 return filterSegByL(feature, layer);
@@ -589,7 +597,7 @@ function applySetting(){
                                             style: function (feature,layer) {
                                                 return lineStyle(feature,layer);
                                             },
-                                            // filter by name
+                                            // filter by curHurIDsByLCY
                                             filter: function(feature, layer){
                                                 return filterHurByLCY(feature, layer);
                                             }//,
@@ -762,7 +770,9 @@ function filterPolygonByL(feature, layer){
     return false;
 }
 
+function filterLineByL(feature, layer){
 
+}
 // feature here is filtered by cat and year already
 function filterSegByL(feature, layer){
     var isOverlap = turf.lineIntersect(feature,curLocationJSON);
