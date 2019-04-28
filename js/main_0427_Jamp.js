@@ -144,7 +144,7 @@ function urbanStyle(feature) {
 /*function filterStateByName(feature, layer){
     return feature.properties.NAME == curLocation; // the selected state
 }*/
-
+var countSelectState = 0;
 function stateOnEachFeature(feature, layer){
 
     //popup content is now just the city name
@@ -164,11 +164,12 @@ function stateOnEachFeature(feature, layer){
             this.closePopup();
         },
         click: function(e) {
+            countSelectState++;
             this.openPopup();
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
-            if (selection != e.target){
+            if (selection != e.target || (selection == e.target && (countSelectState % 2 == 1))){
                 curLocation = feature.properties.NAME;
                 /*zoom in*/
                 /*deselect??*/
@@ -182,7 +183,7 @@ function stateOnEachFeature(feature, layer){
         }
     });
 }
-
+var countSelectUrban = 0;
 function urbanOnEachFeature(feature, layer){
 
     //popup content is now just the city name
@@ -202,10 +203,11 @@ function urbanOnEachFeature(feature, layer){
             this.closePopup();
         },
         click: function(e) {
+            countSelectUrban++;
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
-            if (selection != e.target){
+            if (selection != e.target || (selection == e.target && (countSelectUrban % 2 == 1))){
                 curLocation = feature.properties.NAME;
                 /*zoom in*/
                 /*deselect??*/
@@ -580,18 +582,37 @@ function applySetting(){
                             dataType: "json",
                             success: function(data){
                                 
-                                // update curLocationJSON
-                                curLocationLayer = L.geoJson(data, {
-                                    style: {
-                                        "fillColor": 'blue',
-                                        "fillOpacity": 0.7,
-                                        "weight": 0
-                                    },
-                                    // filter by location
-                                    filter: function(feature, layer){
-                                        return filterPolygonByL(feature, layer);
-                                    }
-                                });
+                                // if it is a city
+                                if (curLocation.indexOf(',') > -1){
+                                    // update curLocationJSON
+                                    curLocationLayer = L.geoJson(curUrbanLayer.toGeoJSON(), {
+                                        style: {
+                                            "fillColor": 'blue',
+                                            "fillOpacity": 0.7,
+                                            "weight": 0
+                                        },
+                                        // filter by location
+                                        filter: function(feature, layer){
+                                            return filterPolygonByL(feature, layer);
+                                        }
+                                    });
+                                }
+                                // if it is a state
+                                else{
+                                    // update curLocationJSON
+                                    curLocationLayer = L.geoJson(data, {
+                                        style: {
+                                            "fillColor": 'blue',
+                                            "fillOpacity": 0.7,
+                                            "weight": 0
+                                        },
+                                        // filter by location
+                                        filter: function(feature, layer){
+                                            return filterPolygonByL(feature, layer);
+                                        }
+                                    });
+                                
+                                }
 
 								// change the map extent to the location
 								updateExtent(curLocationLayer);
@@ -604,7 +625,7 @@ function applySetting(){
                                         // filter hurricanes by curHurIDsByCY
                                         var hurLayerByL = L.geoJson(data, {
                                             filter: function(feature, layer){
-                                                return filterLineByL(feature, layer);
+                                                return filterLineByCY(feature, layer);
                                             }
                                         });
 
@@ -612,7 +633,7 @@ function applySetting(){
                                         L.geoJson(hurLayerByL.toGeoJSON(), {
                                             filter: function(feature, layer){
                                                 // to get the curHurIDs
-                                                return filterSegByL(feature, layer);
+                                                return filterLineByL(feature, layer);
                                             }
                                         });
 
@@ -905,12 +926,12 @@ function filterPolygonByL(feature, layer){
     return false;
 }
 
-function filterLineByL(feature, layer){
+function filterLineByCY(feature, layer){
     return (checkValue(feature.properties.HurID,curHurIDsByCY));
 }
 
 // feature here is filtered by cat and year already
-function filterSegByL(feature, layer){
+function filterLineByL(feature, layer){
     var isOverlap = turf.lineIntersect(feature,curLocationJSON);
     if (isOverlap.features.length > 0){
         if (!checkValue(feature.properties.HurID,curHurIDsByLCY)){
