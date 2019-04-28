@@ -602,7 +602,7 @@ function applySetting(){
 
                                         console.log(curHurIDsByLCY.length + " hurricanes within this location ");
                                         
-                                        if (curHurIDsByCY.length <= 5){
+                                        if (curHurIDsByLCY.length <= 5){
                                             // Map: Zoom to the hurricane line; Add points;
                                             // Info panel: individual hurricane graph should update;
                                             // add the points to the map
@@ -652,11 +652,6 @@ function applySetting(){
                                             });
                                         }
 
-                                        
-                                        
-                                        
-                                        
-                                        
                                         // TODO: map the hurricanes within the location
 
                                         curLineLayer = L.geoJson(curLineLayerJSON, {
