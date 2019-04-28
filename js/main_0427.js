@@ -366,10 +366,10 @@ function applySetting(){
 
     $('#mapid').hide();
     $('#img').show();
-    
+
     countC2 = 0;
     countC3 = 0;
-    
+
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
@@ -381,14 +381,14 @@ function applySetting(){
     //          0.2-no, alert: no such specific hurricane!
     // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
     // then check if curLocation has input:
-    
+
     // Scenario #3 if yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation
     //          3.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within that location
     //          3.2-no: alert: no such location
     // Scenario #2 if no: then empty location, show all the hurricanes within the year range
 
 
-    
+
     // Scenario #1: if hurricane name is abled, check if it is empty
     if (document.getElementById("hurricaneInput").disabled == false) {
         if (curHurricane == ""){
@@ -423,15 +423,96 @@ function applySetting(){
                             onEachFeature: lineOnEachFeature*/
                         });
                         curMap.addLayer(curLineLayer);
-                        
+
                         // change the map extent to the hurricane
-                        
-                        
-                        
-                        // update the hurricane line graph
-                        
-                        
-                        
+
+
+                        //
+                        // // // update the hurricane line graph
+                        // function createLineGraph(){
+                        //
+                        //   // When reading the csv, I must format variables:
+                        //   function(d){
+                        //     return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+                        //   },
+                        //
+                        //   // Now I can use this dataset:
+                        //   function(data) {
+                        //
+                        //     // Add X axis --> it is a date format
+                        //     var x = d3.scaleTime()
+                        //       .domain(d3.extent(data, function(d) { return d.date; }))
+                        //       .range([ 0, width ]);
+                        //     svg.append("g")
+                        //       .attr("transform", "translate(0," + height + ")")
+                        //       .call(d3.axisBottom(x));
+                        //
+                        //     // Add Y axis
+                        //     var y = d3.scaleLinear()
+                        //       .domain( [8000, 9200])
+                        //       .range([ height, 0 ]);
+                        //     svg.append("g")
+                        //       .call(d3.axisLeft(y));
+                        //
+                        //     // Add the line
+                        //     svg.append("path")
+                        //       .datum(data)
+                        //       .attr("fill", "none")
+                        //       .attr("stroke", "black")
+                        //       .attr("stroke-width", 1.5)
+                        //       .attr("d", d3.line()
+                        //         .curve(d3.curveBasis) // Just add that to have a curve instead of segments
+                        //         .x(function(d) { return x(d.date) })
+                        //         .y(function(d) { return y(d.value) })
+                        //         )
+                        //
+                        //     // create a tooltip
+                        //     var Tooltip = d3.select("#lineGraph-div")
+                        //       .append("div")
+                        //       .style("opacity", 0)
+                        //       .attr("class", "tooltip")
+                        //       .style("background-color", "white")
+                        //       .style("border", "solid")
+                        //       .style("border-width", "2px")
+                        //       .style("border-radius", "5px")
+                        //       .style("padding", "5px")
+                        //
+                        //     // Three function that change the tooltip when user hover / move / leave a cell
+                        //     var mouseover = function(d) {
+                        //       Tooltip
+                        //         .style("opacity", 1)
+                        //     }
+                        //     var mousemove = function(d) {
+                        //       Tooltip
+                        //         .html("Exact value: " + d.value)
+                        //         .style("left", (d3.mouse(this)[0]+70) + "px")
+                        //         .style("top", (d3.mouse(this)[1]) + "px")
+                        //     }
+                        //     var mouseleave = function(d) {
+                        //       Tooltip
+                        //         .style("opacity", 0)
+                        //     }
+                        //
+                        //     // Add the points
+                        //     svg
+                        //       .append("g")
+                        //       .selectAll("dot")
+                        //       .data(data)
+                        //       .enter()
+                        //       .append("circle")
+                        //         .attr("class", "myCircle")
+                        //         .attr("cx", function(d) { return x(d.date) } )
+                        //         .attr("cy", function(d) { return y(d.value) } )
+                        //         .attr("r", 4)
+                        //         .attr("stroke", "#69b3a2")
+                        //         .attr("stroke-width", 3)
+                        //         .attr("fill", "white")
+                        //         .on("mouseover", mouseover)
+                        //         .on("mousemove", mousemove)
+                        //         .on("mouseleave", mouseleave)
+                        //   })
+                        // }
+
                         // add the points to the map
                         $.ajax("data/point.json", {
                             dataType: "json",
@@ -454,13 +535,35 @@ function applySetting(){
                                     // on each feature of states
                                     onEachFeature: pointOnEachFeature*/
                                 });
+                                console.log(curPointLayer)
                                 $('#img').hide();
                                 $('#mapid').show();
                                 curMap.addLayer(curPointLayer);
-                                
+
+
+                                var data = [];
+
+                                curPointLayer.eachLayer(function(layer){
+                                  var day = layer.feature.properties.DD;
+                                  var month = layer.feature.properties.MM;
+                                  var year = layer.feature.properties.YYYY;
+                                  var date = year + "-" + month + "-" + day;
+                                  date = d3.timeParse("%Y-%m-%d")(date)
+                                  var cur_wind = layer.feature.properties.Wind;
+
+                                  var new_entry = {"date": date, "value": cur_wind}
+                                  data.push(new_entry)
+
+
+                                });
+                                console.log(data)
+
+                                createLineGraph(data);
+
+
                             }
                         });
-                        
+
                     }
                 });
 
@@ -565,7 +668,7 @@ function applySetting(){
                                         });
 
                                         console.log(countC3 + " hurricanes within this location ");
-                                        
+
                                         // TODO: map the hurricanes within the location
 
                                         curLineLayer = L.geoJson(curLineToGeoJSON, {
@@ -593,7 +696,7 @@ function applySetting(){
                         alert("No location named " + curLocation + "!");
                     }
                 }
-                // Scenario #2: if locationInput is empty, directly map this curLineLayer 
+                // Scenario #2: if locationInput is empty, directly map this curLineLayer
                 else{
                     $('#img').hide();
                     $('#mapid').show();
@@ -608,7 +711,7 @@ function applySetting(){
 }
 
 function pointStyle(feature,layer){
-    
+
 
 }
 
@@ -630,6 +733,10 @@ function filterHurByName(feature, layer){
     return (feature.properties.hurName == curHurricane)
 }
 
+function filterPointByHurID(feature, layer){
+    return (feature.properties.hurName == curHurricane)
+}
+
 function filterSegByCat(feature, layer, values){
     // "values" is a vector containing all the selected categories
     if (checkValue(feature.properties.Cat, values)){
@@ -643,7 +750,7 @@ function filterSegByCat(feature, layer, values){
 function filterHurByCY(feature, layer){
 
     // find all the hurricanes that have at least one segment which meets the selected categories and the selected year range
-    
+
     return (checkValue(feature.properties.HurID, curHurIDs) &&
             feature.properties.YYYY >= curYearMin &&
             feature.properties.YYYY <= curYearMax);
@@ -709,17 +816,13 @@ function createLegend(map){
   //Create a SequenceControl object
   var LegendControl = L.Control.extend({
       options: {
-          position: 'topleft'
+          position: 'topright'
       },
       onAdd: function (map) {
         //Create a DOM container to append to on to the map
         var container = L.DomUtil.create('div', 'legend-control-container');
         //Append the title
         $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
-
-        // //Append the attribute value info
-        // info = ("<p id = 'allVals'>Max: 100 || Mean: 54.20 || Min: 8.40</p>")
-        // $(container).append(info);        //$('#panel').append('<input class="range-slider" type="range">');
 
         //Append the legend symbols
         var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> city area</text><br>'
@@ -744,13 +847,10 @@ function createLegend(map){
         hCategory += '<img src = img/SVG/ex.svg width=45>'
         hCategory += '<text> EX</text><br>'
 
-        var hPressure = '<text>Hurricane Pressures</text>'
-
         //add attribute legend to container
         $(container).append(cityArea);
         $(container).append(stateBoundary);
         $(container).append(hCategory);
-        $(container).append(hPressure);
 
         return container;
       }
@@ -850,6 +950,206 @@ function createScatter() {
 }
 
 createScatter();
+
+// line graph
+// function createLineGraph(x_vals, y_vals){
+//
+//     // set the dimensions and margins of the graph
+//   var margin = {top: 10, right: 30, bottom: 30, left: 60},
+//       width = 460 - margin.left - margin.right,
+//       height = 400 - margin.top - margin.bottom;
+//
+//   // append the svg object to the body of the page
+//   var svg = d3.select("#lineGraph-div")
+//     .append("svg")
+//       .attr("width", width + margin.left + margin.right)
+//       .attr("height", height + margin.top + margin.bottom)
+//     .append("g")
+//       .attr("transform",
+//             "translate(" + margin.left + "," + margin.top + ")");
+//
+//   // Add X axis --> it is a date format
+//   var x = d3.scaleLinear()
+//     .domain([0, 6])
+//     .range([ 0, width ]);
+//   svg.append("g")
+//     .attr("transform", "translate(0," + height + ")")
+//     .call(d3.axisBottom(x));
+//
+//
+//
+//   // Add Y axis
+//   var y = d3.scaleLinear()
+//     .domain( [0, 6])
+//     .range([ height, 0 ]);
+//   svg.append("g")
+//     .call(d3.axisLeft(y));
+//   console.log(svg)
+//   //
+//   // Add the line
+//   // svg.append("path")
+//   //   .attr("fill", "none")
+//   //   .attr("stroke", "black")
+//   //   .attr("stroke-width", 1.5)
+//   //   .attr("d", d3.line()
+//   //     .curve(d3.curveBasis) // Just add that to have a curve instead of segments
+//   //     .x(x_vals)
+//   //     .y(y_vals)
+//   //     )
+//
+//       // Add the points
+//       svg
+//         .append("g")
+//         .selectAll("dot")
+//         .enter()
+//         .append("circle")
+//           .attr("class", "myCircle")
+//           .attr("cx",x(3) )
+//           .attr("cy",y(3) )
+//           .attr("r", 4)
+//           .attr("stroke", "#69b3a2")
+//           .attr("stroke-width", 3)
+//           .attr("fill", "white")
+//   //         // .on("mouseover", mouseover)
+//   //         // .on("mousemove", mousemove)
+//   //         // .on("mouseleave", mouseleave)
+//
+// }
+function createLineGraph(data){
+  //remove previous contents
+  var max = Math.max.apply(Math,data.map(function(o){return o.value;}))
+  var min = Math.min.apply(Math,data.map(function(o){return o.value;}))
+  document.getElementById("lineGraph-div").innerHTML = "";
+
+  // set the dimensions and margins of the graph
+  var margin = {top: 10, right: 30, bottom: 30, left: 50},
+      width = 300 - margin.left - margin.right,
+      height = 200 - margin.top - margin.bottom;
+
+  // append the svg object to the body of the page
+  var svg = d3.select("#lineGraph-div")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+  //Read the data
+
+  // When reading the csv, I must format variables:
+  // function(d){
+  //   return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  // }
+
+  // Now I can use this dataset:
+    console.log(typeof(data))
+    console.log(data)
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+    //
+    // // Add Y axis
+    var y = d3.scaleLinear()
+      .domain( [min - 10, max+10])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .curve(d3.curveBasis) // Just add that to have a curve instead of segments
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) })
+        )
+
+    // create a tooltip
+    // var Tooltip = d3.select("#lineGraph-div")
+    //   .append("div")
+    //   .style("opacity", 0)
+    //   .attr("class", "tooltip")
+    //   .style("background-color", "white")
+    //   .style("border", "solid")
+    //   .style("border-width", "2px")
+    //   .style("border-radius", "5px")
+    //   .style("padding", "5px")
+    //
+    // // Three function that change the tooltip when user hover / move / leave a cell
+    // var mouseover = function(d) {
+    //   Tooltip
+    //     .style("opacity", 1)
+    // }
+    // var mousemove = function(d) {
+    //   Tooltip
+    //     .html("Exact value: " + d.value)
+    //     .style("left", (d3.mouse(this)[0]+70) + "px")
+    //     .style("top", (d3.mouse(this)[1]) + "px")
+    // }
+    // var mouseleave = function(d) {
+    //   Tooltip
+    //     .style("opacity", 0)
+    // }
+
+    // // Add the points
+    svg
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("class", "myCircle")
+        .attr("cx", function(d) { return x(d.date) } )
+        .attr("cy", function(d) { return y(d.value) } )
+        .attr("r", 4)
+        .attr("stroke", "#69b3a2")
+        .attr("stroke-width", 3)
+        .attr("fill", "white")
+    //     .on("mouseover", mouseover)
+    //     .on("mousemove", mousemove)
+    //     .on("mouseleave", mouseleave)
+
+}
+
+
+function selectHurricane(){
+  // workflow 2: nothing shows up
+  // create a select hurricane feedback
+  var textH = ["select a hurricane on the map"];
+
+  var selecthurricane = d3.select("#lineGraph-div")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-color", "white")
+    .style("padding", "5px")
+    .html(textH.join('<br/>'))
+    .style("color", "white")
+
+  }
+
+function selectLocation(){
+  // workflow 2: nothing shows up
+  // create a select location feedback
+  var textL = ["select a location on the map"];
+
+  var selecthurricane = d3.select("#scatterplot-div")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-color", "white")
+    .style("padding", "5px")
+    .html(textL.join('<br/>'))
+    .style("color", "white")
+
+  }
+
 
 window.onload = initializeSiders();
 $(document).ready(createMap);
