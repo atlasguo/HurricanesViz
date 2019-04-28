@@ -567,7 +567,7 @@ function applySetting(){
 
                                 var curLineLayerJSON = curLineLayer.toGeoJSON();
 
-                                // to get the curHurIDs that intersects the location
+                                // update curHurIDsByLCY
                                 L.geoJson(curLineLayerJSON, {
                                     filter: function(feature, layer){
                                         // to get the curHurIDs
