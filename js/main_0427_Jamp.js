@@ -676,26 +676,6 @@ function applySetting(){
 
                                     }
                                 });
-
-                                console.log(curHurIDsByLCY.length + " hurricanes within this location ");
-
-                                // TODO: map the hurricanes within the location
-
-                                curLineLayer = L.geoJson(curLineLayerJSON, {
-                                    style: function (feature,layer) {
-                                        return lineStyle(feature,layer);
-                                    },
-                                    // filter by name
-                                    filter: function(feature, layer){
-                                        return filterHurByLCY(feature, layer);
-                                    }//,
-                                    // on each feature of states
-                                    //onEachFeature: lineOnEachFeature
-                                });
-                                $('#img').hide();
-                                $('#mapid').show();
-                                curMap.addLayer(curLineLayer);
-                                // createScatter(graphData);
                             }
                         });
                     }
