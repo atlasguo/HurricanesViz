@@ -535,7 +535,7 @@ function applySetting(){
                     }
                 });
 
-                // update curHurIDsByCY values
+                // update curHurIDsByCY 
                 curLineLayer = L.geoJson(data, {
                     style: function (feature,layer) {
                         return lineStyle(feature,layer);
@@ -561,7 +561,6 @@ function applySetting(){
                         // map the hurricanes with selected categories and year range + within the specific location!!!
 
                         var curLineLayerJSON = curLineLayer.toGeoJSON();
-
                         console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
 
                         $.ajax("data/polygons.json", {
@@ -584,10 +583,9 @@ function applySetting(){
                                     dataType: "json",
                                     success: function(data){
 
-                                        // filter hurricane by curHurIDsByCY
+                                        // filter hurricanes by curHurIDsByCY
                                         var hurLayerByL = L.geoJson(data, {
                                             filter: function(feature, layer){
-                                                // to get the curHurIDs
                                                 return filterLineByL(feature, layer);
                                             }
                                         });
