@@ -548,7 +548,8 @@ function applySetting(){
                     // on each feature of states
                     onEachFeature: lineOnEachFeature*/
                 });
-
+                
+                console.log("");
                 console.log(curHurIDsByCY.length + " hurricanes after cat and year");
 
                 // only one hurricane selected after filtering by cat and year
@@ -755,14 +756,14 @@ function createPointPopup(feature, layer, radius){
 
 function lineStyle(feature,layer){
 
-    var thickness = [0.5,1,2,3,4,5]
+    var thickness = [1,2,2.5,3,3.5,4,5]
 
     switch (feature.properties.Cat) {
-            case 'H5': return {color: "#ef3837","weight": thickness[5]};
-            case 'H4': return {color: "#f78f27","weight": thickness[4]};
-            case 'H3': return {color: "#fec140","weight": thickness[3]};
-            case 'H2': return {color: "#fee676","weight": thickness[2]};
-            case 'H1': return {color: "#fcf9ce","weight": thickness[1]};
+            case 'H5': return {color: "#ef3837","weight": thickness[6]};
+            case 'H4': return {color: "#f78f27","weight": thickness[5]};
+            case 'H3': return {color: "#fec140","weight": thickness[4]};
+            case 'H2': return {color: "#fee676","weight": thickness[3]};
+            case 'H1': return {color: "#fcf9ce","weight": thickness[2]};
             case 'TS': return {color: "#58e095","weight": thickness[1]};
             case 'TD': return {color: "#70b5e4","weight": thickness[1]};
             case 'EX': return {color: "#cccccb","weight": thickness[1]};
