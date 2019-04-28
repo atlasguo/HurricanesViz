@@ -648,10 +648,10 @@ function pointToLayer(feature, latlng){
     //create marker options
     var options = {
         fillColor: "#add8e6",
-        /*color: "#000",*/
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.4
+        color: "#000",
+        weight: 0,
+        opacity: 0,
+        fillOpacity: 0.6
     };
 
     //Give each feature's circle marker a radius based on its attribute value
@@ -678,7 +678,7 @@ function pointToLayer(feature, latlng){
 
     });
 
-    //return the circle marker to the L.geoJson pointToLayer option
+    //return the circle marker to the L.geoJson point To Layer option
     return layer;
 }
 
@@ -686,7 +686,7 @@ function pointToLayer(feature, latlng){
 // calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //scale factor to adjust symbol size evenly
-    var scaleFactor = 1;
+    var scaleFactor = 3;
     //area based on attribute value and scale factor
     var area = attValue * scaleFactor;
     //radius calculated based on area
