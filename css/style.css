@@ -305,6 +305,6 @@ section.range-slider input[type=range]::-moz-focus-outer {
     font-family: verdana;
     text-align:left;
     line-height: 15px;
-    background-color: lightcyan;
-    /* background-color: rgba(0,0,0,0.9); */
+    /*background-color: lightcyan;*/
+    background-color: rgba(0,0,0,0.9); 
 }
