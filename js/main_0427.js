@@ -1283,5 +1283,6 @@ function selectLocation(){
   }
 
 
+
 window.onload = initializeSiders();
 $(document).ready(createMap);
