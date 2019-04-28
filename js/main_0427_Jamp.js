@@ -81,6 +81,7 @@ function getData(map){
                 onEachFeature: stateOnEachFeature
             });
             map.addLayer(curStateLayer);
+
         }
     });
 
@@ -104,6 +105,7 @@ function getData(map){
                 onEachFeature: urbanOnEachFeature
             });
             map.addLayer(curUrbanLayer);
+
         }
     });
 
@@ -358,6 +360,11 @@ var curHurIDsByCat = [];
 var curHurIDsByCY = [];
 var curHurIDsByLCY = [];
 
+function updateExtent(layer)
+{
+	curMap.fitBounds(layer.getBounds());
+	
+}
 function applySetting(){
 
     $('#mapid').hide();
@@ -383,6 +390,7 @@ function applySetting(){
     //          3.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within that location
     //          3.2-no: alert: no such location
     // Scenario #2 if no: then empty location, show all the hurricanes within the year range
+	
 
 
 
@@ -423,10 +431,12 @@ function applySetting(){
                             // on each feature of states
                             onEachFeature: lineOnEachFeature*/
                         });
-                        curMap.addLayer(curLineLayer);
+						
+                        curMap.addLayer(curLineLayer);						
 
+						
                         // change the map extent to the hurricane
-                        
+                        updateExtent(curLineLayer);
 
                         // add the points to the map
                         $.ajax("data/point.json", {
@@ -564,6 +574,11 @@ function applySetting(){
                                         return filterPolygonByL(feature, layer);
                                     }
                                 });
+								
+								// change the map extent to the location
+								console.log(curLocationJSON);
+								curLocationLayer = L.geoJson(curLocationJSON);
+								updateExtent(curLocationLayer);
 
                                 var curLineLayerJSON = curLineLayer.toGeoJSON();
 
@@ -593,6 +608,9 @@ function applySetting(){
                                 $('#img').hide();
                                 $('#mapid').show();
                                 curMap.addLayer(curLineLayer);
+								
+								// change the map extent to the hurricane
+								//updateExtent(curLineLayer);
                             }
                         });
                     }
@@ -608,6 +626,9 @@ function applySetting(){
                     $('#img').hide();
                     $('#mapid').show();
                     curMap.addLayer(curLineLayer);
+					
+					// change the map extent to the hurricane
+                    updateExtent(curLineLayer);
                 }
             }
         });
