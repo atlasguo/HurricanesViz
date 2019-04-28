@@ -1051,8 +1051,8 @@ function createLineGraph(data){
   // }
 
   // Now I can use this dataset:
-    console.log(typeof(data))
-    console.log(data)
+    /*console.log(typeof(data))
+    console.log(data)*/
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
       .domain(d3.extent(data, function(d) { return d.date; }))
