@@ -468,7 +468,7 @@ function applySetting(){
 
 
                                 });
-                                console.log(graphData)
+                                /*console.log(graphData)；*/
 
                                 createLineGraph(graphData);
 
