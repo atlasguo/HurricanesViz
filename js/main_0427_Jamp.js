@@ -363,8 +363,8 @@ var curHurIDsByLCY = [];
 function updateExtent(layer)
 {
 	curMap.fitBounds(layer.getBounds());
-
 }
+
 function applySetting(){
 
     $('#mapid').hide();
@@ -580,7 +580,6 @@ function applySetting(){
                                 });
 
 								// change the map extent to the location
-								console.log(curLocationJSON);
 								curLocationLayer = L.geoJson(curLocationJSON);
 								updateExtent(curLocationLayer);
 
@@ -588,7 +587,7 @@ function applySetting(){
                                     dataType: "json",
                                     success: function(data){
 
-                                        // update curHurIDsByLCY
+                                        // filter hurricane by curHurIDsByCY
                                         var hurLayerByL = L.geoJson(data, {
                                             filter: function(feature, layer){
                                                 // to get the curHurIDs
@@ -625,28 +624,6 @@ function applySetting(){
 
                                     }
                                 });
-
-                                console.log(curHurIDsByLCY.length + " hurricanes within this location ");
-
-                                // TODO: map the hurricanes within the location
-
-                                curLineLayer = L.geoJson(curLineLayerJSON, {
-                                    style: function (feature,layer) {
-                                        return lineStyle(feature,layer);
-                                    },
-                                    // filter by name
-                                    filter: function(feature, layer){
-                                        return filterHurByLCY(feature, layer);
-                                    }//,
-                                    // on each feature of states
-                                    //onEachFeature: lineOnEachFeature
-                                });
-                                $('#img').hide();
-                                $('#mapid').show();
-                                curMap.addLayer(curLineLayer);
-
-								// change the map extent to the hurricane
-								//updateExtent(curLineLayer);
                             }
                         });
                     }
@@ -811,8 +788,9 @@ function filterPolygonByL(feature, layer){
 }
 
 function filterLineByL(feature, layer){
-
+    return (checkValue(feature.properties.HurID,curHurIDsByCY));
 }
+
 // feature here is filtered by cat and year already
 function filterSegByL(feature, layer){
     var isOverlap = turf.lineIntersect(feature,curLocationJSON);
