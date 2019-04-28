@@ -858,7 +858,10 @@ function createPointPopup(feature, layer, radius){
     var popden = feature.properties.popden;
 
     //add formatted attribute to panel content string
-    var popupContent = "<p><b>Hurricane-affected Population density: " + popden + "</b></p>";
+    var popupContent = "<p style='line-height: 0;'><b>Population affected per square mile:</b> " + Math.round(popden,2) + "</p>";
+    popupContent += "<p style='line-height: 0;'><b>Hurricane name:</b> " + hurName + "</p>";
+    popupContent += "<p style='line-height: 0;'><b>Date:</b> " + YYYY + "-" + MM + "-" + DD + "&nbsp&nbsp" + HH +":00 </p>";
+    popupContent += "<p style='line-height: 0;'><b>Wind:</b> " + Wind + " knots (kts)</p>"
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
         offset: new L.Point(0,-radius),
