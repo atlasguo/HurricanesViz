@@ -15,13 +15,13 @@ var selectedLayer;
 
 var curLineLayer;
 var curPointLayer;
+var curLocationLayer;
 
 var curMap;
 
 var curLocation;
 var curLocationJSON;
 var curHurricane;
-var curCategory;
 
 var curYearMin;
 var curYearMax;
@@ -105,7 +105,6 @@ function getData(map){
                 onEachFeature: urbanOnEachFeature
             });
             map.addLayer(curUrbanLayer);
-
         }
     });
 
@@ -169,15 +168,17 @@ function stateOnEachFeature(feature, layer){
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
-            curLocation = feature.properties.NAME;
-            /*zoom in*/
-            /*deselect??*/
-            /*coordinate with chart*/
-            e.target.setStyle(selectedStyle());
-            selection = e.target;
-            selectedLayer = curStateLayer;
+            if (selection != e.target){
+                curLocation = feature.properties.NAME;
+                /*zoom in*/
+                /*deselect??*/
+                /*coordinate with chart*/
+                e.target.setStyle(selectedStyle());
+                selection = e.target;
+                selectedLayer = curStateLayer;
 
-            L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+                L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+            }
         }
     });
 }
@@ -204,15 +205,17 @@ function urbanOnEachFeature(feature, layer){
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
-            curLocation = feature.properties.NAME;
-            /*zoom in*/
-            /*deselect??*/
-            /*coordinate with chart*/
-            e.target.setStyle(selectedStyle());
-            selection = e.target;
-            selectedLayer = curUrbanLayer;
+            if (selection != e.target){
+                curLocation = feature.properties.NAME;
+                /*zoom in*/
+                /*deselect??*/
+                /*coordinate with chart*/
+                e.target.setStyle(selectedStyle());
+                selection = e.target;
+                selectedLayer = curUrbanLayer;
 
-            L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+                L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+            }
         }
     });
 }
@@ -366,7 +369,11 @@ function updateExtent(layer)
 }
 
 function applySetting(){
-
+    
+    if (selection) {
+        selectedLayer.resetStyle(selection);
+    }
+    
     $('#mapid').hide();
     $('#img').show();
 
@@ -416,6 +423,9 @@ function applySetting(){
                         };
                         if (curLineLayer){
                             curMap.removeLayer(curLineLayer);
+                        };
+                        if (curLocationLayer){
+                            curMap.removeLayer(curLocationLayer);
                         };
 
                         // Define the geojson layer and add it to the map
@@ -527,6 +537,9 @@ function applySetting(){
                 if (curLineLayer){
                     curMap.removeLayer(curLineLayer);
                 };
+                if (curLocationLayer){
+                    curMap.removeLayer(curLocationLayer);
+                };
 
                 // update curHurIDsByCat values
                 L.geoJson(data, {
@@ -566,9 +579,14 @@ function applySetting(){
                         $.ajax("data/polygons.json", {
                             dataType: "json",
                             success: function(data){
-
+                                
                                 // update curLocationJSON
-                                L.geoJson(data, {
+                                curLocationLayer = L.geoJson(data, {
+                                    style: {
+                                        "fillColor": 'blue',
+                                        "fillOpacity": 0.7,
+                                        "weight": 0
+                                    },
                                     // filter by location
                                     filter: function(feature, layer){
                                         return filterPolygonByL(feature, layer);
@@ -576,9 +594,9 @@ function applySetting(){
                                 });
 
 								// change the map extent to the location
-								curLocationLayer = L.geoJson(curLocationJSON);
 								updateExtent(curLocationLayer);
-
+                                curMap.addLayer(curLocationLayer);
+                                
                                 $.ajax("data/hurID.json", {
                                     dataType: "json",
                                     success: function(data){
@@ -729,7 +747,6 @@ function applySetting(){
                     }
                     
                     
-                    
                     $('#img').hide();
                     $('#mapid').show();
                     curMap.addLayer(curLineLayer);
@@ -765,7 +782,7 @@ function pointToLayer(feature, latlng){
     };
 
     //Give each feature's circle marker a radius based on its attribute value
-    options.radius = calcPropRadius(feature.properties.Wind);
+    options.radius = calcPropRadius(feature.properties.popden);
 
     //create circle marker layer
     var layer = L.circleMarker(latlng, options);
@@ -796,7 +813,7 @@ function pointToLayer(feature, latlng){
 // calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //scale factor to adjust symbol size evenly
-    var scaleFactor = 3;
+    var scaleFactor = 5;
     //area based on attribute value and scale factor
     var area = attValue * scaleFactor;
     //radius calculated based on area
@@ -829,15 +846,16 @@ function createPointPopup(feature, layer, radius){
 };
 
 function lineStyle(feature,layer){
-
+    
+    var colorScheme = ["#ffff00","#fecc5c","#fd8d3c","#f03b20","#bd0026"]
     var thickness = [1,2,2.5,3,3.5,4,5]
 
     switch (feature.properties.Cat) {
-            case 'H5': return {color: "#ef3837","weight": thickness[6]};
-            case 'H4': return {color: "#f78f27","weight": thickness[5]};
-            case 'H3': return {color: "#fec140","weight": thickness[4]};
-            case 'H2': return {color: "#fee676","weight": thickness[3]};
-            case 'H1': return {color: "#fcf9ce","weight": thickness[2]};
+            case 'H5': return {color: colorScheme[4],"weight": thickness[6]};
+            case 'H4': return {color: colorScheme[3],"weight": thickness[5]};
+            case 'H3': return {color: colorScheme[2],"weight": thickness[4]};
+            case 'H2': return {color: colorScheme[1],"weight": thickness[3]};
+            case 'H1': return {color: colorScheme[0],"weight": thickness[2]};
             case 'TS': return {color: "#58e095","weight": thickness[1]};
             case 'TD': return {color: "#70b5e4","weight": thickness[1]};
             case 'EX': return {color: "#cccccb","weight": thickness[1]};
@@ -882,6 +900,7 @@ function filterHurByCY(feature, layer){
 function filterPolygonByL(feature, layer){
     if (feature.properties.NAME == curLocation) {
         curLocationJSON = feature;
+        return true;
     }
     return false;
 }
@@ -952,10 +971,10 @@ function createLegend(map){
         var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> city area</text><br>'
         var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> state boundary</text><br>'
 
-
+        // need to fixed
         var hCategory = '<text>Hurricane Categories</text><br>'
         hCategory += '<img src = img/SVG/h5.svg width=45></img>'
-        hCategory +=  '<text>  H5</text><br>'
+        hCategory += '<text> H5</text><br>'
         hCategory += '<img src = img/SVG/h4.svg width=45>'
         hCategory += '<text> H4</text><br>'
         hCategory += '<img src = img/SVG/h3.svg width=45>'
