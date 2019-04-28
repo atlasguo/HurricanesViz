@@ -565,20 +565,10 @@ function applySetting(){
                                     }
                                 });
 
-
-                                var curSegmentLayer = L.geoJson(data, {
-                                    filter: function(feature, layer){
-                                        // select hurricanes based on curHurIDs filtered by cat and year
-                                        return filterHurByCY(feature, layer);
-                                    }
-                                });
-
-                                var curSegmentLayerJSON = curSegmentLayer.toGeoJSON();
-                                console.log("# of Hurricanes after cat and year: " + curSegmentLayerJSON.features.length);
+                                var curLineLayerJSON = curLineLayer.toGeoJSON();
 
                                 // to get the curHurIDs that intersects the location
-                                curHurIDs = [];
-                                curSegmentLayer = L.geoJson(curSegmentLayerJSON, {
+                                L.geoJson(curLineLayerJSON, {
                                     filter: function(feature, layer){
                                         // to get the curHurIDs
                                         return filterSegByL(feature, layer);
@@ -589,7 +579,7 @@ function applySetting(){
 
                                 // TODO: map the hurricanes within the location
 
-                                curLineLayer = L.geoJson(curLineToGeoJSON, {
+                                curLineLayer = L.geoJson(curLineLayerJSON, {
                                     style: function (feature,layer) {
                                         return lineStyle(feature,layer);
                                     },
