@@ -16,6 +16,10 @@ h3 {
   color: #FFFFFF;
 }
 
+.myCircle:hover {
+  stroke: red;
+}
+
 .axisWhite line{
   stroke: white;
 }
