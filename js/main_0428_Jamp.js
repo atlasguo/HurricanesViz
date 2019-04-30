@@ -864,7 +864,6 @@ function applySetting() {
                                     $('#mapid').show();
                                     curMap.addLayer(curPointLayer);
 
-
                                     var graphData = [];
 
                                     curPointLayer.eachLayer(function (layer) {
