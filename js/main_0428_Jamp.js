@@ -872,15 +872,17 @@ function applySetting() {
 								createLineGraph(graphData);
 							}
 						});
+					
+					// change the map extent to the hurricane
+					updateExtent(curLineLayer);
+					
 					}
-
 
 					$('#img').hide();
 					$('#mapid').show();
 					curMap.addLayer(curLineLayer);
 
-					// change the map extent to the hurricane
-					updateExtent(curLineLayer);
+					
 				}
 			}
 		});
