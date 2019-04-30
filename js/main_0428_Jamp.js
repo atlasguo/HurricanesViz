@@ -484,7 +484,7 @@ function applySetting() {
 									},*/
 									// filter by name
 									filter: function (feature, layer) {
-										return filterPointByByName(feature, layer);
+										return filterPointByName(feature, layer);
 									},
 									// on each feature of states
 									pointToLayer: function (feature, latlng) {
@@ -584,8 +584,9 @@ function applySetting() {
 						return filterHurByCY(feature, layer);
 					}
 					/*,
-					                    // on each feature of states
-					                    onEachFeature: lineOnEachFeature*/
+                    //console.log("click for hurricane")
+                    // on each feature of states
+                    onEachFeature: lineOnEachFeature*/
 				});
 
 				console.log(curHurIDsByCY.length + " hurricanes after cat and year");
@@ -680,7 +681,7 @@ function applySetting() {
 														//},
 														// filter by name
 														filter: function (feature, layer) {
-															return filterPointByByIDs(feature, layer);
+															return filterPointByIDs(feature, layer);
 														},
 														// on each feature of states
 														pointToLayer: function (feature, latlng) {
@@ -836,7 +837,7 @@ function applySetting() {
 									},*/
 									// filter by name
 									filter: function (feature, layer) {
-										return filterPointByByIDs(feature, layer);
+										return filterPointByIDs(feature, layer);
 									},
 									// on each feature of states
 									pointToLayer: function (feature, latlng) {
@@ -890,11 +891,11 @@ function applySetting() {
 
 }
 
-function filterPointByByName(feature, layer) {
+function filterPointByName(feature, layer) {
 	return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
 }
 
-function filterPointByByIDs(feature, layer) {
+function filterPointByIDs(feature, layer) {
 	return (checkValue(feature.properties.HurID, curHurIDsByLCY) && feature.properties.popden > 0);
 
 }
@@ -1032,10 +1033,6 @@ function lineStyle(feature, layer) {
 
 function filterHurByName(feature, layer) {
 	return (feature.properties.hurName == curHurricane);
-}
-
-function filterPointByHurID(feature, layer) {
-	return (feature.properties.hurName == curHurricane)
 }
 
 function filterSegByCat(feature, layer, values) {
