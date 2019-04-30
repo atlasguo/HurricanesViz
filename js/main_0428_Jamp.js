@@ -28,118 +28,118 @@ var curYearMax;
 
 //function to instantiate the Leaflet map
 function createMap() {
-	//create the map
-	var map = L.map('mapid', {
-		center: [36, -98],
-		zoom: 4
-	});
+    //create the map
+    var map = L.map('mapid', {
+        center: [36, -98],
+        zoom: 4
+    });
 
-	// set map boundaries to restrict panning out of bounds
-	var southWest = L.latLng(0, -170),
-		northEast = L.latLng(80, -10);
-	var bounds = L.latLngBounds(southWest, northEast);
+    // set map boundaries to restrict panning out of bounds
+    var southWest = L.latLng(0, -170),
+        northEast = L.latLng(80, -10);
+    var bounds = L.latLngBounds(southWest, northEast);
 
-	map.setMaxBounds(bounds);
-	map.on('drag', function () {
-		map.panInsideBounds(bounds, {
-			animate: false
-		});
-	});
+    map.setMaxBounds(bounds);
+    map.on('drag', function () {
+        map.panInsideBounds(bounds, {
+            animate: false
+        });
+    });
 
-	curMap = map;
+    curMap = map;
 
-	// add basemap tilelayer
-	L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-		minZoom: 3,
-		attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-	}).addTo(curMap);
+    // add basemap tilelayer
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        minZoom: 3,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }).addTo(curMap);
 
-	//call getData function
-	getData(curMap);
-	createLegend(curMap)
+    //call getData function
+    getData(curMap);
+    createLegend(curMap)
 
 };
 
 //function to retrieve the data and place it on the map
 function getData(map) {
 
-	// load the states
-	$.ajax("data/state_4326_map.json", {
-		dataType: "json",
-		success: function (data) {
-			// remove current layer if exists
-			if (curStateLayer) {
-				map.removeLayer(curStateLayer);
-			};
+    // load the states
+    $.ajax("data/state_4326_map.json", {
+        dataType: "json",
+        success: function (data) {
+            // remove current layer if exists
+            if (curStateLayer) {
+                map.removeLayer(curStateLayer);
+            };
 
-			// Define the geojson layer and add it to the map
-			curStateLayer = L.geoJson(data, {
-				style: stateStyle,
-				// filter by location
-				/*filter: function(feature, layer){
+            // Define the geojson layer and add it to the map
+            curStateLayer = L.geoJson(data, {
+                style: stateStyle,
+                // filter by location
+                /*filter: function(feature, layer){
 				    return filterStateByName(feature, layer);
 				},*/
-				// on each feature of states
-				onEachFeature: stateOnEachFeature
-			});
-			map.addLayer(curStateLayer);
+                // on each feature of states
+                onEachFeature: stateOnEachFeature
+            });
+            map.addLayer(curStateLayer);
 
-		}
-	});
+        }
+    });
 
-	// load the urban
-	$.ajax("data/urban_4326_map.json", {
-		dataType: "json",
-		success: function (data) {
-			// remove current layer if exists
-			if (curUrbanLayer) {
-				map.removeLayer(curUrbanLayer);
-			};
+    // load the urban
+    $.ajax("data/urban_4326_map.json", {
+        dataType: "json",
+        success: function (data) {
+            // remove current layer if exists
+            if (curUrbanLayer) {
+                map.removeLayer(curUrbanLayer);
+            };
 
-			// Define the geojson layer and add it to the map
-			curUrbanLayer = L.geoJson(data, {
-				style: urbanStyle,
-				// filter by location
-				/*filter: function(feature, layer){
+            // Define the geojson layer and add it to the map
+            curUrbanLayer = L.geoJson(data, {
+                style: urbanStyle,
+                // filter by location
+                /*filter: function(feature, layer){
 				    return filterUrbanByName(feature, layer);
 				},*/
-				// on each feature of states
-				onEachFeature: urbanOnEachFeature
-			});
-			map.addLayer(curUrbanLayer);
-		}
-	});
+                // on each feature of states
+                onEachFeature: urbanOnEachFeature
+            });
+            map.addLayer(curUrbanLayer);
+        }
+    });
 
 };
 
 function stateStyle(feature) {
-	return {
-		fillColor: 'blue',
-		weight: 0.5,
-		opacity: 0.3,
-		color: 'white', //Outline color
-		fillOpacity: 0.1
-	};
+    return {
+        fillColor: 'blue',
+        weight: 0.5,
+        opacity: 0.3,
+        color: 'white', //Outline color
+        fillOpacity: 0.1
+    };
 }
 
 function selectedStyle(feature) {
-	return {
-		fillColor: 'blue',
-		weight: 0.5,
-		opacity: 0.5,
-		color: 'White', //Outline color
-		fillOpacity: 0.7
-	};
+    return {
+        fillColor: 'blue',
+        weight: 0.5,
+        opacity: 0.5,
+        color: 'White', //Outline color
+        fillOpacity: 0.7
+    };
 }
 
 function urbanStyle(feature) {
-	return {
-		fillColor: 'yellow',
-		weight: 0.5,
-		opacity: 0.5,
-		color: 'white', //Outline color
-		fillOpacity: 0.5
-	};
+    return {
+        fillColor: 'yellow',
+        weight: 0.5,
+        opacity: 0.5,
+        color: 'white', //Outline color
+        fillOpacity: 0.5
+    };
 }
 
 // for visualization we don't need to get rid of other states
@@ -150,80 +150,80 @@ var countSelectState = 0;
 
 function stateOnEachFeature(feature, layer) {
 
-	//popup content is now just the city name
-	var popupContent = feature.properties.NAME;
+    //popup content is now just the city name
+    var popupContent = feature.properties.NAME;
 
-	//bind the popup to the circle marker
-	layer.bindPopup(popupContent, {
-		/*offset: new L.Point(0,0),*/
-		closeButton: false
-	});
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent, {
+        /*offset: new L.Point(0,0),*/
+        closeButton: false
+    });
 
-	layer.on({
-		/*mouseover: function(){
+    layer.on({
+        /*mouseover: function(){
 		    this.openPopup();
 		},*/
-		mouseout: function () {
-			this.closePopup();
-		},
-		click: function (e) {
-			countSelectState++;
-			this.openPopup();
-			if (selection) {
-				selectedLayer.resetStyle(selection);
-			}
-			if (selection != e.target || (selection == e.target && (countSelectState % 2 == 1))) {
-				curLocation = feature.properties.NAME;
-				/*zoom in*/
-				/*deselect??*/
-				/*coordinate with chart*/
-				e.target.setStyle(selectedStyle());
-				selection = e.target;
-				selectedLayer = curStateLayer;
+        mouseout: function () {
+            this.closePopup();
+        },
+        click: function (e) {
+            countSelectState++;
+            this.openPopup();
+            if (selection) {
+                selectedLayer.resetStyle(selection);
+            }
+            if (selection != e.target || (selection == e.target && (countSelectState % 2 == 1))) {
+                curLocation = feature.properties.NAME;
+                /*zoom in*/
+                /*deselect??*/
+                /*coordinate with chart*/
+                e.target.setStyle(selectedStyle());
+                selection = e.target;
+                selectedLayer = curStateLayer;
 
-				L.DomEvent.stopPropagation(e); // stop click event from being propagated further
-			}
-		}
-	});
+                L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+            }
+        }
+    });
 }
 var countSelectUrban = 0;
 
 function urbanOnEachFeature(feature, layer) {
 
-	//popup content is now just the city name
-	var popupContent = "<b>City</b>: " + feature.properties.NAME;
+    //popup content is now just the city name
+    var popupContent = "<b>City</b>: " + feature.properties.NAME;
 
-	//bind the popup to the circle marker
-	layer.bindPopup(popupContent, {
-		offset: new L.Point(0, 0),
-		closeButton: false
-	});
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0, 0),
+        closeButton: false
+    });
 
-	layer.on({
-		mouseover: function () {
-			this.openPopup();
-		},
-		mouseout: function () {
-			this.closePopup();
-		},
-		click: function (e) {
-			countSelectUrban++;
-			if (selection) {
-				selectedLayer.resetStyle(selection);
-			}
-			if (selection != e.target || (selection == e.target && (countSelectUrban % 2 == 1))) {
-				curLocation = feature.properties.NAME;
-				/*zoom in*/
-				/*deselect??*/
-				/*coordinate with chart*/
-				e.target.setStyle(selectedStyle());
-				selection = e.target;
-				selectedLayer = curUrbanLayer;
+    layer.on({
+        mouseover: function () {
+            this.openPopup();
+        },
+        mouseout: function () {
+            this.closePopup();
+        },
+        click: function (e) {
+            countSelectUrban++;
+            if (selection) {
+                selectedLayer.resetStyle(selection);
+            }
+            if (selection != e.target || (selection == e.target && (countSelectUrban % 2 == 1))) {
+                curLocation = feature.properties.NAME;
+                /*zoom in*/
+                /*deselect??*/
+                /*coordinate with chart*/
+                e.target.setStyle(selectedStyle());
+                selection = e.target;
+                selectedLayer = curUrbanLayer;
 
-				L.DomEvent.stopPropagation(e); // stop click event from being propagated further
-			}
-		}
-	});
+                L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+            }
+        }
+    });
 }
 
 
@@ -237,141 +237,141 @@ autocomplete(document.getElementById("locationInput"), locations);
 autocomplete(document.getElementById("hurricaneInput"), hurricanes);
 
 function autocomplete(inp, arr) {
-	/*the autocomplete function takes two arguments,
+    /*the autocomplete function takes two arguments,
 	the text field element and an array of possible autocompleted values:*/
-	var currentFocus;
-	/*execute a function when someone writes in the text field:*/
-	inp.addEventListener("input", function (e) {
-		var a, b, i, val = this.value;
-		/*close any already open lists of autocompleted values*/
-		closeAllLists();
-		if (!val) {
-			return false;
-		}
-		currentFocus = -1;
-		/*create a DIV element that will contain the items (values):*/
-		a = document.createElement("DIV");
-		a.setAttribute("id", this.id + "autocomplete-list");
-		a.setAttribute("class", "autocomplete-items");
-		/*append the DIV element as a child of the autocomplete container:*/
-		this.parentNode.appendChild(a);
-		/*for each item in the array...*/
-		for (i = 0; i < arr.length; i++) {
-			/*check if the item starts with the same letters as the text field value:*/
-			if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-				/*create a DIV element for each matching element:*/
-				b = document.createElement("DIV");
-				/*make the matching letters bold:*/
-				b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-				b.innerHTML += arr[i].substr(val.length);
-				/*insert a input field that will hold the current array item's value:*/
-				b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-				/*execute a function when someone clicks on the item value (DIV element):*/
-				b.addEventListener("click", function (e) {
-					/*insert the value for the autocomplete text field:*/
-					inp.value = this.getElementsByTagName("input")[0].value;
-					/*close the list of autocompleted values,
+    var currentFocus;
+    /*execute a function when someone writes in the text field:*/
+    inp.addEventListener("input", function (e) {
+        var a, b, i, val = this.value;
+        /*close any already open lists of autocompleted values*/
+        closeAllLists();
+        if (!val) {
+            return false;
+        }
+        currentFocus = -1;
+        /*create a DIV element that will contain the items (values):*/
+        a = document.createElement("DIV");
+        a.setAttribute("id", this.id + "autocomplete-list");
+        a.setAttribute("class", "autocomplete-items");
+        /*append the DIV element as a child of the autocomplete container:*/
+        this.parentNode.appendChild(a);
+        /*for each item in the array...*/
+        for (i = 0; i < arr.length; i++) {
+            /*check if the item starts with the same letters as the text field value:*/
+            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                /*create a DIV element for each matching element:*/
+                b = document.createElement("DIV");
+                /*make the matching letters bold:*/
+                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                b.innerHTML += arr[i].substr(val.length);
+                /*insert a input field that will hold the current array item's value:*/
+                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                /*execute a function when someone clicks on the item value (DIV element):*/
+                b.addEventListener("click", function (e) {
+                    /*insert the value for the autocomplete text field:*/
+                    inp.value = this.getElementsByTagName("input")[0].value;
+                    /*close the list of autocompleted values,
 					(or any other open lists of autocompleted values:*/
-					closeAllLists();
-				});
-				a.appendChild(b);
-			}
-		}
-	});
-	/*execute a function presses a key on the keyboard:*/
-	inp.addEventListener("keydown", function (e) {
-		var x = document.getElementById(this.id + "autocomplete-list");
-		if (x) x = x.getElementsByTagName("div");
-		if (e.keyCode == 40) {
-			/*If the arrow DOWN key is pressed,
+                    closeAllLists();
+                });
+                a.appendChild(b);
+            }
+        }
+    });
+    /*execute a function presses a key on the keyboard:*/
+    inp.addEventListener("keydown", function (e) {
+        var x = document.getElementById(this.id + "autocomplete-list");
+        if (x) x = x.getElementsByTagName("div");
+        if (e.keyCode == 40) {
+            /*If the arrow DOWN key is pressed,
 			increase the currentFocus variable:*/
-			currentFocus++;
-			/*and and make the current item more visible:*/
-			addActive(x);
-		} else if (e.keyCode == 38) { //up
-			/*If the arrow UP key is pressed,
+            currentFocus++;
+            /*and and make the current item more visible:*/
+            addActive(x);
+        } else if (e.keyCode == 38) { //up
+            /*If the arrow UP key is pressed,
 			decrease the currentFocus variable:*/
-			currentFocus--;
-			/*and and make the current item more visible:*/
-			addActive(x);
-		} else if (e.keyCode == 13) {
-			/*If the ENTER key is pressed, prevent the form from being submitted,*/
-			e.preventDefault();
-			if (currentFocus > -1) {
-				/*and simulate a click on the "active" item:*/
-				if (x) x[currentFocus].click();
-			}
-		}
-	});
+            currentFocus--;
+            /*and and make the current item more visible:*/
+            addActive(x);
+        } else if (e.keyCode == 13) {
+            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+            e.preventDefault();
+            if (currentFocus > -1) {
+                /*and simulate a click on the "active" item:*/
+                if (x) x[currentFocus].click();
+            }
+        }
+    });
 
-	function addActive(x) {
-		/*a function to classify an item as "active":*/
-		if (!x) return false;
-		/*start by removing the "active" class on all items:*/
-		removeActive(x);
-		if (currentFocus >= x.length) currentFocus = 0;
-		if (currentFocus < 0) currentFocus = (x.length - 1);
-		/*add class "autocomplete-active":*/
-		x[currentFocus].classList.add("autocomplete-active");
-	}
+    function addActive(x) {
+        /*a function to classify an item as "active":*/
+        if (!x) return false;
+        /*start by removing the "active" class on all items:*/
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        /*add class "autocomplete-active":*/
+        x[currentFocus].classList.add("autocomplete-active");
+    }
 
-	function removeActive(x) {
-		/*a function to remove the "active" class from all autocomplete items:*/
-		for (var i = 0; i < x.length; i++) {
-			x[i].classList.remove("autocomplete-active");
-		}
-	}
+    function removeActive(x) {
+        /*a function to remove the "active" class from all autocomplete items:*/
+        for (var i = 0; i < x.length; i++) {
+            x[i].classList.remove("autocomplete-active");
+        }
+    }
 
-	function closeAllLists(elmnt) {
-		/*close all autocomplete lists in the document,
+    function closeAllLists(elmnt) {
+        /*close all autocomplete lists in the document,
 		except the one passed as an argument:*/
-		var x = document.getElementsByClassName("autocomplete-items");
-		for (var i = 0; i < x.length; i++) {
-			if (elmnt != x[i] && elmnt != inp) {
-				x[i].parentNode.removeChild(x[i]);
-			}
-		}
-	}
-	/*execute a function when someone clicks in the document:*/
-	document.addEventListener("click", function (e) {
-		closeAllLists(e.target);
-	});
+        var x = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < x.length; i++) {
+            if (elmnt != x[i] && elmnt != inp) {
+                x[i].parentNode.removeChild(x[i]);
+            }
+        }
+    }
+    /*execute a function when someone clicks in the document:*/
+    document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+    });
 }
 
 
 function getVals() {
-	// Get slider values
-	var parent = this.parentNode;
-	var slides = parent.getElementsByTagName("input");
-	var slide1 = parseFloat(slides[0].value);
-	var slide2 = parseFloat(slides[1].value);
-	// Neither slider will clip the other, so make sure we determine which is larger
-	if (slide1 > slide2) {
-		var tmp = slide2;
-		slide2 = slide1;
-		slide1 = tmp;
-	}
+    // Get slider values
+    var parent = this.parentNode;
+    var slides = parent.getElementsByTagName("input");
+    var slide1 = parseFloat(slides[0].value);
+    var slide2 = parseFloat(slides[1].value);
+    // Neither slider will clip the other, so make sure we determine which is larger
+    if (slide1 > slide2) {
+        var tmp = slide2;
+        slide2 = slide1;
+        slide1 = tmp;
+    }
 
-	curYearMin = slide1;
-	curYearMax = slide2;
+    curYearMin = slide1;
+    curYearMax = slide2;
 
-	var displayElement = parent.getElementsByClassName("rangeValues")[0];
-	displayElement.innerHTML = slide1 + " - " + slide2;
+    var displayElement = parent.getElementsByClassName("rangeValues")[0];
+    displayElement.innerHTML = slide1 + " - " + slide2;
 }
 
 function initializeSiders() {
-	// Initialize Sliders
-	var sliderSections = document.getElementsByClassName("range-slider");
-	for (var x = 0; x < sliderSections.length; x++) {
-		var sliders = sliderSections[x].getElementsByTagName("input");
-		for (var y = 0; y < sliders.length; y++) {
-			if (sliders[y].type === "range") {
-				sliders[y].oninput = getVals;
-				// Manually trigger event first time to display values
-				sliders[y].oninput();
-			}
-		}
-	}
+    // Initialize Sliders
+    var sliderSections = document.getElementsByClassName("range-slider");
+    for (var x = 0; x < sliderSections.length; x++) {
+        var sliders = sliderSections[x].getElementsByTagName("input");
+        for (var y = 0; y < sliders.length; y++) {
+            if (sliders[y].type === "range") {
+                sliders[y].oninput = getVals;
+                // Manually trigger event first time to display values
+                sliders[y].oninput();
+            }
+        }
+    }
 }
 
 var curHurIDsByCat = [];
@@ -379,7 +379,7 @@ var curHurIDsByCY = [];
 var curHurIDsByLCY = [];
 
 function updateExtent(layer) {
-	curMap.fitBounds(layer.getBounds());
+    curMap.fitBounds(layer.getBounds());
 }
 
 function clearMap(){
@@ -396,329 +396,329 @@ function clearMap(){
 
 function applySetting() {
 
-	if (selection) {
-		selectedLayer.resetStyle(selection);
-	}
+    if (selection) {
+        selectedLayer.resetStyle(selection);
+    }
 
-	$('#mapid').hide();
-	$('#img').show();
+    $('#mapid').hide();
+    $('#img').show();
 
-	curHurIDsByCat = [];
-	curHurIDsByCY = [];
-	curHurIDsByLCY = [];
+    curHurIDsByCat = [];
+    curHurIDsByCY = [];
+    curHurIDsByLCY = [];
 
-	// Apply setting after click the button
-	curLocation = document.getElementById("locationInput").value;
-	curHurricane = document.getElementById("hurricaneInput").value;
+    // Apply setting after click the button
+    curLocation = document.getElementById("locationInput").value;
+    curHurricane = document.getElementById("hurricaneInput").value;
 
-	// Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
-	//      0-yes, alert: empty input of hurricane name!
-	//      0-no, then check if hurricane name matches any one
-	//          0.1-yes, map it
-	//          0.2-no, alert: no such specific hurricane!
-	// Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
-	// then check if curLocation has input:
+    // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
+    //      0-yes, alert: empty input of hurricane name!
+    //      0-no, then check if hurricane name matches any one
+    //          0.1-yes, map it
+    //          0.2-no, alert: no such specific hurricane!
+    // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
+    // then check if curLocation has input:
 
-	// Scenario #3 if yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation
-	//          3.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within that location
-	//          3.2-no: alert: no such location
-	// Scenario #2 if no: then empty location, show all the hurricanes within the year range
+    // Scenario #3 if yes: check if curLocation matches any location, if yes, check if there is any selected hurricane in curLocation
+    //          3.1-yes: if yes. then zoom in to the extent of the location, and show the corresponding hurricanes within that location
+    //          3.2-no: alert: no such location
+    // Scenario #2 if no: then empty location, show all the hurricanes within the year range
 
 
-	// Scenario #1: if hurricane name is abled, check if it is empty
-	if (document.getElementById("hurricaneInput").disabled == false) {
-		if (curHurricane == "") {
-			$('#img').hide();
-			$('#mapid').show();
-			alert("Empty input of hurricane name!");
-		} else {
-			// if found
-			if (checkValue(curHurricane, hurricanes)) {
+    // Scenario #1: if hurricane name is abled, check if it is empty
+    if (document.getElementById("hurricaneInput").disabled == false) {
+        if (curHurricane == "") {
+            $('#img').hide();
+            $('#mapid').show();
+            alert("Empty input of hurricane name!");
+        } else {
+            // if found
+            if (checkValue(curHurricane, hurricanes)) {
 
-				// TODO: map it
-				// load the lines
-				$.ajax("data/line.json", {
-					dataType: "json",
-					success: function (data) {
-						// remove current layer if exists
-						if (curPointLayer) {
-							curMap.removeLayer(curPointLayer);
-						};
-						if (curLineLayer) {
-							curMap.removeLayer(curLineLayer);
-						};
-						if (curLocationLayer) {
-							curMap.removeLayer(curLocationLayer);
-						};
+                // TODO: map it
+                // load the lines
+                $.ajax("data/line.json", {
+                    dataType: "json",
+                    success: function (data) {
+                        // remove current layer if exists
+                        if (curPointLayer) {
+                            curMap.removeLayer(curPointLayer);
+                        };
+                        if (curLineLayer) {
+                            curMap.removeLayer(curLineLayer);
+                        };
+                        if (curLocationLayer) {
+                            curMap.removeLayer(curLocationLayer);
+                        };
 
-						// Define the geojson layer and add it to the map
-						curLineLayer = L.geoJson(data, {
-							// set up the line style
-							style: function (feature, layer) {
-								return lineStyle(feature, layer);
-							},
-							// filter by name
-							filter: function (feature, layer) {
-								return filterHurByName(feature, layer);
-							}
-							/*,
+                        // Define the geojson layer and add it to the map
+                        curLineLayer = L.geoJson(data, {
+                            // set up the line style
+                            style: function (feature, layer) {
+                                return lineStyle(feature, layer);
+                            },
+                            // filter by name
+                            filter: function (feature, layer) {
+                                return filterHurByName(feature, layer);
+                            }
+                            /*,
 							                            // on each feature of states
 							                            onEachFeature: lineOnEachFeature*/
-						});
+                        });
 
-						curMap.addLayer(curLineLayer);
+                        curMap.addLayer(curLineLayer);
 
 
-						// change the map extent to the hurricane
-						updateExtent(curLineLayer);
+                        // change the map extent to the hurricane
+                        updateExtent(curLineLayer);
 
-						// add the points to the map
-						$.ajax("data/point.json", {
-							dataType: "json",
-							success: function (data) {
+                        // add the points to the map
+                        $.ajax("data/point.json", {
+                            dataType: "json",
+                            success: function (data) {
 
-								// Define the geojson layer and add it to the map
-								curPointLayer = L.geoJson(data, {
-									/*style: function(feature,layer){
+                                // Define the geojson layer and add it to the map
+                                curPointLayer = L.geoJson(data, {
+                                    /*style: function(feature,layer){
 									    return pointStyle(feature,layer);
 									},*/
-									// filter by name
-									filter: function (feature, layer) {
-										return filterPointByByName(feature, layer);
-									},
-									// on each feature of states
-									pointToLayer: function (feature, latlng) {
-										return pointToLayer(feature, latlng);
-									}
-								});
+                                    // filter by name
+                                    filter: function (feature, layer) {
+                                        return filterPointByName(feature, layer);
+                                    },
+                                    // on each feature of states
+                                    pointToLayer: function (feature, latlng) {
+                                        return pointToLayer(feature, latlng);
+                                    }
+                                });
 
-								$('#img').hide();
-								$('#mapid').show();
-								curMap.addLayer(curPointLayer);
-
-
-								var graphData = [];
-
-								curPointLayer.eachLayer(function (layer) {
-									var hour = layer.feature.properties.HH;
-									var day = layer.feature.properties.DD;
-									var month = layer.feature.properties.MM;
-									var doy = layer.feature.properties.doy;
-
-									var cur_wind = layer.feature.properties.Wind;
-
-									var new_entry = {
-										"date": doy,
-										"value": cur_wind,
-										"day": day,
-										"hour": hour,
-										"month": month
-									}
-									graphData.push(new_entry)
+                                $('#img').hide();
+                                $('#mapid').show();
+                                curMap.addLayer(curPointLayer);
 
 
-								});
+                                var graphData = [];
 
-								createLineGraph(graphData);
+                                curPointLayer.eachLayer(function (layer) {
+                                    var hour = layer.feature.properties.HH;
+                                    var day = layer.feature.properties.DD;
+                                    var month = layer.feature.properties.MM;
+                                    var doy = layer.feature.properties.doy;
+
+                                    var cur_wind = layer.feature.properties.Wind;
+
+                                    var new_entry = {
+                                        "date": doy,
+                                        "value": cur_wind,
+                                        "day": day,
+                                        "hour": hour,
+                                        "month": month
+                                    }
+                                    graphData.push(new_entry)
 
 
-							}
-						});
-					}
-				});
+                                });
 
-			}
-			// if not found:
-			else {
-				$('#img').hide();
-				$('#mapid').show();
-				alert("No hurricane named " + curHurricane + "!");
-			}
-		}
-	}
-	// Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
-	else {
-		// "values" is a vector containing all the selected categories
-		var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
-			values = [];
-		Array.prototype.forEach.call(checkboxes, function (el) {
-			values.push(el.value);
-		});
+                                createLineGraph(graphData);
 
-		/*change the order here:
+
+                            }
+                        });
+                    }
+                });
+
+            }
+            // if not found:
+            else {
+                $('#img').hide();
+                $('#mapid').show();
+                alert("No hurricane named " + curHurricane + "!");
+            }
+        }
+    }
+    // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
+    else {
+        // "values" is a vector containing all the selected categories
+        var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
+            values = [];
+        Array.prototype.forEach.call(checkboxes, function (el) {
+            values.push(el.value);
+        });
+
+        /*change the order here:
 		1. filter hurricanes by categories and year range
 		2. check location
 		3. if location matched, then filterHurByL, update curLineLayer
 		4. add curLineLayer to curMap
 		*/
 
-		// load the lines
-		$.ajax("data/line.json", {
-			dataType: "json",
-			success: function (data) {
-				// remove current layer if exists
-				if (curPointLayer) {
-					curMap.removeLayer(curPointLayer);
-				};
-				if (curLineLayer) {
-					curMap.removeLayer(curLineLayer);
-				};
-				if (curLocationLayer) {
-					curMap.removeLayer(curLocationLayer);
-				};
+        // load the lines
+        $.ajax("data/line.json", {
+            dataType: "json",
+            success: function (data) {
+                // remove current layer if exists
+                if (curPointLayer) {
+                    curMap.removeLayer(curPointLayer);
+                };
+                if (curLineLayer) {
+                    curMap.removeLayer(curLineLayer);
+                };
+                if (curLocationLayer) {
+                    curMap.removeLayer(curLocationLayer);
+                };
 
-				// update curHurIDsByCat values
-				L.geoJson(data, {
-					filter: function (feature, layer) {
-						return filterSegByCat(feature, layer, values);
-					}
-				});
+                // update curHurIDsByCat values
+                L.geoJson(data, {
+                    filter: function (feature, layer) {
+                        return filterSegByCat(feature, layer, values);
+                    }
+                });
 
-				// update curHurIDsByCY
-				curLineLayer = L.geoJson(data, {
-					style: function (feature, layer) {
-						return lineStyle(feature, layer);
-					},
-					// filter by name
-					filter: function (feature, layer) {
-						return filterHurByCY(feature, layer);
-					}
-					/*,
-					                    // on each feature of states
-					                    onEachFeature: lineOnEachFeature*/
-				});
+                // update curHurIDsByCY
+                curLineLayer = L.geoJson(data, {
+                    style: function (feature, layer) {
+                        return lineStyle(feature, layer);
+                    },
+                    // filter by name
+                    filter: function (feature, layer) {
+                        return filterHurByCY(feature, layer);
+                    }
+                    /*,
+                    //console.log("click for hurricane")
+                    // on each feature of states
+                    onEachFeature: lineOnEachFeature*/
+                });
 
-				console.log(curHurIDsByCY.length + " hurricanes after cat and year");
-
-
-				// then check if curLocation has input:
-				// Scenario #3 if yes - curLocation is not empty
-				if (curLocation != "") {
-
-					// if found:
-					if (checkValue(curLocation, locations)) {
-
-						// map the hurricanes with selected categories and year range + within the specific location!!!
-
-						var curLineLayerJSON = curLineLayer.toGeoJSON();
-						console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
-
-						$.ajax("data/polygons.json", {
-							dataType: "json",
-							success: function (data) {
-								// if it is a city
-								if (curLocation.indexOf(',') > -1) {
-									// update curLocationJSON
-									curLocationLayer = L.geoJson(curUrbanLayer.toGeoJSON(), {
-										style: {
-											"fillColor": 'blue',
-											"fillOpacity": 0.7,
-											"weight": 0
-										},
-										// filter by location
-										filter: function (feature, layer) {
-											return filterPolygonByL(feature, layer);
-										}
-									});
-
-								}
-								// if it is a state
-								else {
-									// update curLocationJSON
-									curLocationLayer = L.geoJson(data, {
-										style: {
-											"fillColor": 'blue',
-											"fillOpacity": 0.7,
-											"weight": 0
-										},
-										// filter by location
-										filter: function (feature, layer) {
-											return filterPolygonByL(feature, layer);
-										}
-									});
+                console.log(curHurIDsByCY.length + " hurricanes after cat and year");
 
 
-								}
+                // then check if curLocation has input:
+                // Scenario #3 if yes - curLocation is not empty
+                if (curLocation != "") {
 
-								// change the map extent to the location
-								updateExtent(curLocationLayer);
-								curMap.addLayer(curLocationLayer);
+                    // if found:
+                    if (checkValue(curLocation, locations)) {
 
-								$.ajax("data/hurID.json", {
-									dataType: "json",
-									success: function (data) {
+                        // map the hurricanes with selected categories and year range + within the specific location!!!
 
-										// filter hurricanes by curHurIDsByCY
-										var hurLayerByL = L.geoJson(data, {
-											filter: function (feature, layer) {
-												return filterLineByCY(feature, layer);
-											}
-										});
+                        var curLineLayerJSON = curLineLayer.toGeoJSON();
+                        console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
 
-										// update curHurIDsByLCY
-										L.geoJson(hurLayerByL.toGeoJSON(), {
-											filter: function (feature, layer) {
-												// to get the curHurIDs
-												return filterLineByL(feature, layer);
-											}
-										});
+                        $.ajax("data/polygons.json", {
+                            dataType: "json",
+                            success: function (data) {
+                                // if it is a city
+                                if (curLocation.indexOf(',') > -1) {
+                                    // update curLocationJSON
+                                    curLocationLayer = L.geoJson(curUrbanLayer.toGeoJSON(), {
+                                        style: {
+                                            "fillColor": 'blue',
+                                            "fillOpacity": 0.7,
+                                            "weight": 0
+                                        },
+                                        // filter by location
+                                        filter: function (feature, layer) {
+                                            return filterPolygonByL(feature, layer);
+                                        }
+                                    });
 
-										console.log(curHurIDsByLCY.length + " hurricanes within this location ");
-
-										if (curHurIDsByLCY.length <= 5) {
-											// Map: Zoom to the hurricane line; Add points;
-											// Info panel: individual hurricane graph should update;
-											// add the points to the map
-											$.ajax("data/point.json", {
-												dataType: "json",
-												success: function (data) {
-
-													// Define the geojson layer and add it to the map
-													curPointLayer = L.geoJson(data, {
-														//style: function(feature,layer){
-														//    return pointStyle(feature,layer);
-														//},
-														// filter by name
-														filter: function (feature, layer) {
-															return filterPointByByIDs(feature, layer);
-														},
-														// on each feature of states
-														pointToLayer: function (feature, latlng) {
-															return pointToLayer(feature, latlng);
-														}
-													});
-
-													curMap.addLayer(curPointLayer);
-
-                                                if (curHurIDsByLCY.length == 1) {
-                                                    var graphData = [];
-                                                    console.log("here");
-
-                                                       //console.log("here")
-                                                       curPointLayer.eachLayer(function (layer) {
-                                                         var hour = layer.feature.properties.HH;
-                                                         var day = layer.feature.properties.DD;
-                                                         var month = layer.feature.properties.MM;
-                                                         var doy = layer.feature.properties.doy;
-
-                                                         var cur_wind = layer.feature.properties.Wind;
-
-                                                         var new_entry = {
-                                                           "date": doy,
-                                                           "value": cur_wind,
-                                                           "day": day,
-                                                           "hour": hour,
-                                                           "month": month
-                                                         }
-                                                         graphData.push(new_entry)
-                                                           createLineGraph(graphData);
+                                }
+                                // if it is a state
+                                else {
+                                    // update curLocationJSON
+                                    curLocationLayer = L.geoJson(data, {
+                                        style: {
+                                            "fillColor": 'blue',
+                                            "fillOpacity": 0.7,
+                                            "weight": 0
+                                        },
+                                        // filter by location
+                                        filter: function (feature, layer) {
+                                            return filterPolygonByL(feature, layer);
+                                        }
+                                    });
 
 
-                                                       });
+                                }
 
-                                                     }
+                                // change the map extent to the location
+                                updateExtent(curLocationLayer);
+                                curMap.addLayer(curLocationLayer);
+
+                                $.ajax("data/hurID.json", {
+                                    dataType: "json",
+                                    success: function (data) {
+
+                                        // filter hurricanes by curHurIDsByCY
+                                        var hurLayerByL = L.geoJson(data, {
+                                            filter: function (feature, layer) {
+                                                return filterLineByCY(feature, layer);
+                                            }
+                                        });
+
+                                        // update curHurIDsByLCY
+                                        L.geoJson(hurLayerByL.toGeoJSON(), {
+                                            filter: function (feature, layer) {
+                                                // to get the curHurIDs
+                                                return filterLineByL(feature, layer);
+                                            }
+                                        });
+
+                                        console.log(curHurIDsByLCY.length + " hurricanes within this location ");
+
+                                        if (curHurIDsByLCY.length <= 5) {
+                                            // Map: Zoom to the hurricane line; Add points;
+                                            // Info panel: individual hurricane graph should update;
+                                            // add the points to the map
+                                            $.ajax("data/point.json", {
+                                                dataType: "json",
+                                                success: function (data) {
+
+                                                    // Define the geojson layer and add it to the map
+                                                    curPointLayer = L.geoJson(data, {
+                                                        //style: function(feature,layer){
+                                                        //    return pointStyle(feature,layer);
+                                                        //},
+                                                        // filter by name
+                                                        filter: function (feature, layer) {
+                                                            return filterPointByIDs(feature, layer);
+                                                        },
+                                                        // on each feature of states
+                                                        pointToLayer: function (feature, latlng) {
+                                                            return pointToLayer(feature, latlng);
+                                                        }
+                                                    });
+
+                                                    curMap.addLayer(curPointLayer);
+
+                                                    if (curHurIDsByLCY.length == 1) {
+                                                        var graphData = [];
+                                                        console.log("here");
+
+                                                        //console.log("here")
+                                                        curPointLayer.eachLayer(function (layer) {
+                                                            var hour = layer.feature.properties.HH;
+                                                            var day = layer.feature.properties.DD;
+                                                            var month = layer.feature.properties.MM;
+                                                            var doy = layer.feature.properties.doy;
+
+                                                            var cur_wind = layer.feature.properties.Wind;
+
+                                                            var new_entry = {
+                                                                "date": doy,
+                                                                "value": cur_wind,
+                                                                "day": day,
+                                                                "hour": hour,
+                                                                "month": month
+                                                            }
+                                                            graphData.push(new_entry)
+                                                            createLineGraph(graphData);
+
+
+                                                        });
 
                                                     }
+<<<<<<< HEAD
 
 											}); // end of ajax - points.json
 
@@ -803,376 +803,463 @@ function applySetting() {
 										createScatter(graphData);
 									}
 								}); // ajax - hurID.json
+=======
+>>>>>>> 65bea29c751238aaa487b249cda3531373e54e52
 
-							}
-						}); // ajax - polygons.json
+                                                }
 
-					} // end of scenario #3 if location is found
-					// if not found:
-					else {
-						$('#img').hide();
-						$('#mapid').show();
-						alert("No location named " + curLocation + "!");
-					}
+                                            }); // end of ajax - points.json
 
-					// createLineGraph(graphData);
-				}
-				// Scenario #2: if locationInput is empty, directly map this curLineLayer
-				else {
-					// only one hurricane selected after filtering by cat and year
 
-					if (curHurIDsByCY.length == 1) {
-						// Map: Zoom to the hurricane line; Add points;
-						// Info panel: individual hurricane graph should update;
-						// add the points to the map
-						$.ajax("data/point.json", {
-							dataType: "json",
-							success: function (data) {
+                                        } // end of adding points in scenario #3 when the # of hurricanes is <= 5
 
-								// Define the geojson layer and add it to the map
-								curPointLayer = L.geoJson(data, {
-									/*style: function(feature,layer){
+                                        // TODO: map the hurricanes within the location
+
+                                        curLineLayer = L.geoJson(curLineLayerJSON, {
+                                            style: function (feature, layer) {
+                                                return lineStyle(feature, layer);
+                                            },
+                                            // filter by curHurIDsByLCY
+                                            filter: function (feature, layer) {
+                                                return filterHurByLCY(feature, layer);
+                                            } //,
+                                            // on each feature of states
+                                            //onEachFeature: lineOnEachFeature
+                                        });
+
+                                        $('#img').hide();
+                                        $('#mapid').show();
+
+                                        curMap.addLayer(curLineLayer);
+
+
+                                        graphData = []
+                                        curLineLayer.eachLayer(function (layer) {
+                                            tempLine = layer.feature.geometry.coordinates
+                                            var isOverlap = turf.lineIntersect(layer.feature, curLocationJSON);
+
+                                            if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length != 0) {
+                                                var day = layer.feature.properties.DD;
+                                                var month = layer.feature.properties.MM;
+                                                var year = layer.feature.properties.YYYY;
+                                                var date = year + "-" + month + "-" + day;
+                                                var hour = layer.feature.properties.HH
+                                                var doy = layer.feature.properties.doy;
+
+                                                var numDate = year + month + day + hour
+
+                                                var category = layer.feature.properties.Cat;
+
+                                                if (category == "H5") {
+                                                    category = 8
+                                                } else if (category == "H4") {
+                                                    category = 7
+                                                } else if (category == "H3") {
+                                                    category = 6
+                                                } else if (category == "H2") {
+                                                    category = 5
+                                                } else if (category == "H1") {
+                                                    category = 4
+                                                } else if (category == "TS") {
+                                                    category = 3
+                                                } else if (category == "TD") {
+                                                    category = 2
+                                                } else if (category == "EX") {
+                                                    category = 1
+                                                } else {
+                                                    category = 0
+                                                }
+
+                                                date = d3.timeParse("%Y-%m-%d")(date)
+                                                var cur_wind = layer.feature.properties.Wind;
+
+                                                if (category != 0) {
+                                                    var new_entry = {
+                                                        "date": numDate,
+                                                        "value": cur_wind,
+                                                        "category": category,
+                                                        "doy": doy
+                                                    }
+                                                    graphData.push(new_entry)
+                                                }
+
+
+                                            }
+
+
+                                        });
+                                        createScatter(graphData);
+                                    }
+                                }); // ajax - hurID.json
+
+                            }
+                        }); // ajax - polygons.json
+
+                    } // end of scenario #3 if location is found
+                    // if not found:
+                    else {
+                        $('#img').hide();
+                        $('#mapid').show();
+                        alert("No location named " + curLocation + "!");
+                    }
+
+                    // createLineGraph(graphData);
+                }
+                // Scenario #2: if locationInput is empty, directly map this curLineLayer
+                else {
+                    // only one hurricane selected after filtering by cat and year
+
+                    if (curHurIDsByCY.length == 1) {
+                        // Map: Zoom to the hurricane line; Add points;
+                        // Info panel: individual hurricane graph should update;
+                        // add the points to the map
+                        $.ajax("data/point.json", {
+                            dataType: "json",
+                            success: function (data) {
+
+                                // Define the geojson layer and add it to the map
+                                curPointLayer = L.geoJson(data, {
+                                    /*style: function(feature,layer){
 									    return pointStyle(feature,layer);
 									},*/
-									// filter by name
-									filter: function (feature, layer) {
-										return filterPointByByIDs(feature, layer);
-									},
-									// on each feature of states
-									pointToLayer: function (feature, latlng) {
-										return pointToLayer(feature, latlng);
-									}
-								});
+                                    // filter by name
+                                    filter: function (feature, layer) {
+                                        return filterPointByIDs(feature, layer);
+                                    },
+                                    // on each feature of states
+                                    pointToLayer: function (feature, latlng) {
+                                        return pointToLayer(feature, latlng);
+                                    }
+                                });
 
-								$('#img').hide();
-								$('#mapid').show();
-								curMap.addLayer(curPointLayer);
+                                $('#img').hide();
+                                $('#mapid').show();
+                                curMap.addLayer(curPointLayer);
 
 
-								var graphData = [];
+                                var graphData = [];
 
-								curPointLayer.eachLayer(function (layer) {
-									var hour = layer.feature.properties.HH;
-									var day = layer.feature.properties.DD;
-									var month = layer.feature.properties.MM;
-									var doy = layer.feature.properties.doy;
+                                curPointLayer.eachLayer(function (layer) {
+                                    var hour = layer.feature.properties.HH;
+                                    var day = layer.feature.properties.DD;
+                                    var month = layer.feature.properties.MM;
+                                    var doy = layer.feature.properties.doy;
 
-									var cur_wind = layer.feature.properties.Wind;
+                                    var cur_wind = layer.feature.properties.Wind;
 
-									var new_entry = {
-										"date": doy,
-										"value": cur_wind,
-										"day": day,
-										"hour": hour,
-										"month": month
-									}
-									graphData.push(new_entry)
+                                    var new_entry = {
+                                        "date": doy,
+                                        "value": cur_wind,
+                                        "day": day,
+                                        "hour": hour,
+                                        "month": month
+                                    }
+                                    graphData.push(new_entry)
 
 								});
 								createLineGraph(graphData);
 							}
 						});
-					}
 
+					// change the map extent to the hurricane
+					updateExtent(curLineLayer);
+
+					}
 
 					$('#img').hide();
 					$('#mapid').show();
 					curMap.addLayer(curLineLayer);
 
-					// change the map extent to the hurricane
-					updateExtent(curLineLayer);
+
 				}
 			}
 		});
 
 
-	}
+    }
 
 }
 
-function filterPointByByName(feature, layer) {
-	return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
+function filterPointByName(feature, layer) {
+    return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
 }
 
-function filterPointByByIDs(feature, layer) {
-	return (checkValue(feature.properties.HurID, curHurIDsByLCY) && feature.properties.popden > 0);
+function filterPointByIDs(feature, layer) {
+    return (checkValue(feature.properties.HurID, curHurIDsByLCY) && feature.properties.popden > 0);
 
 }
 
 function pointToLayer(feature, latlng) {
-	//create marker options
-	var options = {
-		fillColor: "#add8e6",
-		color: "red",
-		weight: 2,
-		opacity: 1,
-		fillOpacity: 0
-	};
+    //create marker options
+    var options = {
+        fillColor: "#add8e6",
+        color: "red",
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0
+    };
 
-	//Give each feature's circle marker a radius based on its attribute value
-	options.radius = calcPropRadius(feature.properties.popden);
+    //Give each feature's circle marker a radius based on its attribute value
+    options.radius = calcPropRadius(feature.properties.popden);
 
-	//create circle marker layer
-	var layer = L.circleMarker(latlng, options);
+    //create circle marker layer
+    var layer = L.circleMarker(latlng, options);
 
-	// create pop up for features
-	createPointPopup(feature, layer, options.radius);
+    // create pop up for features
+    createPointPopup(feature, layer, options.radius);
 
-	///event listeners to open popup on hover and update the chart in panel on click
-	layer.on({
-		mouseover: function () {
-			this.openPopup();
-		},
-		mouseout: function () {
-			this.closePopup();
-		},
-		// update the line graph on clicking the points
-		click: function () {
-			//hightlightLineGraphPoints();
-		}
+    ///event listeners to open popup on hover and update the chart in panel on click
+    layer.on({
+        mouseover: function () {
+            this.openPopup();
+        },
+        mouseout: function () {
+            this.closePopup();
+        },
+        // update the line graph on clicking the points
+        click: function () {
+            //hightlightLineGraphPoints();
+        }
 
-	});
+    });
 
-	//return the circle marker to the L.geoJson point To Layer option
-	return layer;
+    //return the circle marker to the L.geoJson point To Layer option
+    return layer;
 }
 
 // proportional symbols
 // calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
-	//scale factor to adjust symbol size evenly
-	var scaleFactor = 5;
-	//area based on attribute value and scale factor
-	var area = attValue * scaleFactor;
-	//radius calculated based on area
-	var radius = Math.sqrt(area / Math.PI);
+    //scale factor to adjust symbol size evenly
+    var scaleFactor = 5;
+    //area based on attribute value and scale factor
+    var area = attValue * scaleFactor;
+    //radius calculated based on area
+    var radius = Math.sqrt(area / Math.PI);
 
-	return radius;
+    return radius;
 };
 
 // a consolidated popup-creation function
 function createPointPopup(feature, layer, radius) {
 
-	//popup content is now just the city name
-	var hurName = feature.properties.hurName;
+    //popup content is now just the city name
+    var hurName = feature.properties.hurName;
 
-	var YYYY = feature.properties.YYYY;
-	var MM = feature.properties.MM;
-	var DD = feature.properties.DD;
-	var HH = feature.properties.HH;
-	//var State = feature.properties.State;
-	var Wind = feature.properties.Wind;
-	var popden = feature.properties.popden;
+    var YYYY = feature.properties.YYYY;
+    var MM = feature.properties.MM;
+    var DD = feature.properties.DD;
+    var HH = feature.properties.HH;
+    //var State = feature.properties.State;
+    var Wind = feature.properties.Wind;
+    var popden = feature.properties.popden;
 
-	//add formatted attribute to panel content string
-	var popupContent = "<p style='line-height: 0;'><b>Population affected per square mile:</b> " + Math.round(popden, 2) + "</p>";
-	popupContent += "<p style='line-height: 0;'><b>Hurricane name:</b> " + hurName + "</p>";
-	popupContent += "<p style='line-height: 0;'><b>Date:</b> " + YYYY + "-" + MM + "-" + DD + "&nbsp&nbsp" + HH + ":00 </p>";
-	popupContent += "<p style='line-height: 0;'><b>Wind:</b> " + Wind + " knots (kts)</p>"
-	//bind the popup to the circle marker
-	layer.bindPopup(popupContent, {
-		offset: new L.Point(0, -radius),
-		closeButton: false
-	});
+    //add formatted attribute to panel content string
+    var popupContent = "<p style='line-height: 0;'><b>Population affected per square mile:</b> " + Math.round(popden, 2) + "</p>";
+    popupContent += "<p style='line-height: 0;'><b>Hurricane name:</b> " + hurName + "</p>";
+    popupContent += "<p style='line-height: 0;'><b>Date:</b> " + YYYY + "-" + MM + "-" + DD + "&nbsp&nbsp" + HH + ":00 </p>";
+    popupContent += "<p style='line-height: 0;'><b>Wind:</b> " + Wind + " knots (kts)</p>"
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0, -radius),
+        closeButton: false
+    });
 };
 
 function lineStyle(feature, layer) {
 
-	var colorScheme = ["#ffff00", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]
-	var thickness = [1, 2, 2.5, 3, 3.5, 4, 5]
+    var colorScheme = ["#ffff00", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]
+    var thickness = [1, 2, 2.5, 3, 3.5, 4, 5]
 
-	switch (feature.properties.Cat) {
-		case 'H5':
-			return {
-				color: colorScheme[4],
-				"weight": thickness[6]
-			};
-		case 'H4':
-			return {
-				color: colorScheme[3],
-				"weight": thickness[5]
-			};
-		case 'H3':
-			return {
-				color: colorScheme[2],
-				"weight": thickness[4]
-			};
-		case 'H2':
-			return {
-				color: colorScheme[1],
-				"weight": thickness[3]
-			};
-		case 'H1':
-			return {
-				color: colorScheme[0],
-				"weight": thickness[2]
-			};
-		case 'TS':
-			return {
-				color: "#58e095",
-				"weight": thickness[1]
-			};
-		case 'TD':
-			return {
-				color: "#70b5e4",
-				"weight": thickness[1]
-			};
-		case 'EX':
-			return {
-				color: "#cccccb",
-				"weight": thickness[1]
-			};
-		default:
-			return {
-				color: "#ffffff",
-				"weight": thickness[0]
-			};
-	}
+    switch (feature.properties.Cat) {
+        case 'H5':
+            return {
+                color: colorScheme[4],
+                "weight": thickness[6]
+            };
+        case 'H4':
+            return {
+                color: colorScheme[3],
+                "weight": thickness[5]
+            };
+        case 'H3':
+            return {
+                color: colorScheme[2],
+                "weight": thickness[4]
+            };
+        case 'H2':
+            return {
+                color: colorScheme[1],
+                "weight": thickness[3]
+            };
+        case 'H1':
+            return {
+                color: colorScheme[0],
+                "weight": thickness[2]
+            };
+        case 'TS':
+            return {
+                color: "#58e095",
+                "weight": thickness[1]
+            };
+        case 'TD':
+            return {
+                color: "#70b5e4",
+                "weight": thickness[1]
+            };
+        case 'EX':
+            return {
+                color: "#cccccb",
+                "weight": thickness[1]
+            };
+        default:
+            return {
+                color: "#ffffff",
+                "weight": thickness[0]
+            };
+    }
 }
 
 function filterHurByName(feature, layer) {
-	return (feature.properties.hurName == curHurricane);
-}
-
-function filterPointByHurID(feature, layer) {
-	return (feature.properties.hurName == curHurricane)
+    return (feature.properties.hurName == curHurricane);
 }
 
 function filterSegByCat(feature, layer, values) {
-	// "values" is a vector containing all the selected categories
-	if (checkValue(feature.properties.Cat, values)) {
-		if (!checkValue(feature.properties.HurID, curHurIDsByCat)) {
-			curHurIDsByCat.push(feature.properties.HurID);
-		}
-	}
-	return false;
+    // "values" is a vector containing all the selected categories
+    if (checkValue(feature.properties.Cat, values)) {
+        if (!checkValue(feature.properties.HurID, curHurIDsByCat)) {
+            curHurIDsByCat.push(feature.properties.HurID);
+        }
+    }
+    return false;
 }
 
 function filterHurByCY(feature, layer) {
 
-	// find all the hurricanes that have at least one segment which meets the selected categories and the selected year range
-	var result = (checkValue(feature.properties.HurID, curHurIDsByCat) &&
-		feature.properties.YYYY >= curYearMin &&
-		feature.properties.YYYY <= curYearMax);
+    // find all the hurricanes that have at least one segment which meets the selected categories and the selected year range
+    var result = (checkValue(feature.properties.HurID, curHurIDsByCat) &&
+                  feature.properties.YYYY >= curYearMin &&
+                  feature.properties.YYYY <= curYearMax);
 
-	if (result) {
-		if (!checkValue(feature.properties.HurID, curHurIDsByCY)) {
-			curHurIDsByCY.push(feature.properties.HurID);
-		}
-	}
+    if (result) {
+        if (!checkValue(feature.properties.HurID, curHurIDsByCY)) {
+            curHurIDsByCY.push(feature.properties.HurID);
+        }
+    }
 
-	return result;
+    return result;
 }
 
 function filterPolygonByL(feature, layer) {
-	if (feature.properties.NAME == curLocation) {
-		curLocationJSON = feature;
-		return true;
-	}
-	return false;
+    if (feature.properties.NAME == curLocation) {
+        curLocationJSON = feature;
+        return true;
+    }
+    return false;
 }
 
 function filterLineByCY(feature, layer) {
-	return (checkValue(feature.properties.HurID, curHurIDsByCY));
+    return (checkValue(feature.properties.HurID, curHurIDsByCY));
 }
 
 // feature here is filtered by cat and year already
 function filterLineByL(feature, layer) {
-	var isOverlap = turf.lineIntersect(feature, curLocationJSON);
+    var isOverlap = turf.lineIntersect(feature, curLocationJSON);
 
-	if (isOverlap.features.length > 0) {
-		if (!checkValue(feature.properties.HurID, curHurIDsByLCY)) {
-			curHurIDsByLCY.push(feature.properties.HurID);
-		}
-	}
-	return false;
+    if (isOverlap.features.length > 0) {
+        if (!checkValue(feature.properties.HurID, curHurIDsByLCY)) {
+            curHurIDsByLCY.push(feature.properties.HurID);
+        }
+    }
+    return false;
 }
 
 function filterHurByLCY(feature, layer) {
-	// find all the hurricanes that have at least one segment which meets the selected categories, crossing the selected location, and within the selected year range
-	return checkValue(feature.properties.HurID, curHurIDsByLCY);
+    // find all the hurricanes that have at least one segment which meets the selected categories, crossing the selected location, and within the selected year range
+    return checkValue(feature.properties.HurID, curHurIDsByLCY);
 }
 
 
 function checkValue(value, arr) {
-	var status = false;
+    var status = false;
 
-	for (var i = 0; i < arr.length; i++) {
-		var name = arr[i];
-		if (name == value) {
-			status = true;
-			break;
-		}
-	}
+    for (var i = 0; i < arr.length; i++) {
+        var name = arr[i];
+        if (name == value) {
+            status = true;
+            break;
+        }
+    }
 
-	return status;
+    return status;
 }
 
 function getCheckedCheckboxesFor() {
-	// "values" is a vector containing all the selected categories
-	var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
-		values = [];
-	Array.prototype.forEach.call(checkboxes, function (el) {
-		values.push(el.value);
-	});
-	if (values.length == 0) {
-		document.getElementById("hurricaneInput").disabled = false;
-	} else {
-		document.getElementById("hurricaneInput").disabled = true;
-	}
+    // "values" is a vector containing all the selected categories
+    var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
+        values = [];
+    Array.prototype.forEach.call(checkboxes, function (el) {
+        values.push(el.value);
+    });
+    if (values.length == 0) {
+        document.getElementById("hurricaneInput").disabled = false;
+    } else {
+        document.getElementById("hurricaneInput").disabled = true;
+    }
 }
 
 //create new sequence controls to control the years
 function createLegend(map) {
-	//Create a SequenceControl object
-	var LegendControl = L.Control.extend({
-		options: {
-			position: 'topright'
-		},
-		onAdd: function (map) {
-			//Create a DOM container to append to on to the map
-			var container = L.DomUtil.create('div', 'legend-control-container');
-			//Append the title
-			$(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
+    //Create a SequenceControl object
+    var LegendControl = L.Control.extend({
+        options: {
+            position: 'topright'
+        },
+        onAdd: function (map) {
+            //Create a DOM container to append to on to the map
+            var container = L.DomUtil.create('div', 'legend-control-container');
+            //Append the title
+            $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
 
-			//Append the legend symbols
-			var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> city area</text><br>'
-			var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> state boundary</text><br>'
+            //Append the legend symbols
+            var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> city area</text><br>'
+            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> state boundary</text><br>'
 
-			// need to fixed
-			var hCategory = '<text>Hurricane Categories</text><br>'
-			hCategory += '<img src = img/SVG/h5.svg width=45></img>'
-			hCategory += '<text> H5</text><br>'
-			hCategory += '<img src = img/SVG/h4.svg width=45>'
-			hCategory += '<text> H4</text><br>'
-			hCategory += '<img src = img/SVG/h3.svg width=45>'
-			hCategory += '<text> H3</text><br>'
-			hCategory += '<img src = img/SVG/h2.svg width=45>'
-			hCategory += '<text> H2</text><br>'
-			hCategory += '<img src = img/SVG/h1.svg width=45>'
-			hCategory += '<text> H1</text><br>'
-			hCategory += '<img src = img/SVG/ts.svg width=45>'
-			hCategory += '<text> TS</text><br>'
-			hCategory += '<img src = img/SVG/td.svg width=45>'
-			hCategory += '<text> TD</text><br>'
-			hCategory += '<img src = img/SVG/ex.svg width=45>'
-			hCategory += '<text> EX</text><br>'
+            // need to fixed
+            var hCategory = '<text>Hurricane Categories</text><br>'
+            hCategory += '<img src = img/SVG/h5.svg width=45></img>'
+            hCategory += '<text> H5</text><br>'
+            hCategory += '<img src = img/SVG/h4.svg width=45>'
+            hCategory += '<text> H4</text><br>'
+            hCategory += '<img src = img/SVG/h3.svg width=45>'
+            hCategory += '<text> H3</text><br>'
+            hCategory += '<img src = img/SVG/h2.svg width=45>'
+            hCategory += '<text> H2</text><br>'
+            hCategory += '<img src = img/SVG/h1.svg width=45>'
+            hCategory += '<text> H1</text><br>'
+            hCategory += '<img src = img/SVG/ts.svg width=45>'
+            hCategory += '<text> TS</text><br>'
+            hCategory += '<img src = img/SVG/td.svg width=45>'
+            hCategory += '<text> TD</text><br>'
+            hCategory += '<img src = img/SVG/ex.svg width=45>'
+            hCategory += '<text> EX</text><br>'
 
-			//add attribute legend to container
-			$(container).append(cityArea);
-			$(container).append(stateBoundary);
-			$(container).append(hCategory);
+            //add attribute legend to container
+            $(container).append(cityArea);
+            $(container).append(stateBoundary);
+            $(container).append(hCategory);
 
-			return container;
-		}
-	});
+            return container;
+        }
+    });
 
-	map.addControl(new LegendControl());
+    map.addControl(new LegendControl());
 
 }
 
 // scatterplot
 function createScatter(graphData) {
+<<<<<<< HEAD
 	var ymax = Math.max.apply(Math, graphData.map(function (o) {
 		return o.category;
 	}))
@@ -1295,156 +1382,270 @@ function createScatter(graphData) {
 		.on("mouseover", mouseover)
 		.on("mousemove", mousemove)
 		.on("mouseleave", mouseleave)
+=======
+    var ymax = Math.max.apply(Math, graphData.map(function (o) {
+        return o.category;
+    }))
+    var ymin = Math.min.apply(Math, graphData.map(function (o) {
+        return o.category;
+    }))
+
+    //
+    var xmax = Math.max.apply(Math, graphData.map(function (o) {
+        return o.date;
+    }))
+    var xmin = Math.min.apply(Math, graphData.map(function (o) {
+        return o.date;
+    }))
+
+    //remove previous contents
+    document.getElementById("scatterplot-div").innerHTML = "";
+
+    // set the dimensions and margins of the graph
+    var margin = {
+        top: 10,
+        right: 25,
+        bottom: 10,
+        left: 25
+    },
+        width = 375 - margin.left - margin.right,
+        height = 220 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#scatterplot-div")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom + 10)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+    // Add X axis
+    var x = d3.scaleLinear()
+    .domain([xmin - 0.12, xmax + 0.12])
+    .range([0, width]);
+
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("class", "axisWhite")
+        .call(d3.axisBottom(x).tickSize(0))
+        .selectAll("text").remove()
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+    .domain([0, 8])
+    .range([height, 0]);
+
+    svg.append("g")
+        .attr("class", "axisWhite")
+        .call(d3.axisLeft(y).tickSizeOuter(0));
+
+    // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
+    // Its opacity is set to 0: we don't see it by default.
+    var tooltip = d3.select("#scatterplot-div")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+
+    // A function that change this tooltip when the user hover a point.
+    // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+    var mouseover = function (d) {
+        tooltip
+            .style("opacity", 1)
+    }
+
+    var mousemove = function (d) {
+        tooltip
+            .html("Category: " + d.category)
+            .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+            .style("top", (d3.mouse(this)[1]) + "px")
+    }
+
+    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+    var mouseleave = function (d) {
+        tooltip
+            .transition()
+            .duration(200)
+            .style("opacity", 0)
+    }
+
+    // Add dots
+    svg.append('g')
+        .selectAll("dot")
+    // .data(graphData.filter(function(d,i){return i<50})) // the .filter part is just to keep a few dots on the chart, not all of them
+        .data(graphData)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) {
+        return x(d.date);
+    })
+        .attr("cy", function (d) {
+        return y(d.category);
+    })
+        .attr("r", 4)
+        .style("fill", "#69b3a2")
+        .style("opacity", 0.3)
+        .style("stroke", "white")
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+>>>>>>> 65bea29c751238aaa487b249cda3531373e54e52
 
 }
 
 
 // line graph
 function createLineGraph(data) {
-	var ymax = Math.max.apply(Math, data.map(function (o) {
-		return o.value;
-	}))
-	var ymin = Math.min.apply(Math, data.map(function (o) {
-		return o.value;
-	}))
+    var ymax = Math.max.apply(Math, data.map(function (o) {
+        return o.value;
+    }))
+    var ymin = Math.min.apply(Math, data.map(function (o) {
+        return o.value;
+    }))
 
-	var xmax = Math.max.apply(Math, data.map(function (o) {
-		return o.date;
-	}))
-	var xmin = Math.min.apply(Math, data.map(function (o) {
-		return o.date;
-	}))
+    var xmax = Math.max.apply(Math, data.map(function (o) {
+        return o.date;
+    }))
+    var xmin = Math.min.apply(Math, data.map(function (o) {
+        return o.date;
+    }))
 
-	//remove previous contents
-	document.getElementById("lineGraph-div").innerHTML = "";
+    //remove previous contents
+    document.getElementById("lineGraph-div").innerHTML = "";
 
-	// set the dimensions and margins of the graph
-	var margin = {
-			top: 10,
-			right: 25,
-			bottom: 10,
-			left: 25
-		},
-		width = 375 - margin.left - margin.right,
-		height = 220 - margin.top - margin.bottom;
+    // set the dimensions and margins of the graph
+    var margin = {
+        top: 10,
+        right: 25,
+        bottom: 10,
+        left: 25
+    },
+        width = 375 - margin.left - margin.right,
+        height = 220 - margin.top - margin.bottom;
 
-	// append the svg object to the body of the page
-	var svg = d3.select("#lineGraph-div")
-		.append("svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom + 10)
-		.append("g")
-		.attr("transform",
-			"translate(" + margin.left + "," + margin.top + ")");
+    // append the svg object to the body of the page
+    var svg = d3.select("#lineGraph-div")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom + 10)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
-	// Add X axis --> it is a date format
-	var x = d3.scaleLinear()
-		.domain([xmin - 0.12, xmax + 0.12])
-		.range([0, width]);
-
-
-	svg.append("g")
-		.attr("transform", "translate(0," + height + ")")
-		.attr("class", "axisWhite")
-		.call(d3.axisBottom(x).tickSize(0))
-		.selectAll("text").remove()
-
-	// add x-axis label
-	svg.append("text")
-		.attr("text-anchor", "center")
-		.attr("fill", "white")
-		.attr("transform", "translate(" + 140 + "," + 217 + ")")
-		.style("font-size", 12)
-		.text("Time");
-
-	// Add Y axis
-	var y = d3.scaleLinear()
-		.domain([ymin - 10, ymax + 10])
-		.range([height, 0]);
-
-	svg.append("g")
-		.attr("class", "axisWhite")
-		.call(d3.axisLeft(y).tickSizeOuter(0));
+    // Add X axis --> it is a date format
+    var x = d3.scaleLinear()
+    .domain([xmin - 0.12, xmax + 0.12])
+    .range([0, width]);
 
 
-	// Add the line
-	svg.append("path")
-		.datum(data)
-		.attr("fill", "none")
-		.attr("stroke", "white")
-		.attr("class", "axisWhite")
-		.attr("stroke-width", 1.25)
-		.attr("d", d3.line()
-			.curve(d3.curveBasis) // Just add that to have a curve instead of segments
-			.x(function (d) {
-				return x(d.date)
-			})
-			.y(function (d) {
-				return y(d.value)
-			})
-		)
+    svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .attr("class", "axisWhite")
+        .call(d3.axisBottom(x).tickSize(0))
+        .selectAll("text").remove()
 
-	// create a tooltip
-	var Tooltip = d3.select("#lineGraph-div")
-		.append("div")
-		.style("opacity", 0)
-		.attr("class", "tooltip")
-		.style("background-color", "white")
-		.style("border", "solid")
-		.style("border-width", "2px")
-		.style("border-radius", "5px")
-		.style("padding", "5px")
+    // add x-axis label
+    svg.append("text")
+        .attr("text-anchor", "center")
+        .attr("fill", "white")
+        .attr("transform", "translate(" + 140 + "," + 217 + ")")
+        .style("font-size", 12)
+        .text("Time");
 
-	// Three function that change the tooltip when user hover / move / leave a cell
-	var mouseover = function (d) {
-		Tooltip
-			.style("opacity", 1)
-	}
-	var mousemove = function (d) {
-		Tooltip
-			.html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)
-			.style("left", (d3.mouse(this)[0] + 70) + "px")
-			.style("top", (d3.mouse(this)[1]) + "px")
-	}
-	var mouseleave = function (d) {
-		Tooltip
-			.style("opacity", 0)
-	}
+    // Add Y axis
+    var y = d3.scaleLinear()
+    .domain([ymin - 10, ymax + 10])
+    .range([height, 0]);
 
-	// Add the points
-	svg
-		.append("g")
-		.selectAll("dot")
-		.data(data)
-		.enter()
-		.append("circle")
-		.attr("class", "myCircle")
-		.attr("cx", function (d) {
-			return x(d.date)
-		})
-		.attr("cy", function (d) {
-			return y(d.value)
-		})
-		.attr("r", 2.75)
-		.attr("stroke", "#69b3a2")
-		.attr("stroke-width", 1.5)
-		.attr("fill", "white")
-		.on("mouseover", mouseover)
-		.on("mousemove", mousemove)
-		.on("mouseleave", mouseleave)
+    svg.append("g")
+        .attr("class", "axisWhite")
+        .call(d3.axisLeft(y).tickSizeOuter(0));
+
+
+    // Add the line
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "white")
+        .attr("class", "axisWhite")
+        .attr("stroke-width", 1.25)
+        .attr("d", d3.line()
+              .curve(d3.curveBasis) // Just add that to have a curve instead of segments
+              .x(function (d) {
+        return x(d.date)
+    })
+              .y(function (d) {
+        return y(d.value)
+    })
+             )
+
+    // create a tooltip
+    var Tooltip = d3.select("#lineGraph-div")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+    // Three function that change the tooltip when user hover / move / leave a cell
+    var mouseover = function (d) {
+        Tooltip
+            .style("opacity", 1)
+    }
+    var mousemove = function (d) {
+        Tooltip
+            .html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)
+            .style("left", (d3.mouse(this)[0] + 70) + "px")
+            .style("top", (d3.mouse(this)[1]) + "px")
+    }
+    var mouseleave = function (d) {
+        Tooltip
+            .style("opacity", 0)
+    }
+
+    // Add the points
+    svg
+        .append("g")
+        .selectAll("dot")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", "myCircle")
+        .attr("cx", function (d) {
+        return x(d.date)
+    })
+        .attr("cy", function (d) {
+        return y(d.value)
+    })
+        .attr("r", 2.75)
+        .attr("stroke", "#69b3a2")
+        .attr("stroke-width", 1.5)
+        .attr("fill", "white")
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
 
 }
 
 
 function selectHurricane() {
-	var selecthurricane = d3.select("#lineGraph-div").html("<p>Select a hurricane on the map</p>")
+    var selecthurricane = d3.select("#lineGraph-div").html("<p>Select a hurricane on the map</p>")
 
-}
+    }
 
 function selectLocation() {
-	var selectlocation = d3.select("#scatterplot-div").html("<p>Select a location on the map</p>")
+    var selectlocation = d3.select("#scatterplot-div").html("<p>Select a location on the map</p>")
 
-}
+    }
 
 
 window.onload = initializeSiders();
