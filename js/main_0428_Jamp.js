@@ -886,16 +886,16 @@ function applySetting() {
                             });
                         }
 
-                        else if (curHurIDsByCY.length >= 100) {
-                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
-                        }
-
                         $('#img').hide();
                         $('#mapid').show();
                         curMap.addLayer(curLineLayer);
 
                         // change the map extent to the hurricane
                         updateExtent(curLineLayer);
+                        
+                        if (curHurIDsByCY.length >= 100) {
+                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
+                        }
                     }
                 } // end of Scenario #2
             }
@@ -1150,20 +1150,31 @@ function filterHurByLCY(feature, layer) {
 
 
 function lineOnEachFeature(feature,layer){
+    
+    //popup content is now just the city name
+    var popupContent = "<b>Hurricane Name: </b>: " + feature.properties.hurName + "<br />";
+    popupContent += "<b>Click to see more info in the graph</b>";
+
+    //bind the popup to the circle marker
+    layer.bindPopup(popupContent, {
+        offset: new L.Point(0, 0),
+        closeButton: false
+    });
+    
     layer.on({
-        /*mouseover: function(){
-		    this.openPopup();
-		},*/
-        /*mouseout: function () {
+        mouseover: function(){
+            this.openPopup();
+        },
+        mouseout: function () {
             this.closePopup();
-        },*/
+        },
         click: function (e) {
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
             if (selection != e.target) {
                 var curLineSeg = feature;
-                
+
                 // update the line graph
                 $.ajax("data/point.json", {
                     dataType: "json",
