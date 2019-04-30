@@ -678,11 +678,36 @@ function applySetting() {
 
 													curMap.addLayer(curPointLayer);
 
-													if (curHurIDsByLCY.length == 1) {
-														var graphData = [];
+                                                if (curHurIDsByLCY.length == 1) {
+                                                    var graphData = [];
+                                                    console.log("here");
 
-													}
-												}
+                                                       //console.log("here")
+                                                       curPointLayer.eachLayer(function (layer) {
+                                                         var hour = layer.feature.properties.HH;
+                                                         var day = layer.feature.properties.DD;
+                                                         var month = layer.feature.properties.MM;
+                                                         var doy = layer.feature.properties.doy;
+
+                                                         var cur_wind = layer.feature.properties.Wind;
+
+                                                         var new_entry = {
+                                                           "date": doy,
+                                                           "value": cur_wind,
+                                                           "day": day,
+                                                           "hour": hour,
+                                                           "month": month
+                                                         }
+                                                         graphData.push(new_entry)
+                                                           createLineGraph(graphData);
+
+
+                                                       });
+
+                                                     }
+
+                                                    }
+												
 											}); // end of ajax - points.json
 
 
