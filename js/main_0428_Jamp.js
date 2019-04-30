@@ -871,7 +871,7 @@ function applySetting() {
 
                     // change the map extent to the hurricane
                     updateExtent(curLineLayer);
-                    
+
                 } // end of Scenario #2
             }
         });// end of ajax line.json
@@ -894,7 +894,6 @@ function pointToLayer(feature, latlng) {
     //create marker options
     var options = {
         fillColor: "#add8e6",
-        color: "red",
         weight: 2,
         opacity: 1,
         fillOpacity: 0
@@ -902,6 +901,7 @@ function pointToLayer(feature, latlng) {
 
     //Give each feature's circle marker a radius based on its attribute value
     options.radius = calcPropRadius(feature.properties.popden);
+    options.color = calcPointColor(feature.properties.Cat);
 
     //create circle marker layer
     var layer = L.circleMarker(latlng, options);
@@ -929,6 +929,43 @@ function pointToLayer(feature, latlng) {
 }
 
 // proportional symbols
+// point color should be consistent with line color
+function calcPointColor(attValue){
+
+    var colorScheme = ["#ffff00", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]
+    var pointColor;
+
+    switch (attValue) {
+        case 'H5': 
+            pointColor = colorScheme[4]; 
+            break;
+        case 'H4': 
+            pointColor = colorScheme[3]; 
+            break;
+        case 'H3': 
+            pointColor = colorScheme[2]; 
+            break;
+        case 'H2': 
+            pointColor = colorScheme[1]; 
+            break;
+        case 'H1': 
+            pointColor = colorScheme[0]; 
+            break;
+        case 'TS':
+            pointColor = "#58e095"; 
+            break;
+        case 'TD':
+            pointColor = "#70b5e4"; 
+            break;
+        case 'EX':
+            pointColor = "#cccccb"; 
+            break;
+        default:
+            pointColor = "#ffffff"; 
+    } 
+}
+
+
 // calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //scale factor to adjust symbol size evenly
