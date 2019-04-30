@@ -719,7 +719,7 @@ function applySetting() {
                                                      }
 
                                                     }
-												
+
 											}); // end of ajax - points.json
 
 
@@ -1198,7 +1198,7 @@ function createScatter(graphData) {
 			bottom: 10,
 			left: 25
 		},
-		width = 375 - margin.left - margin.right,
+		width = 300 - margin.left - margin.right,
 		height = 220 - margin.top - margin.bottom;
 
 	// append the svg object to the body of the page
@@ -1221,14 +1221,24 @@ function createScatter(graphData) {
 		.call(d3.axisBottom(x).tickSize(0))
 		.selectAll("text").remove()
 
+	// set format y axis tick label
+	var tickLabels = ["","EX","TD","TS","H1","H2","H3","H4","H5"]
+
 	// Add Y axis
 	var y = d3.scaleLinear()
-		.domain([0, 8])
+		.domain([0,8])
 		.range([height, 0]);
+
+	var myAxis = d3.axisLeft()
+		.scale(y)
+		.tickValues([0,1,2,3,4,5,6,7,8])
+		.tickFormat(function(d,i){ return tickLabels[i] });
+
 
 	svg.append("g")
 		.attr("class", "axisWhite")
-		.call(d3.axisLeft(y).tickSizeOuter(0));
+		.call(myAxis.tickSizeOuter(0));
+		// .call(d3.axisLeft(y).tickSizeOuter(0));
 
 	// Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
 	// Its opacity is set to 0: we don't see it by default.
@@ -1280,7 +1290,7 @@ function createScatter(graphData) {
 		})
 		.attr("r", 4)
 		.style("fill", "#69b3a2")
-		.style("opacity", 0.3)
+		.style("opacity", 0.8)
 		.style("stroke", "white")
 		.on("mouseover", mouseover)
 		.on("mousemove", mousemove)
