@@ -496,6 +496,7 @@ function applySetting() {
                                 var graphData = [];
 
                                 curPointLayer.eachLayer(function (layer) {
+                                    var y = layer.feature.properties.YYYY;
                                     var hour = layer.feature.properties.HH;
                                     var day = layer.feature.properties.DD;
                                     var month = layer.feature.properties.MM;
@@ -508,7 +509,8 @@ function applySetting() {
                                         "value": cur_wind,
                                         "day": day,
                                         "hour": hour,
-                                        "month": month
+                                        "month": month,
+                                        "y":y
                                     }
                                     graphData.push(new_entry)
 
@@ -700,10 +702,8 @@ function applySetting() {
                                                         // update the line graph 
                                                         if (curHurIDsByLCY.length == 1) {
                                                             var graphData = [];
-                                                            //console.log("here");
-
-                                                            //console.log("here")
                                                             curPointLayer.eachLayer(function (layer) {
+                                                                var y = layer.feature.properties.YYYY;
                                                                 var hour = layer.feature.properties.HH;
                                                                 var day = layer.feature.properties.DD;
                                                                 var month = layer.feature.properties.MM;
@@ -716,14 +716,15 @@ function applySetting() {
                                                                     "value": cur_wind,
                                                                     "day": day,
                                                                     "hour": hour,
-                                                                    "month": month
+                                                                    "month": month,
+                                                                    "y":y
                                                                 }
                                                                 graphData.push(new_entry)
-                                                                createLineGraph(graphData);
 
 
                                                             });
 
+                                                            createLineGraph(graphData);
                                                         }
                                                     }
                                                 });// end of ajax - points.json
@@ -864,6 +865,7 @@ function applySetting() {
                                     var graphData = [];
 
                                     curPointLayer.eachLayer(function (layer) {
+                                        var y = layer.feature.properties.YYYY;
                                         var hour = layer.feature.properties.HH;
                                         var day = layer.feature.properties.DD;
                                         var month = layer.feature.properties.MM;
@@ -876,9 +878,11 @@ function applySetting() {
                                             "value": cur_wind,
                                             "day": day,
                                             "hour": hour,
-                                            "month": month
+                                            "month": month,
+                                            "y":y
                                         }
                                         graphData.push(new_entry)
+
 
                                     });
                                     createLineGraph(graphData);
@@ -892,15 +896,15 @@ function applySetting() {
 
                         // change the map extent to the hurricane
                         updateExtent(curLineLayer);
-                        
+
                         if (curHurIDsByCY.length >= 100) {
                             alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
                         }
+
                     }
                 } // end of Scenario #2
             }
         });// end of ajax line.json
-
 
     } // end of Scenario #2 or #3
 
@@ -1150,7 +1154,7 @@ function filterHurByLCY(feature, layer) {
 
 
 function lineOnEachFeature(feature,layer){
-    
+
     //popup content is now just the city name
     var popupContent = "<b>Hurricane Name: </b>: " + feature.properties.hurName + "<br />";
     popupContent += "<b>Click to see more info in the graph</b>";
@@ -1160,7 +1164,7 @@ function lineOnEachFeature(feature,layer){
         offset: new L.Point(0, 0),
         closeButton: false
     });
-    
+
     layer.on({
         mouseover: function(){
             this.openPopup();
@@ -1191,6 +1195,7 @@ function lineOnEachFeature(feature,layer){
                         var graphData = [];
 
                         curPointLayer.eachLayer(function (layer) {
+                            var y = layer.feature.properties.YYYY;
                             var hour = layer.feature.properties.HH;
                             var day = layer.feature.properties.DD;
                             var month = layer.feature.properties.MM;
@@ -1203,7 +1208,8 @@ function lineOnEachFeature(feature,layer){
                                 "value": cur_wind,
                                 "day": day,
                                 "hour": hour,
-                                "month": month
+                                "month": month,
+                                "y":y
                             }
                             graphData.push(new_entry)
 
@@ -1527,7 +1533,9 @@ function createLineGraph(data) {
     }
     var mousemove = function (d) {
         Tooltip
-            .html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)
+        /*.html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)*/
+            .html("<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
+                 + "<b>Wind :</b>&nbsp" + d.value)
             .style("left", (d3.mouse(this)[0] + 70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
     }

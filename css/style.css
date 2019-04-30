@@ -320,7 +320,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
     vertical-align: top;
     font-family: verdana;
     text-align:left;
-    line-height: 15px;
+    line-height: 1.2;
     /*background-color: lightcyan;*/
     background-color: rgba(0,0,0,0.9);
 }
