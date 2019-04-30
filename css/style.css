@@ -9,47 +9,47 @@ h4 {
 }
 
 label {
-  color: #FFFFFF;
+    color: #FFFFFF;
 }
 
 h3 {
-  color: #FFFFFF;
+    color: #FFFFFF;
 }
 
 .myCircle:hover {
-  stroke: red;
+    stroke: red;
 }
 
 .axisWhite line{
-  stroke: white;
+    stroke: white;
 }
 
 .axisWhite path{
-  stroke: white;
+    stroke: white;
 }
 
 .axisWhite text{
-  fill: white;
+    fill: white;
 }
 
 .rangeValues {
-  color: #FFFFFF;
+    color: #FFFFFF;
 }
 
 .legend-control-container {
-  color: #FFFFFF;
-  width: 130px;
-  background-color: rgba(0,0,0,0.6);
-  outline: 2px solid white;
-  padding: 10px;
-  text-align: left;
-  /* bottom: 0;
-  left: 0;
-  border: solid black 1px;
-  display: table-cell;
-  white-space: nowrap;
-  font-family: Arial;
-  font-weight: bold; */
+    color: #FFFFFF;
+    width: 130px;
+    background-color: rgba(0,0,0,0.6);
+    outline: 2px solid white;
+    padding: 10px;
+    text-align: left;
+    /* bottom: 0;
+    left: 0;
+    border: solid black 1px;
+    display: table-cell;
+    white-space: nowrap;
+    font-family: Arial;
+    font-weight: bold; */
 
 }
 
@@ -68,7 +68,7 @@ h3 {
     color: white;
     font-size: 25px;
     padding: 4px;
-	font-family: verdana;
+    font-family: verdana;
     border: 3px solid white;
     background-color: darkblue;
     text-align:center;
@@ -105,11 +105,11 @@ input[type=text] {
     width: 250px;
 }
 input[type=text]:enabled {
-  background: #fff;
+    background: #fff;
 }
 
 input[type=text]:disabled {
-  background: #dddddd;
+    background: #dddddd;
 }
 .autocomplete-items {
     position: absolute;
@@ -143,74 +143,74 @@ input[type=text]:disabled {
 
 /* The container */
 .container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Hide the browser's default checkbox */
 .container input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
 }
 
 /*.container span {
-    margin: 1px;
+margin: 1px;
 }*/
 
 /* Create a custom checkbox */
 .checkmark {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 20px;
-  width: 20px;
-  background-color: #eee;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
 }
 
 /* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
-  background-color: #ccc;
+    background-color: #ccc;
 }
 
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
-  background-color: #2196F3;
+    background-color: #2196F3;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
-  position: absolute;
-  display: none;
+    content: "";
+    position: absolute;
+    display: none;
 }
 
 /* Show the checkmark when checked */
 .container input:checked ~ .checkmark:after {
-  display: block;
+    display: block;
 }
 
 /* Style the checkmark/indicator */
 .container .checkmark:after {
-  left: 7px;
-  top: 2px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
+    left: 7px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
 }
 
 
@@ -232,7 +232,7 @@ section.range-slider input {
     height: 18px;
     margin-bottom: 10px;
     padding-bottom: 10px;
-	background-color: transparent;
+    background-color: transparent;
 }
 section.range-slider input::-webkit-slider-thumb {
     pointer-events: all;
@@ -261,7 +261,7 @@ section.range-slider input:last-of-type::-moz-range-track {
     border: 0;
 }
 section.range-slider input[type=range]::-moz-focus-outer {
-  border: 0;
+    border: 0;
 }
 
 
@@ -277,21 +277,21 @@ section.range-slider input[type=range]::-moz-focus-outer {
 }
 /* Blue */
 .apply {
-  color: dodgerblue;
+    color: dodgerblue;
 }
 
 .apply:hover {
-  background: #2196F3;
-  color: white;
+    background: #2196F3;
+    color: white;
 }
 /* Red */
 .clear {
-  color: red;
+    color: red;
 }
 
 .clear:hover {
-  background: #f44336;
-  color: white;
+    background: #f44336;
+    color: white;
 }
 
 #img {
