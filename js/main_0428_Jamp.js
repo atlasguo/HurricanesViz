@@ -828,72 +828,79 @@ function applySetting() {
 
                 // Scenario #2: if locationInput is empty, directly map the curLineLayer
                 else {
-                    // only one hurricane selected after filtering by cat and year
 
-                    if (curHurIDsByCY.length == 1) {
-                        // Map: Zoom to the hurricane line; Add points;
-                        // Info panel: individual hurricane graph should update;
-                        // add the points to the map
-                        $.ajax("data/point.json", {
-                            dataType: "json",
-                            success: function (data) {
+                    if (curHurIDsByCY.length == 0) {
+                        alert("There is no resulting hurricanes based on current settings.")
+                        $('#img').hide();
+                        $('#mapid').show();
+                    }
 
-                                // Define the geojson layer and add it to the map
-                                curPointLayer = L.geoJson(data, {
-                                    /*style: function(feature,layer){
+                    else{
+                        // only one hurricane selected after filtering by cat and year
+                        if (curHurIDsByCY.length == 1) {
+                            // Map: Zoom to the hurricane line; Add points;
+                            // Info panel: individual hurricane graph should update;
+                            // add the points to the map
+                            $.ajax("data/point.json", {
+                                dataType: "json",
+                                success: function (data) {
+
+                                    // Define the geojson layer and add it to the map
+                                    curPointLayer = L.geoJson(data, {
+                                        /*style: function(feature,layer){
 									    return pointStyle(feature,layer);
 									},*/
-                                    // filter by name
-                                    filter: function (feature, layer) {
-                                        return filterPointByByIDs(feature, layer);
-                                    },
-                                    // on each feature of states
-                                    pointToLayer: function (feature, latlng) {
-                                        return pointToLayer(feature, latlng);
-                                    }
-                                });
+                                        // filter by name
+                                        filter: function (feature, layer) {
+                                            return filterPointByByIDs(feature, layer);
+                                        },
+                                        // on each feature of states
+                                        pointToLayer: function (feature, latlng) {
+                                            return pointToLayer(feature, latlng);
+                                        }
+                                    });
 
-                                $('#img').hide();
-                                $('#mapid').show();
-                                curMap.addLayer(curPointLayer);
+                                    $('#img').hide();
+                                    $('#mapid').show();
+                                    curMap.addLayer(curPointLayer);
 
 
-                                var graphData = [];
+                                    var graphData = [];
 
-                                curPointLayer.eachLayer(function (layer) {
-                                    var hour = layer.feature.properties.HH;
-                                    var day = layer.feature.properties.DD;
-                                    var month = layer.feature.properties.MM;
-                                    var doy = layer.feature.properties.doy;
+                                    curPointLayer.eachLayer(function (layer) {
+                                        var hour = layer.feature.properties.HH;
+                                        var day = layer.feature.properties.DD;
+                                        var month = layer.feature.properties.MM;
+                                        var doy = layer.feature.properties.doy;
 
-                                    var cur_wind = layer.feature.properties.Wind;
+                                        var cur_wind = layer.feature.properties.Wind;
 
-                                    var new_entry = {
-                                        "date": doy,
-                                        "value": cur_wind,
-                                        "day": day,
-                                        "hour": hour,
-                                        "month": month
-                                    }
-                                    graphData.push(new_entry)
+                                        var new_entry = {
+                                            "date": doy,
+                                            "value": cur_wind,
+                                            "day": day,
+                                            "hour": hour,
+                                            "month": month
+                                        }
+                                        graphData.push(new_entry)
 
-                                });
-                                createLineGraph(graphData);
-                            }
-                        });
+                                    });
+                                    createLineGraph(graphData);
+                                }
+                            });
+                        }
+
+                        else if (curHurIDsByCY.length >= 100) {
+                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
+                        }
+
+                        $('#img').hide();
+                        $('#mapid').show();
+                        curMap.addLayer(curLineLayer);
+
+                        // change the map extent to the hurricane
+                        updateExtent(curLineLayer);
                     }
-
-                    else if (curHurIDsByCY.length >= 100) {
-                        alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
-                    }
-
-                    $('#img').hide();
-                    $('#mapid').show();
-                    curMap.addLayer(curLineLayer);
-
-                    // change the map extent to the hurricane
-                    updateExtent(curLineLayer);
-
                 } // end of Scenario #2
             }
         });// end of ajax line.json
