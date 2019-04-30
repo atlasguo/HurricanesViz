@@ -665,14 +665,14 @@ function applySetting() {
                                         });
 
                                         console.log(curHurIDsByLCY.length + " hurricanes within this location ");
-                                        
+
                                         // if there is no resulting hurricanes
                                         if (curHurIDsByLCY.length == 0) {
                                             alert("There is no resulting hurricanes based on current settings.")
                                             $('#img').hide();
                                             $('#mapid').show();
                                         }
-                                        
+
                                         // if there is hurricane
                                         else {
                                             // if # of resulting hurricanes is <= 5, then add points to map
@@ -735,6 +735,9 @@ function applySetting() {
                                             } // end of adding points in scenario #3 when the # of hurricanes is <= 5
 
                                             curLineLayer = L.geoJson(curLineLayerJSON, {
+                                                style: function (feature, layer) {
+                                                    return lineStyle(feature, layer);
+                                                },
                                                 filter: function (feature, layer) {
                                                     // to get the curHurIDsByLCY
                                                     return filterHurByLCY(feature, layer);
@@ -981,7 +984,9 @@ function calcPointColor(attValue){
             break;
         default:
             pointColor = "#ffffff"; 
-    } 
+    }
+
+    return pointColor;
 }
 
 
