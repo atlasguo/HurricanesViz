@@ -382,6 +382,18 @@ function updateExtent(layer) {
 	curMap.fitBounds(layer.getBounds());
 }
 
+function clearMap(){
+    if (curPointLayer) {
+        curMap.removeLayer(curPointLayer);
+    };
+    if (curLineLayer) {
+        curMap.removeLayer(curLineLayer);
+    };
+    if (curLocationLayer) {
+        curMap.removeLayer(curLocationLayer);
+    };
+}
+
 function applySetting() {
 
 	if (selection) {
@@ -794,31 +806,6 @@ function applySetting() {
 
 							}
 						}); // ajax - polygons.json
-						// // if found and only one hurricane shows up
-						// graphData = []
-						// if (curHurIDsByCY.length == 1) {
-						//   console.log("here")
-						//   curPointLayer.eachLayer(function (layer) {
-						//     var hour = layer.feature.properties.HH;
-						//     var day = layer.feature.properties.DD;
-						//     var month = layer.feature.properties.MM;
-						//     var doy = layer.feature.properties.doy;
-						//
-						//     var cur_wind = layer.feature.properties.Wind;
-						//
-						//     var new_entry = {
-						//       "date": doy,
-						//       "value": cur_wind,
-						//       "day": day,
-						//       "hour": hour,
-						//       "month": month
-						//     }
-						//     graphData.push(new_entry)
-						//
-						//
-						//   });
-						//
-						// }
 
 					} // end of scenario #3 if location is found
 					// if not found:
@@ -849,7 +836,7 @@ function applySetting() {
 									},*/
 									// filter by name
 									filter: function (feature, layer) {
-										return filterPointByByName(feature, layer);
+										return filterPointByByIDs(feature, layer);
 									},
 									// on each feature of states
 									pointToLayer: function (feature, latlng) {
