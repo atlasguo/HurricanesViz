@@ -800,11 +800,11 @@ function applySetting() {
                         $('#img').hide();
                         $('#mapid').show();
                         alert("No location named " + curLocation + "!");
-                    }
+                    } // end of scenario #3 if location is not found
 
-                }
+                } // end of scenario #3
 
-                // Scenario #2: if locationInput is empty, directly map this curLineLayer
+                // Scenario #2: if locationInput is empty, directly map the curLineLayer
                 else {
                     // only one hurricane selected after filtering by cat and year
 
@@ -871,12 +871,13 @@ function applySetting() {
 
                     // change the map extent to the hurricane
                     updateExtent(curLineLayer);
-                }
+                    
+                } // end of Scenario #2
             }
-        });
+        });// end of ajax line.json
 
 
-    }
+    } // end of Scenario #2 or #3
 
 }
 
