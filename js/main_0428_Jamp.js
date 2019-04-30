@@ -461,9 +461,6 @@ function applySetting() {
                             filter: function (feature, layer) {
                                 return filterHurByName(feature, layer);
                             }
-                            /*,
-                            // on each feature of states
-                            onEachFeature: lineOnEachFeature*/
                         });
 
                         curMap.addLayer(curLineLayer);
@@ -581,10 +578,9 @@ function applySetting() {
                     // filter by name
                     filter: function (feature, layer) {
                         return filterHurByCY(feature, layer);
-                    }
-                    /*,
-                    // on each feature of states
-                    onEachFeature: lineOnEachFeature*/
+                    },
+                    // on each feature of line
+                    onEachFeature: lineOnEachFeature
                 });
 
                 console.log(curHurIDsByCY.length + " hurricanes after cat and year");
@@ -704,7 +700,7 @@ function applySetting() {
                                                         // update the line graph 
                                                         if (curHurIDsByLCY.length == 1) {
                                                             var graphData = [];
-                                                            console.log("here");
+                                                            //console.log("here");
 
                                                             //console.log("here")
                                                             curPointLayer.eachLayer(function (layer) {
@@ -741,13 +737,14 @@ function applySetting() {
                                                 filter: function (feature, layer) {
                                                     // to get the curHurIDsByLCY
                                                     return filterHurByLCY(feature, layer);
-                                                }
+                                                },
+                                                // on each feature of line
+                                                onEachFeature: lineOnEachFeature
                                             });
 
                                             // TODO: map the hurricanes within the location
                                             $('#img').hide();
                                             $('#mapid').show();
-
                                             curMap.addLayer(curLineLayer);
 
                                             // update the scatterplot
@@ -1151,6 +1148,65 @@ function filterHurByLCY(feature, layer) {
     return checkValue(feature.properties.HurID, curHurIDsByLCY);
 }
 
+
+function lineOnEachFeature(feature,layer){
+    layer.on({
+        /*mouseover: function(){
+		    this.openPopup();
+		},*/
+        /*mouseout: function () {
+            this.closePopup();
+        },*/
+        click: function (e) {
+            if (selection) {
+                selectedLayer.resetStyle(selection);
+            }
+            if (selection != e.target) {
+                var curLineSeg = feature;
+                
+                // update the line graph
+                $.ajax("data/point.json", {
+                    dataType: "json",
+                    success: function (data) {
+
+                        // Define the geojson layer and add it to the map
+                        curPointLayer = L.geoJson(data, {
+                            filter: function (feature, layer) {
+                                return feature.properties.HurID == curLineSeg.properties.HurID;
+                            }
+                        });
+
+                        // update the line graph
+                        var graphData = [];
+
+                        curPointLayer.eachLayer(function (layer) {
+                            var hour = layer.feature.properties.HH;
+                            var day = layer.feature.properties.DD;
+                            var month = layer.feature.properties.MM;
+                            var doy = layer.feature.properties.doy;
+
+                            var cur_wind = layer.feature.properties.Wind;
+
+                            var new_entry = {
+                                "date": doy,
+                                "value": cur_wind,
+                                "day": day,
+                                "hour": hour,
+                                "month": month
+                            }
+                            graphData.push(new_entry)
+
+
+                        });
+
+                        createLineGraph(graphData);
+
+                    }
+                });
+            }
+        }
+    });
+}
 
 function checkValue(value, arr) {
     var status = false;
