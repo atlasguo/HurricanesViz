@@ -1113,10 +1113,10 @@ function lineOnEachFeature(feature,layer){
         },
         click: function (e) {
             if (lineSelection != e.target) {
-                
+
                 lineSelection = e.target;
                 var curLineSeg = feature;
-                
+
                 // update the line graph
                 $.ajax("data/point.json", {
                     dataType: "json",
@@ -1251,8 +1251,8 @@ function createScatter(graphData) {
     // append the svg object to the body of the page
     var svg = d3.select("#scatterplot-div")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + 10)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 300")
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -1417,8 +1417,8 @@ function createLineGraph(data) {
     // append the svg object to the body of the page
     var svg = d3.select("#lineGraph-div")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + 10)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 300")
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -1488,7 +1488,6 @@ function createLineGraph(data) {
     }
     var mousemove = function (d) {
         Tooltip
-        /*.html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)*/
             .html("<p style='font-size:12px;margin=0;padding=0;'>" +
                   "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
                   + "<b>Wind :</b>&nbsp" + d.value + "</p>")
