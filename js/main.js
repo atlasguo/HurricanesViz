@@ -1531,7 +1531,7 @@ function createScatter(graphData) {
           .on("mousemove", mousemove)
           .on("mouseleave", mouseleave)
     }
-    catch {
+    catch (err){
       $('#scatterplotTitle').html("Historical Hurricanes by Location");
     }
 }
