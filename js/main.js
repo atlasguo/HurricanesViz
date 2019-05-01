@@ -1477,7 +1477,7 @@ function createScatter(graphData) {
           .call(myAxis.tickSizeOuter(0));
 
       // Add a tooltip div
-      var tooltip = d3.select("#scatterplot-div")
+      var tooltip = d3.select("body")
       .append("div")
       .style("opacity", 0)
       .attr("class", "tooltip")
@@ -1531,7 +1531,7 @@ function createScatter(graphData) {
           .on("mousemove", mousemove)
           .on("mouseleave", mouseleave)
     }
-    catch{
+    catch {
       $('#scatterplotTitle').html("Historical Hurricanes by Location");
     }
 }
