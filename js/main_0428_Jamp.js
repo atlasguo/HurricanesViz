@@ -149,7 +149,7 @@ function urbanStyle(feature) {
 var countSelectState = 0;
 
 function stateOnEachFeature(feature, layer) {
-   
+
     //popup content is now just the city name
     var popupContent = feature.properties.NAME;
 
@@ -164,13 +164,13 @@ function stateOnEachFeature(feature, layer) {
             this.closePopup();
         },
         click: function (e) {
-            
+
             if (curLocationLayer){
                 curMap.removeLayer(curLocationLayer);
             }
-            
+
             countSelectState++;
-            
+
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
@@ -186,7 +186,7 @@ function stateOnEachFeature(feature, layer) {
 
                 L.DomEvent.stopPropagation(e); // stop click event from being propagated further
             }
-            
+
         }
     });
 }
@@ -203,7 +203,7 @@ function urbanOnEachFeature(feature, layer) {
     });
 
     layer.on({
-        
+
         mouseover: function () {
             this.openPopup();
         },
@@ -211,13 +211,13 @@ function urbanOnEachFeature(feature, layer) {
             this.closePopup();
         },
         click: function (e) {
-            
+
             if (curLocationLayer){
                 curMap.removeLayer(curLocationLayer);
             }
-            
+
             countSelectUrban++;
-            
+
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
@@ -717,21 +717,20 @@ function applySetting() {
                                             curLineLayer.eachLayer(function (layer) {
                                                 /*tempLine = layer.feature.geometry.coordinates;*/
                                                 var isOverlap = turf.lineIntersect(layer.feature, curLocationJSON);
-                                                
+
                                                 if (isOverlap.features.length > 0) {
-                                                /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
+                                                    /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
                                                     var day = layer.feature.properties.DD;
                                                     var month = layer.feature.properties.MM;
                                                     var year = layer.feature.properties.YYYY;
-                                                    var date = year + "-" + month + "-" + day;
-                                                    var hour = layer.feature.properties.HH
-                                                    var doy = layer.feature.properties.doy;
-
-                                                    var numDate = year + month + day + hour
+                                                    var hour = layer.feature.properties.HH;
+                                                    
+                                                    var show_date = year + "-" + month + "-" + day + " " + hour + ":00";
 
                                                     var category = layer.feature.properties.Cat;
                                                     var hurName = layer.feature.properties.hurName;
-                                                    
+                                                    var cur_wind = layer.feature.properties.Wind;
+
                                                     var check = 0;
                                                     if (category == "H5") {
                                                         check = 8
@@ -750,18 +749,17 @@ function applySetting() {
                                                     } else if (category == "EX") {
                                                         check = 1
                                                     }
-
-                                                    date = d3.timeParse("%Y-%m-%d")(date)
-                                                    var cur_wind = layer.feature.properties.Wind;
-
+                                                    
+                                                    var xDate = month + "-" + day + " " + hour + ":00";
+                                                    xDate = d3.timeParse("%m-%d %I:%M")(xDate);
+                                                    
                                                     if (check != 0) {
                                                         var new_entry = {
-                                                            "show_date": date,
-                                                            "date": numDate,
+                                                            "show_date": show_date,
+                                                            "xOrder": xDate,
                                                             "value": cur_wind,
                                                             "category": category,
-                                                            "doy": doy,
-                                                            "check": check,
+                                                            "yOrder": check,
                                                             "hurName": hurName
                                                         }
                                                         graphData.push(new_entry)
@@ -1226,18 +1224,18 @@ function createLegend(map) {
 // scatterplot
 function createScatter(graphData) {
     var ymax = Math.max.apply(Math, graphData.map(function (o) {
-        return o.check;
+        return o.yOrder;
     }))
     var ymin = Math.min.apply(Math, graphData.map(function (o) {
-        return o.check;
+        return o.yOrder;
     }))
 
     //
     var xmax = Math.max.apply(Math, graphData.map(function (o) {
-        return o.date;
+        return o.xOrder;
     }))
     var xmin = Math.min.apply(Math, graphData.map(function (o) {
-        return o.date;
+        return o.xOrder;
     }))
 
     //remove previous contents
@@ -1314,9 +1312,9 @@ function createScatter(graphData) {
 
     var mousemove = function (d) {
         tooltip
-            .html("<b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
+            .html("<p style='font-size:12px;margin=0;padding=0;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
                   "<b>Date</b>: " + d.show_date + "<br/>"  + 
-                  "<b>Category</b>: " + d.category + "<br/>")
+                  "<b>Category</b>: " + d.category + "</p>")
             .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", (d3.mouse(this)[1]) + "px")
     }
@@ -1337,10 +1335,10 @@ function createScatter(graphData) {
         .enter()
         .append("circle")
         .attr("cx", function (d) {
-        return x(d.date);
+        return x(d.xOrder);
     })
         .attr("cy", function (d) {
-        return y(d.check);
+        return y(d.yOrder);
     })
         .attr("r", 4)
         .style("fill", "#69b3a2")
@@ -1487,8 +1485,9 @@ function createLineGraph(data) {
     var mousemove = function (d) {
         Tooltip
         /*.html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)*/
-            .html("<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
-                  + "<b>Wind :</b>&nbsp" + d.value)
+            .html("<p style='font-size:12px;margin=0;padding=0;'>" + 
+                  "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
+                  + "<b>Wind :</b>&nbsp" + d.value + "</p>")
             .style("left", (d3.mouse(this)[0] + 70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
     }
