@@ -415,11 +415,11 @@ function applySetting() {
     curHurIDsByCat = [];
     curHurIDsByCY = [];
     curHurIDsByLCY = [];
-
+    
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-
+    
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
     //      0-no, then check if hurricane name matches any one
