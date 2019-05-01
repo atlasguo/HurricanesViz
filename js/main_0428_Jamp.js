@@ -1127,14 +1127,14 @@ function lineOnEachFeature(feature,layer){
                     success: function (data) {
 
                         // Define the geojson layer and add it to the map
-                        curPointLayer = L.geoJson(data, {
+                        var curPointLayer2 = L.geoJson(data, {
                             filter: function (feature, layer) {
-                                return feature.properties.HurID == curLineSeg.properties.HurID;
+                                return (feature.properties.HurID == curLineSeg.properties.HurID && feature.properties.popden > 0);
                             }
                         });
 
                         // update the line graph
-                        updateLineGraph(curPointLayer);
+                        updateLineGraph(curPointLayer2);
 
                     }
                 });
@@ -1380,7 +1380,7 @@ function updateLineGraph(curPointLayer){
 // line graph
 function createLineGraph(data) {
 
-    $('#lineGraphTitle').html("Indivial Hurricane Info of " + data[0].hurName);
+    $('#lineGraphTitle').html("Indivial Hurricane Info of " + data[0].hurName + " within U.S.");
 
     var ymax = Math.max.apply(Math, data.map(function (o) {
         return o.value;
