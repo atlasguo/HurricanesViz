@@ -1113,10 +1113,10 @@ function lineOnEachFeature(feature,layer){
         },
         click: function (e) {
             if (lineSelection != e.target) {
-                
+
                 lineSelection = e.target;
                 var curLineSeg = feature;
-                
+
                 // update the line graph
                 $.ajax("data/point.json", {
                     dataType: "json",
@@ -1227,13 +1227,13 @@ function createScatter(graphData) {
         return o.category;
     }))
 
-    // set x axis min and max values
-    var xmax = Math.max.apply(Math, graphData.map(function(o) {
-        return o.date;
-    }))
-    var xmin = Math.min.apply(Math, graphData.map(function(o) {
-        return o.date;
-    }))
+    // // set x axis min and max values
+    // var xmax = Math.max.apply(Math, graphData.map(function(o) {
+    //     return o.date;
+    // }))
+    // var xmin = Math.min.apply(Math, graphData.map(function(o) {
+    //     return o.date;
+    // }))
 
     //remove previous contents
     document.getElementById("scatterplot-div").innerHTML = "";
@@ -1258,9 +1258,13 @@ function createScatter(graphData) {
             "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
-    var x = d3.scaleLinear()
-        .domain([xmin - xmin / 20, xmax + xmax / 20])
-        .range([0, width]);
+    minmax = d3.extent(graphData, function(d) {
+      return d.xOrder;
+    })
+    minmax[0].setDate(minmax[0].getDate() - 10);
+    var x = d3.scaleTime()
+      .domain(minmax)
+      .range([ 0, width ]);
 
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
