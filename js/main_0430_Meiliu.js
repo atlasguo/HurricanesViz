@@ -1259,13 +1259,12 @@ function createScatter(graphData) {
             "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
-    minmax = d3.extent(graphData, function(d) {
-      return d.xOrder;
-    })
-    minmax[0].setDate(minmax[0].getDate() - 5);
-    var x = d3.scaleTime()
-      .domain(minmax)
-      .range([ 0, width ]);
+    var x = d3.scaleLinear()
+    .domain([xmin-600000000,xmax+600000000])
+    .range([0, width]);
+
+    /*console.log(xmin);
+    console.log(xmax);*/
 
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
