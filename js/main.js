@@ -698,6 +698,72 @@ function applySetting() {
 
                                                         curMap.addLayer(curPointLayer);
 
+                                                        // update the scatterplot
+                                                        $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
+                                                        graphData = []
+                                                        curPointLayer.eachLayer(function (layer) {
+                                                            /*tempLine = layer.feature.geometry.coordinates;*/
+                                                            var isOverlap = turf.booleanPointInPolygon(layer.feature, curLocationJSON);
+
+                                                            if (isOverlap) {
+                                                                /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
+                                                                var day = layer.feature.properties.DD;
+                                                                var month = layer.feature.properties.MM;
+                                                                var year = layer.feature.properties.YYYY;
+                                                                var hour = layer.feature.properties.HH;
+
+                                                                var show_date = year + "-" + month + "-" + day + " " + hour + ":00";
+
+                                                                var category = layer.feature.properties.Cat;
+                                                                var hurName = layer.feature.properties.hurName;
+                                                                var cur_wind = layer.feature.properties.Wind;
+
+                                                                var check = 0;
+                                                                if (category == "H5") {
+                                                                    check = 8
+                                                                } else if (category == "H4") {
+                                                                    check = 7
+                                                                } else if (category == "H3") {
+                                                                    check = 6
+                                                                } else if (category == "H2") {
+                                                                    check = 5
+                                                                } else if (category == "H1") {
+                                                                    check = 4
+                                                                } else if (category == "TS") {
+                                                                    check = 3
+                                                                } else if (category == "TD") {
+                                                                    check = 2
+                                                                } else if (category == "EX") {
+                                                                    check = 1
+                                                                }
+
+                                                                var xDate = month + "-" + day + " " + hour + ":00";
+                                                                xDate = d3.timeParse("%m-%d %I:%M")(xDate);
+
+                                                                if (check != 0) {
+                                                                    var new_entry = {
+                                                                        "show_date": show_date,
+                                                                        "xOrder": xDate,
+                                                                        "value": cur_wind,
+                                                                        "category": category,
+                                                                        "yOrder": check,
+                                                                        "hurName": hurName
+                                                                    }
+                                                                    graphData.push(new_entry)
+                                                                }
+
+
+                                                            }
+
+
+                                                        });
+                                                        // console.log("HERE")
+
+                                                        createScatter(graphData);
+                                                        document.getElementById("lineGraph-div").innerHTML = "";
+
+
+
                                                         // update the line graph
                                                         if (curHurIDsByLCY.length == 1) {
                                                             // update the line graph
@@ -739,69 +805,6 @@ function applySetting() {
                                             $('#img').hide();
                                             $('#mapid').show();
                                             curMap.addLayer(curLineLayer);
-
-                                            // update the scatterplot
-                                              graphData = []
-                                              curLineLayer.eachLayer(function (layer) {
-                                                  /*tempLine = layer.feature.geometry.coordinates;*/
-                                                  var isOverlap = turf.lineIntersect(layer.feature, curLocationJSON);
-
-                                                  if (isOverlap.features.length > 0) {
-                                                      /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
-                                                      var day = layer.feature.properties.DD;
-                                                      var month = layer.feature.properties.MM;
-                                                      var year = layer.feature.properties.YYYY;
-                                                      var hour = layer.feature.properties.HH;
-
-                                                      var show_date = year + "-" + month + "-" + day + " " + hour + ":00";
-
-                                                      var category = layer.feature.properties.Cat;
-                                                      var hurName = layer.feature.properties.hurName;
-                                                      var cur_wind = layer.feature.properties.Wind;
-
-                                                      var check = 0;
-                                                      if (category == "H5") {
-                                                          check = 8
-                                                      } else if (category == "H4") {
-                                                          check = 7
-                                                      } else if (category == "H3") {
-                                                          check = 6
-                                                      } else if (category == "H2") {
-                                                          check = 5
-                                                      } else if (category == "H1") {
-                                                          check = 4
-                                                      } else if (category == "TS") {
-                                                          check = 3
-                                                      } else if (category == "TD") {
-                                                          check = 2
-                                                      } else if (category == "EX") {
-                                                          check = 1
-                                                      }
-
-                                                      var xDate = month + "-" + day + " " + hour + ":00";
-                                                      xDate = d3.timeParse("%m-%d %I:%M")(xDate);
-
-                                                      if (check != 0) {
-                                                          var new_entry = {
-                                                              "show_date": show_date,
-                                                              "xOrder": xDate,
-                                                              "value": cur_wind,
-                                                              "category": category,
-                                                              "yOrder": check,
-                                                              "hurName": hurName
-                                                          }
-                                                          graphData.push(new_entry)
-                                                      }
-
-
-                                                  }
-
-
-                                              });
-                                            // console.log("HERE")
-
-                                            createScatter(graphData);
-                                            document.getElementById("lineGraph-div").innerHTML = "";
 
 
                                         } // end of scenario #3 if location is found and resulting hurricane # > 0
