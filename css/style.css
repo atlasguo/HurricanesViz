@@ -323,4 +323,6 @@ section.range-slider input[type=range]::-moz-focus-outer {
     line-height: 1.2;
     /*background-color: lightcyan;*/
     background-color: rgba(0,0,0,0.9);
+    
+    overflow: scroll;
 }

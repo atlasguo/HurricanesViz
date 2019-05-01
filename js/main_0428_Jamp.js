@@ -149,30 +149,33 @@ function urbanStyle(feature) {
 var countSelectState = 0;
 
 function stateOnEachFeature(feature, layer) {
-
+   
     //popup content is now just the city name
     var popupContent = feature.properties.NAME;
 
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
-        /*offset: new L.Point(0,0),*/
+        //offset: curSelectionLayer.getBounds().getCenter(),
         closeButton: false
     });
 
     layer.on({
-        /*mouseover: function(){
-		    this.openPopup();
-		},*/
         mouseout: function () {
             this.closePopup();
         },
         click: function (e) {
+            
+            if (curLocationLayer){
+                curMap.removeLayer(curLocationLayer);
+            }
+            
             countSelectState++;
-            this.openPopup();
+            
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
             if (selection != e.target || (selection == e.target && (countSelectState % 2 == 1))) {
+
                 curLocation = feature.properties.NAME;
                 /*zoom in*/
                 /*deselect??*/
@@ -183,6 +186,7 @@ function stateOnEachFeature(feature, layer) {
 
                 L.DomEvent.stopPropagation(e); // stop click event from being propagated further
             }
+            
         }
     });
 }
@@ -195,11 +199,11 @@ function urbanOnEachFeature(feature, layer) {
 
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
-        offset: new L.Point(0, 0),
         closeButton: false
     });
 
     layer.on({
+        
         mouseover: function () {
             this.openPopup();
         },
@@ -207,7 +211,13 @@ function urbanOnEachFeature(feature, layer) {
             this.closePopup();
         },
         click: function (e) {
+            
+            if (curLocationLayer){
+                curMap.removeLayer(curLocationLayer);
+            }
+            
             countSelectUrban++;
+            
             if (selection) {
                 selectedLayer.resetStyle(selection);
             }
@@ -221,6 +231,7 @@ function urbanOnEachFeature(feature, layer) {
                 selectedLayer = curUrbanLayer;
 
                 L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+
             }
         }
     });
@@ -493,32 +504,7 @@ function applySetting() {
                                 curMap.addLayer(curPointLayer);
 
                                 // update the line graph
-                                var graphData = [];
-
-                                curPointLayer.eachLayer(function (layer) {
-                                    var y = layer.feature.properties.YYYY;
-                                    var hour = layer.feature.properties.HH;
-                                    var day = layer.feature.properties.DD;
-                                    var month = layer.feature.properties.MM;
-                                    var doy = layer.feature.properties.doy;
-
-                                    var cur_wind = layer.feature.properties.Wind;
-
-                                    var new_entry = {
-                                        "date": doy,
-                                        "value": cur_wind,
-                                        "day": day,
-                                        "hour": hour,
-                                        "month": month,
-                                        "y":y
-                                    }
-                                    graphData.push(new_entry)
-
-
-                                });
-
-                                createLineGraph(graphData);
-
+                                updateLineGraph(curPointLayer);
 
                             }
                         });
@@ -701,30 +687,7 @@ function applySetting() {
 
                                                         // update the line graph 
                                                         if (curHurIDsByLCY.length == 1) {
-                                                            var graphData = [];
-                                                            curPointLayer.eachLayer(function (layer) {
-                                                                var y = layer.feature.properties.YYYY;
-                                                                var hour = layer.feature.properties.HH;
-                                                                var day = layer.feature.properties.DD;
-                                                                var month = layer.feature.properties.MM;
-                                                                var doy = layer.feature.properties.doy;
-
-                                                                var cur_wind = layer.feature.properties.Wind;
-
-                                                                var new_entry = {
-                                                                    "date": doy,
-                                                                    "value": cur_wind,
-                                                                    "day": day,
-                                                                    "hour": hour,
-                                                                    "month": month,
-                                                                    "y":y
-                                                                }
-                                                                graphData.push(new_entry)
-
-
-                                                            });
-
-                                                            createLineGraph(graphData);
+                                                            updateLineGraph(curPointLayer);
                                                         }
                                                     }
                                                 });// end of ajax - points.json
@@ -749,12 +712,14 @@ function applySetting() {
                                             curMap.addLayer(curLineLayer);
 
                                             // update the scatterplot
+                                            $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
                                             graphData = []
                                             curLineLayer.eachLayer(function (layer) {
-                                                tempLine = layer.feature.geometry.coordinates
+                                                /*tempLine = layer.feature.geometry.coordinates;*/
                                                 var isOverlap = turf.lineIntersect(layer.feature, curLocationJSON);
-
-                                                if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length != 0) {
+                                                
+                                                if (isOverlap.features.length > 0) {
+                                                /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
                                                     var day = layer.feature.properties.DD;
                                                     var month = layer.feature.properties.MM;
                                                     var year = layer.feature.properties.YYYY;
@@ -765,36 +730,39 @@ function applySetting() {
                                                     var numDate = year + month + day + hour
 
                                                     var category = layer.feature.properties.Cat;
-
+                                                    var hurName = layer.feature.properties.hurName;
+                                                    
+                                                    var check = 0;
                                                     if (category == "H5") {
-                                                        category = 8
+                                                        check = 8
                                                     } else if (category == "H4") {
-                                                        category = 7
+                                                        check = 7
                                                     } else if (category == "H3") {
-                                                        category = 6
+                                                        check = 6
                                                     } else if (category == "H2") {
-                                                        category = 5
+                                                        check = 5
                                                     } else if (category == "H1") {
-                                                        category = 4
+                                                        check = 4
                                                     } else if (category == "TS") {
-                                                        category = 3
+                                                        check = 3
                                                     } else if (category == "TD") {
-                                                        category = 2
+                                                        check = 2
                                                     } else if (category == "EX") {
-                                                        category = 1
-                                                    } else {
-                                                        category = 0
+                                                        check = 1
                                                     }
 
                                                     date = d3.timeParse("%Y-%m-%d")(date)
                                                     var cur_wind = layer.feature.properties.Wind;
 
-                                                    if (category != 0) {
+                                                    if (check != 0) {
                                                         var new_entry = {
+                                                            "show_date": date,
                                                             "date": numDate,
                                                             "value": cur_wind,
                                                             "category": category,
-                                                            "doy": doy
+                                                            "doy": doy,
+                                                            "check": check,
+                                                            "hurName": hurName
                                                         }
                                                         graphData.push(new_entry)
                                                     }
@@ -862,30 +830,7 @@ function applySetting() {
                                     $('#mapid').show();
                                     curMap.addLayer(curPointLayer);
 
-                                    var graphData = [];
-
-                                    curPointLayer.eachLayer(function (layer) {
-                                        var y = layer.feature.properties.YYYY;
-                                        var hour = layer.feature.properties.HH;
-                                        var day = layer.feature.properties.DD;
-                                        var month = layer.feature.properties.MM;
-                                        var doy = layer.feature.properties.doy;
-
-                                        var cur_wind = layer.feature.properties.Wind;
-
-                                        var new_entry = {
-                                            "date": doy,
-                                            "value": cur_wind,
-                                            "day": day,
-                                            "hour": hour,
-                                            "month": month,
-                                            "y":y
-                                        }
-                                        graphData.push(new_entry)
-
-
-                                    });
-                                    createLineGraph(graphData);
+                                    updateLineGraph(curPointLayer);
                                 }
                             });
                         }
@@ -1192,31 +1137,7 @@ function lineOnEachFeature(feature,layer){
                         });
 
                         // update the line graph
-                        var graphData = [];
-
-                        curPointLayer.eachLayer(function (layer) {
-                            var y = layer.feature.properties.YYYY;
-                            var hour = layer.feature.properties.HH;
-                            var day = layer.feature.properties.DD;
-                            var month = layer.feature.properties.MM;
-                            var doy = layer.feature.properties.doy;
-
-                            var cur_wind = layer.feature.properties.Wind;
-
-                            var new_entry = {
-                                "date": doy,
-                                "value": cur_wind,
-                                "day": day,
-                                "hour": hour,
-                                "month": month,
-                                "y":y
-                            }
-                            graphData.push(new_entry)
-
-
-                        });
-
-                        createLineGraph(graphData);
+                        updateLineGraph(curPointLayer);
 
                     }
                 });
@@ -1305,10 +1226,10 @@ function createLegend(map) {
 // scatterplot
 function createScatter(graphData) {
     var ymax = Math.max.apply(Math, graphData.map(function (o) {
-        return o.category;
+        return o.check;
     }))
     var ymin = Math.min.apply(Math, graphData.map(function (o) {
-        return o.category;
+        return o.check;
     }))
 
     //
@@ -1329,7 +1250,7 @@ function createScatter(graphData) {
         bottom: 10,
         left: 25
     },
-        width = 300 - margin.left - margin.right,
+        width = 280 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
@@ -1393,7 +1314,9 @@ function createScatter(graphData) {
 
     var mousemove = function (d) {
         tooltip
-            .html("Category: " + d.category)
+            .html("<b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
+                  "<b>Date</b>: " + d.show_date + "<br/>"  + 
+                  "<b>Category</b>: " + d.category + "<br/>")
             .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", (d3.mouse(this)[1]) + "px")
     }
@@ -1417,7 +1340,7 @@ function createScatter(graphData) {
         return x(d.date);
     })
         .attr("cy", function (d) {
-        return y(d.category);
+        return y(d.check);
     })
         .attr("r", 4)
         .style("fill", "#69b3a2")
@@ -1429,9 +1352,39 @@ function createScatter(graphData) {
 
 }
 
+function updateLineGraph(curPointLayer){
+    var graphData = [];
 
+    curPointLayer.eachLayer(function (layer) {
+        var hurName = layer.feature.properties.hurName;
+        var y = layer.feature.properties.YYYY;
+        var hour = layer.feature.properties.HH;
+        var day = layer.feature.properties.DD;
+        var month = layer.feature.properties.MM;
+        var doy = layer.feature.properties.doy;
+        var cur_wind = layer.feature.properties.Wind;
+
+        var new_entry = {
+            "date": doy,
+            "value": cur_wind,
+            "day": day,
+            "hour": hour,
+            "month": month,
+            "y":y,
+            "hurName": hurName
+        }
+        graphData.push(new_entry)
+
+
+    });
+
+    createLineGraph(graphData);
+}
 // line graph
 function createLineGraph(data) {
+
+    $('#lineGraphTitle').html("Indivial Hurricane Info of " + data[0].hurName);
+
     var ymax = Math.max.apply(Math, data.map(function (o) {
         return o.value;
     }))
@@ -1456,7 +1409,7 @@ function createLineGraph(data) {
         bottom: 10,
         left: 25
     },
-        width = 375 - margin.left - margin.right,
+        width = 280 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
@@ -1535,7 +1488,7 @@ function createLineGraph(data) {
         Tooltip
         /*.html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)*/
             .html("<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
-                 + "<b>Wind :</b>&nbsp" + d.value)
+                  + "<b>Wind :</b>&nbsp" + d.value)
             .style("left", (d3.mouse(this)[0] + 70) + "px")
             .style("top", (d3.mouse(this)[1]) + "px")
     }
