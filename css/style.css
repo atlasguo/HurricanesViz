@@ -317,6 +317,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
     height: 640px;
     width: 57%;
     display: inline-block;
+    z-index: 10;
 }
 
 #infoPanel {
@@ -334,4 +335,17 @@ section.range-slider input[type=range]::-moz-focus-outer {
     background-color: rgba(0,0,0,0.9);
     word-wrap:break-word;
     overflow: scroll;
+}
+
+.tooltip {
+    z-index: 99 !important;
+    position: absolute;
+    text-align: left;
+    width: 200px;
+    height: 60px;
+    padding: 8px;
+    margin: 3px;
+    font: 8px sans-serif;
+    background: #fff;
+    pointer-events: none;
 }

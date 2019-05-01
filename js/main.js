@@ -415,11 +415,11 @@ function applySetting() {
     curHurIDsByCat = [];
     curHurIDsByCY = [];
     curHurIDsByLCY = [];
-    
+
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-    
+
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
     //      0-no, then check if hurricane name matches any one
@@ -1300,14 +1300,14 @@ function createScatter(graphData) {
         bottom: 10,
         left: 25
     },
-        width = 300 - margin.left - margin.right,
-        height = 220 - margin.top - margin.bottom;
+    width = 300 - margin.left - margin.right,
+    height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#scatterplot-div")
     .append("svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 300 300")
+    .attr("viewBox", "0 0 300 250")
     .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
@@ -1356,29 +1356,24 @@ function createScatter(graphData) {
         .call(myAxis.tickSizeOuter(0));
 
     // Add a tooltip div
-    var tooltip = d3.select("#scatterplot-div")
+    var tooltip = d3.select("body")
     .append("div")
-    .style("opacity", 0)
     .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
+    .style("display", "none");
 
     // A function that change this tooltip when the user hover a point
     var mouseover = function(d) {
         tooltip
-            .style("opacity", 1)
+            .style("display", "inline");
     }
 
     var mousemove = function (d) {
         tooltip
-            .html("<p style='font-size:12px;margin=0;padding=0;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
+            .html("<p style='font-size:12px;margin-left=3px;padding-left=10px;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
                   "<b>Date</b>: " + d.show_date + "<br/>"  +
                   "<b>Category</b>: " + d.category + "</p>")
-            .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-            .style("top", (d3.mouse(this)[1]) + "px")
+            .style("left", (d3.event.pageX - 150) + "px")
+            .style("top", (d3.event.pageY - 90) + "px");
     }
 
     // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
@@ -1386,7 +1381,7 @@ function createScatter(graphData) {
         tooltip
             .transition()
             .duration(200)
-            .style("opacity", 0)
+            .style("display", "none");
     }
 
     // Add dots
