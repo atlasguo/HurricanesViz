@@ -800,7 +800,11 @@ function applySetting() {
 
 
                                             });
+                                            // console.log("HERE")
+
                                             createScatter(graphData);
+                                            document.getElementById("lineGraph-div").innerHTML = "";
+
 
                                         } // end of scenario #3 if location is found and resulting hurricane # > 0
 
@@ -1485,7 +1489,7 @@ function createLineGraph(data) {
 
     // Add X axis --> it is a date format
     var x = d3.scaleLinear()
-    .domain([xmin - xmin / 1200, xmax + xmax / 1200])
+    .domain([xmin - xmin / 1000, xmax + xmax / 1000])
     .range([0, width]);
 
 
