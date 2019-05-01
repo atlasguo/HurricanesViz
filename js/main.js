@@ -500,28 +500,28 @@ function applySetting() {
                                 $('#img').hide();
                                 $('#mapid').show();
                                 curMap.addLayer(curPointLayer);
-								
-								// update popden info
-								var mean=0, max=0, min=99999, count=0;
-								curPointLayer.eachLayer(function (layer) {
-									var popden = layer.feature.properties.popden;
-									if (popden>0)
-									{
-										count++;
-										mean+=popden;
-										if (popden<min)
-											min=popden;
-										if (popden>max)
-											max=popden;
-									}
-								});
-								mean/=count;
-								popDenValue={									
-									max: max,
-									mean: mean,
-									min: min
-								};
-								updateLegend(curMap);
+
+                                // update popden info
+                                var mean=0, max=0, min=99999, count=0;
+                                curPointLayer.eachLayer(function (layer) {
+                                    var popden = layer.feature.properties.popden;
+                                    if (popden>0)
+                                    {
+                                        count++;
+                                        mean+=popden;
+                                        if (popden<min)
+                                            min=popden;
+                                        if (popden>max)
+                                            max=popden;
+                                    }
+                                });
+                                mean/=count;
+                                popDenValue={									
+                                    max: max,
+                                    mean: mean,
+                                    min: min
+                                };
+                                updateLegend(curMap);
 
                                 // update the line graph
                                 $.ajax("data/point.json", {
@@ -719,28 +719,28 @@ function applySetting() {
                                                         });
 
                                                         curMap.addLayer(curPointLayer);
-														
-														// update popden info
-														var mean=0, max=0, min=99999, count=0;
-														curPointLayer.eachLayer(function (layer) {
-															var popden = layer.feature.properties.popden;
-															if (popden>0)
-															{
-																count++;
-																mean+=popden;
-																if (popden<min)
-																	min=popden;
-																if (popden>max)
-																	max=popden;
-															}
-														});
-														mean/=count;
-														popDenValue={									
-															max: max,
-															mean: mean,
-															min: min
-														};
-														updateLegend(curMap);
+
+                                                        // update popden info
+                                                        var mean=0, max=0, min=99999, count=0;
+                                                        curPointLayer.eachLayer(function (layer) {
+                                                            var popden = layer.feature.properties.popden;
+                                                            if (popden>0)
+                                                            {
+                                                                count++;
+                                                                mean+=popden;
+                                                                if (popden<min)
+                                                                    min=popden;
+                                                                if (popden>max)
+                                                                    max=popden;
+                                                            }
+                                                        });
+                                                        mean/=count;
+                                                        popDenValue={									
+                                                            max: max,
+                                                            mean: mean,
+                                                            min: min
+                                                        };
+                                                        updateLegend(curMap);
 
                                                         // update the scatterplot
                                                         $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
@@ -914,28 +914,28 @@ function applySetting() {
                                     $('#img').hide();
                                     $('#mapid').show();
                                     curMap.addLayer(curPointLayer);
-									
-									// update popden info
-									var mean=0, max=0, min=99999, count=0;
-									curPointLayer.eachLayer(function (layer) {
-										var popden = layer.feature.properties.popden;
-										if (popden>0)
-										{
-											count++;
-											mean+=popden;
-											if (popden<min)
-												min=popden;
-											if (popden>max)
-												max=popden;
-										}
-									});
-									mean/=count;
-									popDenValue={									
-										max: max,
-										mean: mean,
-										min: min
-									};
-									updateLegend(curMap);
+
+                                    // update popden info
+                                    var mean=0, max=0, min=99999, count=0;
+                                    curPointLayer.eachLayer(function (layer) {
+                                        var popden = layer.feature.properties.popden;
+                                        if (popden>0)
+                                        {
+                                            count++;
+                                            mean+=popden;
+                                            if (popden<min)
+                                                min=popden;
+                                            if (popden>max)
+                                                max=popden;
+                                        }
+                                    });
+                                    mean/=count;
+                                    popDenValue={									
+                                        max: max,
+                                        mean: mean,
+                                        min: min
+                                    };
+                                    updateLegend(curMap);
 
                                     // update the line graph
                                     $.ajax("data/point.json", {
@@ -1300,45 +1300,45 @@ function getCheckedCheckboxesFor() {
 // check and remove element by id
 function removeElement(elementId)
 {
-	var checkElement = document.getElementById(elementId);
-	if (checkElement!=null)
-	{
-		checkElement.parentNode.removeChild(checkElement);		
-	}	
+    var checkElement = document.getElementById(elementId);
+    if (checkElement!=null)
+    {
+        checkElement.parentNode.removeChild(checkElement);		
+    }	
 }
 
 // update the point symbol legend
 function updateLegend(map){
-	
-	removeElement("point-text");
-	removeElement("point-legend");
-	
-	var container = document.getElementsByClassName("legend-control-container")[0];
 
-	$(container).append('<text id="point-text">Pop Density Affected</text>');
-	
-	var svg = '<svg id="point-legend" width="120px" height="70px">';	
-	var circles = {
-		max: 25,
-		mean: 45,
-		min: 65
-	};		
-	for (var circle in circles){		
-		svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
-		svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
-	};
-	svg += "</svg>";
-	
-	$(container).append(svg);
-	
-	for (var key in popDenValue){		
-		var radius = calcPropRadius(popDenValue[key]);
-		$('#'+key).attr({
-			cy: 69 - radius,
-			r: radius
-		});
-		$('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
-	};		
+    removeElement("point-text");
+    removeElement("point-legend");
+
+    var container = document.getElementsByClassName("legend-control-container")[0];
+
+    $(container).append('<text id="point-text">Pop Density Affected</text>');
+
+    var svg = '<svg id="point-legend" width="120px" height="70px">';	
+    var circles = {
+        max: 25,
+        mean: 45,
+        min: 65
+    };		
+    for (var circle in circles){		
+        svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
+        svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
+    };
+    svg += "</svg>";
+
+    $(container).append(svg);
+
+    for (var key in popDenValue){		
+        var radius = calcPropRadius(popDenValue[key]);
+        $('#'+key).attr({
+            cy: 69 - radius,
+            r: radius
+        });
+        $('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
+    };		
 };
 
 //create new sequence controls to control the years
@@ -1393,140 +1393,140 @@ function createLegend(map) {
 // scatterplot
 function createScatter(graphData) {
 
-  try{
-      $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
-      // set y axis min and max values
-      var ymax = Math.max.apply(Math, graphData.map(function(o) {
-          return o.yOrder;
-      }))
-      var ymin = Math.min.apply(Math, graphData.map(function(o) {
-          return o.yOrder;
-      }))
+    try{
+        $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
+        // set y axis min and max values
+        var ymax = Math.max.apply(Math, graphData.map(function(o) {
+            return o.yOrder;
+        }))
+        var ymin = Math.min.apply(Math, graphData.map(function(o) {
+            return o.yOrder;
+        }))
 
-      // set x axis min and max values
-      var xmax = Math.max.apply(Math, graphData.map(function(o) {
-          return o.xOrder;
-      }))
-      var xmin = Math.min.apply(Math, graphData.map(function(o) {
-          return o.xOrder;
-      }))
+        // set x axis min and max values
+        var xmax = Math.max.apply(Math, graphData.map(function(o) {
+            return o.xOrder;
+        }))
+        var xmin = Math.min.apply(Math, graphData.map(function(o) {
+            return o.xOrder;
+        }))
 
-      //remove previous contents
-      document.getElementById("scatterplot-div").innerHTML = "";
+        //remove previous contents
+        document.getElementById("scatterplot-div").innerHTML = "";
 
-      // set the dimensions and margins of the graph
-      var margin = {
-          top: 10,
-          right: 25,
-          bottom: 10,
-          left: 25
-      },
-          width = 300 - margin.left - margin.right,
-          height = 220 - margin.top - margin.bottom;
+        // set the dimensions and margins of the graph
+        var margin = {
+            top: 10,
+            right: 25,
+            bottom: 10,
+            left: 25
+        },
+            width = 300 - margin.left - margin.right,
+            height = 220 - margin.top - margin.bottom;
 
-      // append the svg object to the body of the page
-      var svg = d3.select("#scatterplot-div")
-      .append("svg")
-      .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "0 0 300 250")
-      .append("g")
-      .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+        // append the svg object to the body of the page
+        var svg = d3.select("#scatterplot-div")
+        .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 250")
+        .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
 
-      // Add X axis
-      var x = d3.scaleLinear()
-      .domain([xmin-600000000,xmax+600000000])
-      .range([0, width]);
+        // Add X axis
+        var x = d3.scaleLinear()
+        .domain([xmin-600000000,xmax+600000000])
+        .range([0, width]);
 
-      /*console.log(xmin);
+        /*console.log(xmin);
       console.log(xmax);*/
 
-      svg.append("g")
-          .attr("transform", "translate(0," + height + ")")
-          .attr("class", "axisWhite")
-          .call(d3.axisBottom(x).tickSize(0))
-          .selectAll("text").remove()
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .attr("class", "axisWhite")
+            .call(d3.axisBottom(x).tickSize(0))
+            .selectAll("text").remove()
 
-      // add x-axis label
-      svg.append("text")
-          .attr("text-anchor", "center")
-          .attr("fill", "white")
-          .attr("transform", "translate(" + 110 + "," + 217 + ")")
-          .style("font-size", 12)
-          .text("Time");
+        // add x-axis label
+        svg.append("text")
+            .attr("text-anchor", "center")
+            .attr("fill", "white")
+            .attr("transform", "translate(" + 110 + "," + 217 + ")")
+            .style("font-size", 12)
+            .text("Time");
 
 
-      // set format y axis tick label
-      var tickLabels = ["", "EX", "TD", "TS", "H1", "H2", "H3", "H4", "H5"]
+        // set format y axis tick label
+        var tickLabels = ["", "EX", "TD", "TS", "H1", "H2", "H3", "H4", "H5"]
 
-      // Add Y axis
-      var y = d3.scaleLinear()
-      .domain([0, 8])
-      .range([height, 0]);
+        // Add Y axis
+        var y = d3.scaleLinear()
+        .domain([0, 8])
+        .range([height, 0]);
 
-      var myAxis = d3.axisLeft()
-      .scale(y)
-      .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8])
-      .tickFormat(function(d, i) {
-          return tickLabels[i]
-      });
+        var myAxis = d3.axisLeft()
+        .scale(y)
+        .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8])
+        .tickFormat(function(d, i) {
+            return tickLabels[i]
+        });
 
-      svg.append("g")
-          .attr("class", "axisWhite")
-          .call(myAxis.tickSizeOuter(0));
+        svg.append("g")
+            .attr("class", "axisWhite")
+            .call(myAxis.tickSizeOuter(0));
 
-    // Add a tooltip div
-    var tooltip = d3.select("body")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("display", "none");
+        // Add a tooltip div
+        var tooltip = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("display", "none");
 
-    // A function that change this tooltip when the user hover a point
-    var mouseover = function(d) {
-        tooltip
-            .style("display", "inline");
-    }
+        // A function that change this tooltip when the user hover a point
+        var mouseover = function(d) {
+            tooltip
+                .style("display", "inline");
+        }
 
-    var mousemove = function (d) {
-        tooltip
-            .html("<p style='font-size:12px;margin-left=3px;padding-left=10px;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
-                  "<b>Date</b>: " + d.show_date + "<br/>"  +
-                  "<b>Category</b>: " + d.category + "</p>")
-            .style("left", (d3.event.pageX - 150) + "px")
-            .style("top", (d3.event.pageY - 90) + "px");
-    }
+        var mousemove = function (d) {
+            tooltip
+                .html("<p style='font-size:12px;margin-left=3px;padding-left=10px;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
+                      "<b>Date</b>: " + d.show_date + "<br/>"  +
+                      "<b>Category</b>: " + d.category + "</p>")
+                .style("left", (d3.event.pageX - 150) + "px")
+                .style("top", (d3.event.pageY - 90) + "px");
+        }
 
-    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-    var mouseleave = function (d) {
-        tooltip
-            .transition()
-            .duration(200)
-            .style("display", "none");
-    }
+        // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+        var mouseleave = function (d) {
+            tooltip
+                .transition()
+                .duration(200)
+                .style("display", "none");
+        }
 
-    // Add dots
-    svg.append('g')
-        .selectAll("dot")
-    // .data(graphData.filter(function(d,i){return i<50})) // the .filter part is just to keep a few dots on the chart, not all of them
-        .data(graphData)
-        .enter()
-        .append("circle")
-        .attr("cx", function (d) {
-        return x(d.xOrder);
-    })
-        .attr("cy", function (d) {
-        return y(d.yOrder);
-    })
-        .attr("r", 4)
-        .style("fill", "#69b3a2")
-        .style("opacity", 0.8)
-        .style("stroke", "white")
-        .on("mouseover", mouseover)
-        .on("mousemove", mousemove)
-        .on("mouseleave", mouseleave)
+        // Add dots
+        svg.append('g')
+            .selectAll("dot")
+        // .data(graphData.filter(function(d,i){return i<50})) // the .filter part is just to keep a few dots on the chart, not all of them
+            .data(graphData)
+            .enter()
+            .append("circle")
+            .attr("cx", function (d) {
+            return x(d.xOrder);
+        })
+            .attr("cy", function (d) {
+            return y(d.yOrder);
+        })
+            .attr("r", 4)
+            .style("fill", "#69b3a2")
+            .style("opacity", 0.8)
+            .style("stroke", "white")
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave)
     }
     catch (err){
-      $('#scatterplotTitle').html("Historical Hurricanes by Location");
+        $('#scatterplotTitle').html("Historical Hurricanes by Location");
     }
 }
 
@@ -1562,150 +1562,151 @@ function updateLineGraph(curPointLayer){
 function createLineGraph(data) {
 
     try{
-      if (data[0].hurName != ""){
-          $('#lineGraphTitle').html("Individual Hurricane Info of " + data[0].hurName + " within U.S.");
-      }
-      else{
-          $('#lineGraphTitle').html("Individual Unnamed Hurricane Info within U.S.");
-      }
+        if (data[0].hurName != ""){
+            $('#lineGraphTitle').html("Individual Hurricane Info of " + data[0].hurName);
+        }
+        else{
+            $('#lineGraphTitle').html("Individual Unnamed Hurricane Info");
+        }
 
 
-    var ymax = Math.max.apply(Math, data.map(function (o) {
-        return o.value;
-    }))
-    var ymin = Math.min.apply(Math, data.map(function (o) {
-        return o.value;
-    }))
+        var ymax = Math.max.apply(Math, data.map(function (o) {
+            return o.value;
+        }))
+        var ymin = Math.min.apply(Math, data.map(function (o) {
+            return o.value;
+        }))
 
-    var xmax = Math.max.apply(Math, data.map(function (o) {
-        return o.date;
-    }))
-    var xmin = Math.min.apply(Math, data.map(function (o) {
-        return o.date;
-    }))
+        var xmax = Math.max.apply(Math, data.map(function (o) {
+            return o.date;
+        }))
+        var xmin = Math.min.apply(Math, data.map(function (o) {
+            return o.date;
+        }))
 
-    //remove previous contents
-    document.getElementById("lineGraph-div").innerHTML = "";
+        //remove previous contents
+        document.getElementById("lineGraph-div").innerHTML = "";
 
-    // set the dimensions and margins of the graph
-    var margin = {
-        top: 10,
-        right: 25,
-        bottom: 10,
-        left: 25
-    },
-        width = 300 - margin.left - margin.right,
-        height = 220 - margin.top - margin.bottom;
+        // set the dimensions and margins of the graph
+        var margin = {
+            top: 10,
+            right: 25,
+            bottom: 10,
+            left: 25
+        },
+            width = 300 - margin.left - margin.right,
+            height = 220 - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
-    var svg = d3.select("#lineGraph-div")
-    .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 300 250")
-    .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-
-    // Add X axis --> it is a date format
-    var x = d3.scaleLinear()
-    .domain([xmin - xmin / 1000, xmax + xmax / 1000])
-    .range([0, width]);
-
-
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .attr("class", "axisWhite")
-        .call(d3.axisBottom(x).tickSize(0))
-        .selectAll("text").remove()
-
-    // add x-axis label
-    svg.append("text")
-        .attr("text-anchor", "center")
-        .attr("fill", "white")
-        .attr("transform", "translate(" + 110 + "," + 217 + ")")
-        .style("font-size", 12)
-        .text("Time");
-
-    // Add Y axis
-    var y = d3.scaleLinear()
-    .domain([ymin - 10, ymax + 10])
-    .range([height, 0]);
-
-    svg.append("g")
-        .attr("class", "axisWhite")
-        .call(d3.axisLeft(y).tickSizeOuter(0));
-
-    // Add the line
-    svg.append("path")
-        .datum(data)
-        .attr("fill", "none")
-        .attr("stroke", "white")
-        .attr("class", "axisWhite")
-        .attr("stroke-width", 1.25)
-        .attr("d", d3.line()
-              .curve(d3.curveBasis) // Just add that to have a curve instead of segments
-              .x(function (d) {
-        return x(d.date)
-    })
-              .y(function (d) {
-        return y(d.value)
-    })
-             )
-
-    // create a tooltip
-    var Tooltip = d3.select("#lineGraph-div")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-
-    // Three function that change the tooltip when user hover / move / leave a cell
-    var mouseover = function (d) {
-        Tooltip
-            .style("opacity", 1)
-    }
-    var mousemove = function (d) {
-        Tooltip
-            .html("<p style='font-size:12px;margin=0;padding=0;'>" +
-                  "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
-                  + "<b>Wind :</b>&nbsp" + d.value + "</p>")
-            .style("left", (d3.mouse(this)[0] + 70) + "px")
-            .style("top", (d3.mouse(this)[1]) + "px")
-    }
-    var mouseleave = function (d) {
-        Tooltip
-            .style("opacity", 0)
-    }
-
-    // Add the points
-    svg
+        // append the svg object to the body of the page
+        var svg = d3.select("#lineGraph-div")
+        .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 250")
         .append("g")
-        .selectAll("dot")
-        .data(data)
-        .enter()
-        .append("circle")
-        .attr("class", "myCircle")
-        .attr("cx", function(d) {
-        return x(d.date)
-    })
-        .attr("cy", function(d) {
-        return y(d.value)
-    })
-        .attr("r", 2.5)
-        .style("fill", "#69b3a2")
-        .style("opacity", 0.8)
-        .style("stroke", "white")
-        .on("mouseover", mouseover)
-        .on("mousemove", mousemove)
-        .on("mouseleave", mouseleave)
-  }
-  catch(err){
-    $('#lineGraphTitle').html("Individual Hurricane Info");
-  }
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add X axis --> it is a date format
+        var x = d3.scaleLinear()
+        .domain([xmin - xmin / 1000, xmax + xmax / 1000])
+        .range([0, width]);
+
+
+        svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .attr("class", "axisWhite")
+            .call(d3.axisBottom(x).tickSize(0))
+            .selectAll("text").remove()
+
+        // add x-axis label
+        svg.append("text")
+            .attr("text-anchor", "center")
+            .attr("fill", "white")
+            .attr("transform", "translate(" + 110 + "," + 217 + ")")
+            .style("font-size", 12)
+            .text("Time");
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+        .domain([ymin - 10, ymax + 10])
+        .range([height, 0]);
+
+        svg.append("g")
+            .attr("class", "axisWhite")
+            .call(d3.axisLeft(y).tickSizeOuter(0));
+
+        // Add the line
+        svg.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", "white")
+            .attr("class", "axisWhite")
+            .attr("stroke-width", 1.25)
+            .attr("d", d3.line()
+                  .curve(d3.curveBasis) // Just add that to have a curve instead of segments
+                  .x(function (d) {
+            return x(d.date)
+        })
+                  .y(function (d) {
+            return y(d.value)
+        })
+                 )
+
+
+        // Add a tooltip div
+        var tooltipLineGraph = d3.select("body")
+        .append("div")
+        .attr("class", "tooltipLineGraph")
+        .style("display", "none");
+
+        // A function that change this tooltip when the user hover a point
+        var mouseover = function(d) {
+            tooltipLineGraph
+                .style("display", "inline");
+        }
+
+        var mousemove = function (d) {
+            tooltipLineGraph
+                .html("<p style='font-size:12px;margin=0;padding=0;'>" +
+                      "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
+                      + "<b>Wind :</b>&nbsp" + d.value + "</p>")
+                .style("left", (d3.event.pageX - 150) + "px")
+                .style("top", (d3.event.pageY - 70) + "px");
+        }
+
+        // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+        var mouseleave = function (d) {
+            tooltipLineGraph
+                .transition()
+                .duration(200)
+                .style("display", "none");
+        }
+
+        // Add the points
+        svg
+            .append("g")
+            .selectAll("dot")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("class", "myCircle")
+            .attr("cx", function(d) {
+            return x(d.date)
+        })
+            .attr("cy", function(d) {
+            return y(d.value)
+        })
+            .attr("r", 2.5)
+            .style("fill", "#69b3a2")
+            .style("opacity", 0.8)
+            .style("stroke", "white")
+            .on("mouseover", mouseover)
+            .on("mousemove", mousemove)
+            .on("mouseleave", mouseleave)
+    }
+    catch(err){
+        $('#lineGraphTitle').html("Individual Hurricane Info");
+    }
 }
 
 

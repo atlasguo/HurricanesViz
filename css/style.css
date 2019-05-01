@@ -349,3 +349,16 @@ section.range-slider input[type=range]::-moz-focus-outer {
     background: #fff;
     pointer-events: none;
 }
+
+.tooltipLineGraph {
+    z-index: 99 !important;
+    position: absolute;
+    text-align: left;
+    width: 200px;
+    height: 45px;
+    padding: 8px;
+    margin: 3px;
+    font: 8px sans-serif;
+    background: #fff;
+    pointer-events: none;
+}
