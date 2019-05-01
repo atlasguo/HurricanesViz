@@ -1260,9 +1260,12 @@ function createScatter(graphData) {
 
     // Add X axis
     var x = d3.scaleLinear()
-    .domain([xmin,xmax])
+    .domain([xmin-600000000,xmax+600000000])
     .range([0, width]);
-
+    
+    /*console.log(xmin);
+    console.log(xmax);*/
+    
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .attr("class", "axisWhite")
