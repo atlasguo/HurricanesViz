@@ -1229,12 +1229,12 @@ function createScatter(graphData) {
     }))
 
     // set x axis min and max values
-    var xmax = Math.max.apply(Math, graphData.map(function(o) {
-        return o.xOrder;
-    }))
-    var xmin = Math.min.apply(Math, graphData.map(function(o) {
-        return o.xOrder;
-    }))
+    // var xmax = Math.max.apply(Math, graphData.map(function(o) {
+    //     return o.xOrder;
+    // }))
+    // var xmin = Math.min.apply(Math, graphData.map(function(o) {
+    //     return o.xOrder;
+    // }))
 
     //remove previous contents
     document.getElementById("scatterplot-div").innerHTML = "";
@@ -1262,10 +1262,10 @@ function createScatter(graphData) {
     var x = d3.scaleLinear()
     .domain([xmin-600000000,xmax+600000000])
     .range([0, width]);
-    
+
     /*console.log(xmin);
     console.log(xmax);*/
-    
+
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .attr("class", "axisWhite")
