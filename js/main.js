@@ -1428,7 +1428,7 @@ function createScatter(graphData) {
       var svg = d3.select("#scatterplot-div")
       .append("svg")
       .attr("preserveAspectRatio", "xMinYMin meet")
-      .attr("viewBox", "0 0 300 300")
+      .attr("viewBox", "0 0 300 250")
       .append("g")
       .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -1471,23 +1471,17 @@ function createScatter(graphData) {
           return tickLabels[i]
       });
 
-
       svg.append("g")
           .attr("class", "axisWhite")
           .call(myAxis.tickSizeOuter(0));
 
-      // Add a tooltip div
-      var tooltip = d3.select("body")
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip")
-      .style("background-color", "white")
-      .style("border", "solid")
-      .style("border-width", "1px")
-      .style("border-radius", "5px")
-      .style("padding", "5px")
+    // Add a tooltip div
+    var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("display", "none");
 
-      // A function that change this tooltip when the user hover a point
+    // A function that change this tooltip when the user hover a point
     var mouseover = function(d) {
         tooltip
             .style("display", "inline");
@@ -1510,26 +1504,26 @@ function createScatter(graphData) {
             .style("display", "none");
     }
 
-      // Add dots
-      svg.append('g')
-          .selectAll("dot")
-      // .data(graphData.filter(function(d,i){return i<50})) // the .filter part is just to keep a few dots on the chart, not all of them
-          .data(graphData)
-          .enter()
-          .append("circle")
-          .attr("cx", function (d) {
-          return x(d.xOrder);
-      })
-          .attr("cy", function (d) {
-          return y(d.yOrder);
-      })
-          .attr("r", 4)
-          .style("fill", "#69b3a2")
-          .style("opacity", 0.8)
-          .style("stroke", "white")
-          .on("mouseover", mouseover)
-          .on("mousemove", mousemove)
-          .on("mouseleave", mouseleave)
+    // Add dots
+    svg.append('g')
+        .selectAll("dot")
+    // .data(graphData.filter(function(d,i){return i<50})) // the .filter part is just to keep a few dots on the chart, not all of them
+        .data(graphData)
+        .enter()
+        .append("circle")
+        .attr("cx", function (d) {
+        return x(d.xOrder);
+    })
+        .attr("cy", function (d) {
+        return y(d.yOrder);
+    })
+        .attr("r", 4)
+        .style("fill", "#69b3a2")
+        .style("opacity", 0.8)
+        .style("stroke", "white")
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
     }
     catch (err){
       $('#scatterplotTitle').html("Historical Hurricanes by Location");
@@ -1607,7 +1601,7 @@ function createLineGraph(data) {
     var svg = d3.select("#lineGraph-div")
     .append("svg")
     .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 300 300")
+    .attr("viewBox", "0 0 300 250")
     .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
