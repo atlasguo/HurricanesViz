@@ -1229,12 +1229,12 @@ function createScatter(graphData) {
     }))
 
     // set x axis min and max values
-    // var xmax = Math.max.apply(Math, graphData.map(function(o) {
-    //     return o.xOrder;
-    // }))
-    // var xmin = Math.min.apply(Math, graphData.map(function(o) {
-    //     return o.xOrder;
-    // }))
+    var xmax = Math.max.apply(Math, graphData.map(function(o) {
+        return o.xOrder;
+    }))
+    var xmin = Math.min.apply(Math, graphData.map(function(o) {
+        return o.xOrder;
+    }))
 
     //remove previous contents
     document.getElementById("scatterplot-div").innerHTML = "";
@@ -1390,10 +1390,10 @@ function updateLineGraph(curPointLayer){
 function createLineGraph(data) {
 
     if (data[0].hurName != ""){
-        $('#lineGraphTitle').html("Indivial Hurricane Info of " + data[0].hurName + " within U.S.");
+        $('#lineGraphTitle').html("Individual Hurricane Info of " + data[0].hurName + " within U.S.");
     }
     else{
-        $('#lineGraphTitle').html("Indivial Unnamed Hurricane Info within U.S.");
+        $('#lineGraphTitle').html("Individual Unnamed Hurricane Info within U.S.");
     }
 
 
@@ -1461,7 +1461,6 @@ function createLineGraph(data) {
     svg.append("g")
         .attr("class", "axisWhite")
         .call(d3.axisLeft(y).tickSizeOuter(0));
-
 
     // Add the line
     svg.append("path")
