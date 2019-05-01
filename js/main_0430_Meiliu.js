@@ -1463,7 +1463,6 @@ function createLineGraph(data) {
         .attr("class", "axisWhite")
         .call(d3.axisLeft(y).tickSizeOuter(0));
 
-
     // Add the line
     svg.append("path")
         .datum(data)
