@@ -265,8 +265,6 @@ section.range-slider input[type=range]::-moz-focus-outer {
     border: 0;
 }
 
-
-
 .btn {
     border: none;
     background-color: lightcyan;
@@ -324,6 +322,6 @@ section.range-slider input[type=range]::-moz-focus-outer {
     line-height: 1.2;
     /*background-color: lightcyan;*/
     background-color: rgba(0,0,0,0.9);
-    
+    word-wrap:break-word;
     overflow: scroll;
 }
