@@ -1378,27 +1378,27 @@ function createScatter(graphData) {
       .style("padding", "5px")
 
       // A function that change this tooltip when the user hover a point
-      var mouseover = function(d) {
-          tooltip
-              .style("opacity", 1)
-      }
+    var mouseover = function(d) {
+        tooltip
+            .style("display", "inline");
+    }
 
-      var mousemove = function (d) {
-          tooltip
-              .html("<p style='font-size:12px;margin=0;padding=0;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
-                    "<b>Date</b>: " + d.show_date + "<br/>"  +
-                    "<b>Category</b>: " + d.category + "</p>")
-              .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-              .style("top", (d3.mouse(this)[1]) + "px")
-      }
+    var mousemove = function (d) {
+        tooltip
+            .html("<p style='font-size:12px;margin-left=3px;padding-left=10px;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
+                  "<b>Date</b>: " + d.show_date + "<br/>"  +
+                  "<b>Category</b>: " + d.category + "</p>")
+            .style("left", (d3.event.pageX - 150) + "px")
+            .style("top", (d3.event.pageY - 90) + "px");
+    }
 
-      // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-      var mouseleave = function (d) {
-          tooltip
-              .transition()
-              .duration(200)
-              .style("opacity", 0)
-      }
+    // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+    var mouseleave = function (d) {
+        tooltip
+            .transition()
+            .duration(200)
+            .style("display", "none");
+    }
 
       // Add dots
       svg.append('g')
