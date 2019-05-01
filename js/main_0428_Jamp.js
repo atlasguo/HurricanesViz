@@ -1251,8 +1251,8 @@ function createScatter(graphData) {
     // append the svg object to the body of the page
     var svg = d3.select("#scatterplot-div")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + 10)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 300")
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
@@ -1421,8 +1421,8 @@ function createLineGraph(data) {
     // append the svg object to the body of the page
     var svg = d3.select("#lineGraph-div")
         .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + 10)
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 300 300")
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
