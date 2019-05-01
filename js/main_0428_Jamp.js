@@ -568,7 +568,7 @@ function applySetting() {
                         return filterHurByCY(feature, layer);
                     },
                     // on each feature of line
-                    onEachFeature: lineOnEachFeature
+                    onEachFeature: lineOnEachFeature // which will allow user to click
                 });
 
                 console.log(curHurIDsByCY.length + " hurricanes after cat and year");
@@ -1095,11 +1095,11 @@ function filterHurByLCY(feature, layer) {
     return checkValue(feature.properties.HurID, curHurIDsByLCY);
 }
 
-
+var lineSelection;
 function lineOnEachFeature(feature,layer){
 
     //popup content is now just the city name
-    var popupContent = "<b>Hurricane Name: </b>: " + feature.properties.hurName + "<br />";
+    var popupContent = "<b>Hurricane Name: </b>" + feature.properties.hurName + "<br />";
     popupContent += "<b>Click to see more info in the graph</b>";
 
     //bind the popup to the circle marker
@@ -1116,12 +1116,11 @@ function lineOnEachFeature(feature,layer){
             this.closePopup();
         },
         click: function (e) {
-            if (selection) {
-                selectedLayer.resetStyle(selection);
-            }
-            if (selection != e.target) {
+            if (lineSelection != e.target) {
+                
+                lineSelection = e.target;
                 var curLineSeg = feature;
-
+                
                 // update the line graph
                 $.ajax("data/point.json", {
                     dataType: "json",
