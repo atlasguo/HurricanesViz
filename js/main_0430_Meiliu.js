@@ -1100,13 +1100,14 @@ function lineOnEachFeature(feature,layer){
 
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
-        offset: new L.Point(0, 0),
+        //offset: new L.Point(0, 0),
         closeButton: false
     });
 
     layer.on({
-        mouseover: function(){
-            this.openPopup();
+        mouseover: function(e){
+            var pop = e.target.getPopup();
+            pop.setLatLng(e.latlng).openOn(curMap);
         },
         mouseout: function () {
             this.closePopup();
