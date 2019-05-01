@@ -7,7 +7,6 @@
 /*eslint-disable no-console*/
 
 /* Map of GeoJSON data from line.geojson */
-
 var curStateLayer;
 var curUrbanLayer;
 var selection;
@@ -66,7 +65,7 @@ function getData(map) {
     // load the states
     $.ajax("data/state_4326_map.json", {
         dataType: "json",
-        success: function (data) {
+        success: function(data) {
             // remove current layer if exists
             if (curStateLayer) {
                 map.removeLayer(curStateLayer);
@@ -77,8 +76,8 @@ function getData(map) {
                 style: stateStyle,
                 // filter by location
                 /*filter: function(feature, layer){
-				    return filterStateByName(feature, layer);
-				},*/
+                    return filterStateByName(feature, layer);
+                },*/
                 // on each feature of states
                 onEachFeature: stateOnEachFeature
             });
@@ -90,7 +89,7 @@ function getData(map) {
     // load the urban
     $.ajax("data/urban_4326_map.json", {
         dataType: "json",
-        success: function (data) {
+        success: function(data) {
             // remove current layer if exists
             if (curUrbanLayer) {
                 map.removeLayer(curUrbanLayer);
@@ -101,8 +100,8 @@ function getData(map) {
                 style: urbanStyle,
                 // filter by location
                 /*filter: function(feature, layer){
-				    return filterUrbanByName(feature, layer);
-				},*/
+                    return filterUrbanByName(feature, layer);
+                },*/
                 // on each feature of states
                 onEachFeature: urbanOnEachFeature
             });
@@ -175,7 +174,6 @@ function stateOnEachFeature(feature, layer) {
                 selectedLayer.resetStyle(selection);
             }
             if (selection != e.target || (selection == e.target && (countSelectState % 2 == 1))) {
-
                 curLocation = feature.properties.NAME;
                 /*zoom in*/
                 /*deselect??*/
@@ -186,7 +184,6 @@ function stateOnEachFeature(feature, layer) {
 
                 L.DomEvent.stopPropagation(e); // stop click event from being propagated further
             }
-
         }
     });
 }
@@ -231,7 +228,6 @@ function urbanOnEachFeature(feature, layer) {
                 selectedLayer = curUrbanLayer;
 
                 L.DomEvent.stopPropagation(e); // stop click event from being propagated further
-
             }
         }
     });
@@ -249,10 +245,10 @@ autocomplete(document.getElementById("hurricaneInput"), hurricanes);
 
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,
-	the text field element and an array of possible autocompleted values:*/
+    the text field element and an array of possible autocompleted values:*/
     var currentFocus;
     /*execute a function when someone writes in the text field:*/
-    inp.addEventListener("input", function (e) {
+    inp.addEventListener("input", function(e) {
         var a, b, i, val = this.value;
         /*close any already open lists of autocompleted values*/
         closeAllLists();
@@ -278,11 +274,11 @@ function autocomplete(inp, arr) {
                 /*insert a input field that will hold the current array item's value:*/
                 b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
                 /*execute a function when someone clicks on the item value (DIV element):*/
-                b.addEventListener("click", function (e) {
+                b.addEventListener("click", function(e) {
                     /*insert the value for the autocomplete text field:*/
                     inp.value = this.getElementsByTagName("input")[0].value;
                     /*close the list of autocompleted values,
-					(or any other open lists of autocompleted values:*/
+                    (or any other open lists of autocompleted values:*/
                     closeAllLists();
                 });
                 a.appendChild(b);
@@ -290,18 +286,18 @@ function autocomplete(inp, arr) {
         }
     });
     /*execute a function presses a key on the keyboard:*/
-    inp.addEventListener("keydown", function (e) {
+    inp.addEventListener("keydown", function(e) {
         var x = document.getElementById(this.id + "autocomplete-list");
         if (x) x = x.getElementsByTagName("div");
         if (e.keyCode == 40) {
             /*If the arrow DOWN key is pressed,
-			increase the currentFocus variable:*/
+            increase the currentFocus variable:*/
             currentFocus++;
             /*and and make the current item more visible:*/
             addActive(x);
         } else if (e.keyCode == 38) { //up
             /*If the arrow UP key is pressed,
-			decrease the currentFocus variable:*/
+            decrease the currentFocus variable:*/
             currentFocus--;
             /*and and make the current item more visible:*/
             addActive(x);
@@ -335,7 +331,7 @@ function autocomplete(inp, arr) {
 
     function closeAllLists(elmnt) {
         /*close all autocomplete lists in the document,
-		except the one passed as an argument:*/
+        except the one passed as an argument:*/
         var x = document.getElementsByClassName("autocomplete-items");
         for (var i = 0; i < x.length; i++) {
             if (elmnt != x[i] && elmnt != inp) {
@@ -344,7 +340,7 @@ function autocomplete(inp, arr) {
         }
     }
     /*execute a function when someone clicks in the document:*/
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", function(e) {
         closeAllLists(e.target);
     });
 }
@@ -393,7 +389,7 @@ function updateExtent(layer) {
     curMap.fitBounds(layer.getBounds());
 }
 
-function clearMap(){
+function clearMap() {
     if (curPointLayer) {
         curMap.removeLayer(curPointLayer);
     };
@@ -530,17 +526,17 @@ function applySetting() {
         });
 
         /*change the order here:
-		1. filter hurricanes by categories and year range
-		2. check location
-		3. if location matched, then filterHurByL, update curLineLayer
-		4. add curLineLayer to curMap
-		*/
+        1. filter hurricanes by categories and year range
+        2. check location
+        3. if location matched, then filterHurByL, update curLineLayer
+        4. add curLineLayer to curMap
+        */
 
         // load the lines
         $.ajax("data/line.json", {
             dataType: "json",
-            success: function (data) {
-                // remove current layers if they exists
+            success: function(data) {
+                // remove current layer if exists
                 if (curPointLayer) {
                     curMap.removeLayer(curPointLayer);
                 };
@@ -553,7 +549,7 @@ function applySetting() {
 
                 // update curHurIDsByCat values
                 L.geoJson(data, {
-                    filter: function (feature, layer) {
+                    filter: function(feature, layer) {
                         return filterSegByCat(feature, layer, values);
                     }
                 });
@@ -685,7 +681,7 @@ function applySetting() {
 
                                                         curMap.addLayer(curPointLayer);
 
-                                                        // update the line graph 
+                                                        // update the line graph
                                                         if (curHurIDsByLCY.length == 1) {
                                                             updateLineGraph(curPointLayer);
                                                         }
@@ -724,7 +720,7 @@ function applySetting() {
                                                     var month = layer.feature.properties.MM;
                                                     var year = layer.feature.properties.YYYY;
                                                     var hour = layer.feature.properties.HH;
-                                                    
+
                                                     var show_date = year + "-" + month + "-" + day + " " + hour + ":00";
 
                                                     var category = layer.feature.properties.Cat;
@@ -749,10 +745,10 @@ function applySetting() {
                                                     } else if (category == "EX") {
                                                         check = 1
                                                     }
-                                                    
+
                                                     var xDate = month + "-" + day + " " + hour + ":00";
                                                     xDate = d3.timeParse("%m-%d %I:%M")(xDate);
-                                                    
+
                                                     if (check != 0) {
                                                         var new_entry = {
                                                             "show_date": show_date,
@@ -908,32 +904,32 @@ function calcPointColor(attValue){
     var pointColor;
 
     switch (attValue) {
-        case 'H5': 
-            pointColor = colorScheme[4]; 
+        case 'H5':
+            pointColor = colorScheme[4];
             break;
-        case 'H4': 
-            pointColor = colorScheme[3]; 
+        case 'H4':
+            pointColor = colorScheme[3];
             break;
-        case 'H3': 
-            pointColor = colorScheme[2]; 
+        case 'H3':
+            pointColor = colorScheme[2];
             break;
-        case 'H2': 
-            pointColor = colorScheme[1]; 
+        case 'H2':
+            pointColor = colorScheme[1];
             break;
-        case 'H1': 
-            pointColor = colorScheme[0]; 
+        case 'H1':
+            pointColor = colorScheme[0];
             break;
         case 'TS':
-            pointColor = "#58e095"; 
+            pointColor = "#58e095";
             break;
         case 'TD':
-            pointColor = "#70b5e4"; 
+            pointColor = "#70b5e4";
             break;
         case 'EX':
-            pointColor = "#cccccb"; 
+            pointColor = "#cccccb";
             break;
         default:
-            pointColor = "#ffffff"; 
+            pointColor = "#ffffff";
     }
 
     return pointColor;
@@ -1222,19 +1218,21 @@ function createLegend(map) {
 
 // scatterplot
 function createScatter(graphData) {
-    var ymax = Math.max.apply(Math, graphData.map(function (o) {
-        return o.yOrder;
+
+    // set y axis min and max values
+    var ymax = Math.max.apply(Math, graphData.map(function(o) {
+        return o.category;
     }))
-    var ymin = Math.min.apply(Math, graphData.map(function (o) {
-        return o.yOrder;
+    var ymin = Math.min.apply(Math, graphData.map(function(o) {
+        return o.category;
     }))
 
-    //
-    var xmax = Math.max.apply(Math, graphData.map(function (o) {
-        return o.xOrder;
+    // set x axis min and max values
+    var xmax = Math.max.apply(Math, graphData.map(function(o) {
+        return o.date;
     }))
-    var xmin = Math.min.apply(Math, graphData.map(function (o) {
-        return o.xOrder;
+    var xmin = Math.min.apply(Math, graphData.map(function(o) {
+        return o.date;
     }))
 
     //remove previous contents
@@ -1242,27 +1240,27 @@ function createScatter(graphData) {
 
     // set the dimensions and margins of the graph
     var margin = {
-        top: 10,
-        right: 25,
-        bottom: 10,
-        left: 25
-    },
-        width = 280 - margin.left - margin.right,
+            top: 10,
+            right: 25,
+            bottom: 10,
+            left: 25
+        },
+        width = 300 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#scatterplot-div")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom + 10)
-    .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom + 10)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
     var x = d3.scaleLinear()
-    .domain([xmin - 0.12, xmax + 0.12])
-    .range([0, width]);
+        .domain([xmin - xmin / 20, xmax + xmax / 20])
+        .range([0, width]);
 
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -1270,41 +1268,48 @@ function createScatter(graphData) {
         .call(d3.axisBottom(x).tickSize(0))
         .selectAll("text").remove()
 
+    // add x-axis label
+    svg.append("text")
+        .attr("text-anchor", "center")
+        .attr("fill", "white")
+        .attr("transform", "translate(" + 110 + "," + 217 + ")")
+        .style("font-size", 12)
+        .text("Time");
+
+
     // set format y axis tick label
-    var tickLabels = ["","EX","TD","TS","H1","H2","H3","H4","H5"]
+    var tickLabels = ["", "EX", "TD", "TS", "H1", "H2", "H3", "H4", "H5"]
 
     // Add Y axis
     var y = d3.scaleLinear()
-    .domain([0,8])
-    .range([height, 0]);
+        .domain([0, 8])
+        .range([height, 0]);
 
     var myAxis = d3.axisLeft()
-    .scale(y)
-    .tickValues([0,1,2,3,4,5,6,7,8])
-    .tickFormat(function(d,i){ return tickLabels[i] });
+        .scale(y)
+        .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8])
+        .tickFormat(function(d, i) {
+            return tickLabels[i]
+        });
 
 
     svg.append("g")
         .attr("class", "axisWhite")
         .call(myAxis.tickSizeOuter(0));
-    // .call(d3.axisLeft(y).tickSizeOuter(0));
 
-    // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
-    // Its opacity is set to 0: we don't see it by default.
+    // Add a tooltip div
     var tooltip = d3.select("#scatterplot-div")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("background-color", "white")
+        .style("border", "solid")
+        .style("border-width", "1px")
+        .style("border-radius", "5px")
+        .style("padding", "5px")
 
-
-    // A function that change this tooltip when the user hover a point.
-    // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-    var mouseover = function (d) {
+    // A function that change this tooltip when the user hover a point
+    var mouseover = function(d) {
         tooltip
             .style("opacity", 1)
     }
@@ -1312,7 +1317,7 @@ function createScatter(graphData) {
     var mousemove = function (d) {
         tooltip
             .html("<p style='font-size:12px;margin=0;padding=0;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
-                  "<b>Date</b>: " + d.show_date + "<br/>"  + 
+                  "<b>Date</b>: " + d.show_date + "<br/>"  +
                   "<b>Category</b>: " + d.category + "</p>")
             .style("left", (d3.mouse(this)[0] + 90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
             .style("top", (d3.mouse(this)[1]) + "px")
@@ -1401,27 +1406,27 @@ function createLineGraph(data) {
 
     // set the dimensions and margins of the graph
     var margin = {
-        top: 10,
-        right: 25,
-        bottom: 10,
-        left: 25
-    },
-        width = 280 - margin.left - margin.right,
+            top: 10,
+            right: 25,
+            bottom: 10,
+            left: 25
+        },
+        width = 300 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#lineGraph-div")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom + 10)
-    .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+        .append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom + 10)
+        .append("g")
+        .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis --> it is a date format
     var x = d3.scaleLinear()
-    .domain([xmin - 0.12, xmax + 0.12])
-    .range([0, width]);
+        .domain([xmin - xmin / 1200, xmax + xmax / 1200])
+        .range([0, width]);
 
 
     svg.append("g")
@@ -1434,14 +1439,14 @@ function createLineGraph(data) {
     svg.append("text")
         .attr("text-anchor", "center")
         .attr("fill", "white")
-        .attr("transform", "translate(" + 140 + "," + 217 + ")")
+        .attr("transform", "translate(" + 110 + "," + 217 + ")")
         .style("font-size", 12)
         .text("Time");
 
     // Add Y axis
     var y = d3.scaleLinear()
-    .domain([ymin - 10, ymax + 10])
-    .range([height, 0]);
+		    .domain([ymin - 10, ymax + 10])
+		    .range([height, 0]);
 
     svg.append("g")
         .attr("class", "axisWhite")
@@ -1484,7 +1489,7 @@ function createLineGraph(data) {
     var mousemove = function (d) {
         Tooltip
         /*.html("<b>Month:</b>" + d.month + "<b> Day:</b>" + d.day + "<b> Hour:</b>" + d.hour)*/
-            .html("<p style='font-size:12px;margin=0;padding=0;'>" + 
+            .html("<p style='font-size:12px;margin=0;padding=0;'>" +
                   "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
                   + "<b>Wind :</b>&nbsp" + d.value + "</p>")
             .style("left", (d3.mouse(this)[0] + 70) + "px")
@@ -1503,33 +1508,21 @@ function createLineGraph(data) {
         .enter()
         .append("circle")
         .attr("class", "myCircle")
-        .attr("cx", function (d) {
-        return x(d.date)
-    })
-        .attr("cy", function (d) {
-        return y(d.value)
-    })
-        .attr("r", 2.75)
-        .attr("stroke", "#69b3a2")
-        .attr("stroke-width", 1.5)
-        .attr("fill", "white")
+        .attr("cx", function(d) {
+            return x(d.date)
+        })
+        .attr("cy", function(d) {
+            return y(d.value)
+        })
+        .attr("r", 4)
+        .style("fill", "#69b3a2")
+        .style("opacity", 0.8)
+        .style("stroke", "white")
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
 
-}
-
-
-function selectHurricane() {
-    var selecthurricane = d3.select("#lineGraph-div").html("<p>Select a hurricane on the map</p>")
-
     }
-
-function selectLocation() {
-    var selectlocation = d3.select("#scatterplot-div").html("<p>Select a location on the map</p>")
-
-    }
-
 
 window.onload = initializeSiders();
 $(document).ready(createMap);
