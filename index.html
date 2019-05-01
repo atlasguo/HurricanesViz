@@ -27,55 +27,69 @@
         <div id="queryPanel">
 
 
+            <form>
+                <!--Hurricane selection-->
+                <div id="HurricaneFillIn">
+                    <h3 style="margin-top: 10px;margin-left: 0px;">
+                        Hurricane:
+                    </h3>
+                    <input type="radio" name="colors" id="o1" checked=false;><label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filtered By Name <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label></label>
 
-            <!--Hurricane selection-->
-            <div id="HurricaneFillIn">
-                <h3 style="margin-top: 0px;margin-left: 0px;">
-                    Hurricane:
-                </h3>
-                <label style="line-height: 1.2;">Option #1: Filtered By Name <p style="margin-top:4px;margin-bottom:0;font-size:13px;">(available when all hurricane categories below are unselected)</p></label>
-                <form autocomplete="off" action="/action_page.php">
-                    <div class="autocomplete" style="width:300px;">
-                        <input id="hurricaneInput" type="text" name="hurricane" placeholder="Select one hurricane by name" disabled>
+                    <form autocomplete="off" action="/action_page.php">
+                        <div class="autocomplete" style="width:300px;margin-top: 0;">
+                            <input id="hurricaneInput" type="text" name="hurricane" placeholder="Select one hurricane by name" disabled>
+                        </div>
+                    </form>
+
+                    <input type="radio" name="colors" id="o2" checked=true;><label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year</label>
+
+                    <div id="checkBoxControl">
+                        <label class="container" style="color: #bd0026; padding-top: 15px;">H5: Winds >= 157 mph
+                            <input name="category" value="H5" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark" style="margin-top: 10px;"></span>
+                        </label>
+                        <label class="container" style="color: #f03b20;padding-top: 5px;">H4: Winds 130-156 mph
+                            <input name="category" value="H4" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container" style="color: #fd8d3c; padding-top: 5px;">H3: Winds 111-129 mph
+                            <input name="category" value="H3" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container" style="color: #fecc5c; padding-top: 5px;">H2: Winds 96-110 mph
+                            <input name="category" value="H2" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container" style="color: #ffff00; padding-top: 5px;">H1: Winds 74-95 mph
+                            <input name="category" value="H1" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container" style="color: #58e095; padding-top: 5px;">TS: Tropical Storm
+                            <input name="category" value="TS" type="checkbox" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container" style="color: #70b5e4; padding-top: 5px;">TD: Tropical Depression
+                            <input name="category" value="TD" type="checkbox" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
+                        <label class="container" style="color: #cccccb; padding-top: 5px;">EX: Extratropical cyclone
+                            <input name="category" value="EX" type="checkbox" onclick="getCheckedCheckboxesFor()">
+                            <span class="checkmark"></span>
+                        </label>
                     </div>
-                </form>
-
-                <label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year Range</label>
-                <div id="checkBoxControl">
-                    <label class="container" style="color: #bd0026; padding-top: 15px;">H5: Winds >= 157 mph
-                        <input name="category" value="H5" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark" style="margin-top: 10px;"></span>
-                    </label>
-                    <label class="container" style="color: #f03b20;padding-top: 5px;">H4: Winds 130-156 mph
-                        <input name="category" value="H4" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container" style="color: #fd8d3c; padding-top: 5px;">H3: Winds 111-129 mph
-                        <input name="category" value="H3" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container" style="color: #fecc5c; padding-top: 5px;">H2: Winds 96-110 mph
-                        <input name="category" value="H2" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container" style="color: #ffff00; padding-top: 5px;">H1: Winds 74-95 mph
-                        <input name="category" value="H1" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container" style="color: #58e095; padding-top: 5px;">TS: Tropical Storm
-                        <input name="category" value="TS" type="checkbox" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container" style="color: #70b5e4; padding-top: 5px;">TD: Tropical Depression
-                        <input name="category" value="TD" type="checkbox" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
-                    <label class="container" style="color: #cccccb; padding-top: 5px;">EX: Extratropical cyclone
-                        <input name="category" value="EX" type="checkbox" onclick="getCheckedCheckboxesFor()">
-                        <span class="checkmark"></span>
-                    </label>
                 </div>
-            </div>
+
+
+
+            </form>
+
+
+
+            <!--<label style="line-height: 1.2;">Option #1: Filtered By Name <p style="margin-top:4px;margin-bottom:0;font-size:13px;">(available when all hurricane categories below are unselected)</p></label>-->
+
+
+            <!--<label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year Range</label>-->
+
 
 
             <!--Location selection-->
