@@ -25,8 +25,10 @@ var curHurricane;
 var curYearMin;
 var curYearMax;
 
+
 //function to instantiate the Leaflet map
 function createMap() {
+
     //create the map
     var map = L.map('mapid', {
         center: [36, -98],
@@ -381,13 +383,13 @@ function initializeSiders() {
     }
 }
 
-var curHurIDsByCat = [];
-var curHurIDsByCY = [];
-var curHurIDsByLCY = [];
-
 function updateExtent(layer) {
     curMap.fitBounds(layer.getBounds());
 }
+
+var curHurIDsByCat = [];
+var curHurIDsByCY = [];
+var curHurIDsByLCY = [];
 
 function clearMap() {
     if (curPointLayer) {
@@ -433,6 +435,7 @@ function applySetting() {
 
 
     // Scenario #1: if hurricane name is abled, check if it is empty
+
     if (document.getElementById("hurricaneInput").disabled == false) {
         if (curHurricane == "") {
             $('#img').hide();
@@ -500,7 +503,22 @@ function applySetting() {
                                 curMap.addLayer(curPointLayer);
 
                                 // update the line graph
-                                updateLineGraph(curPointLayer);
+                                $.ajax("data/point.json", {
+                                    dataType: "json",
+                                    success: function (data) {
+
+                                        // Define the geojson layer and add it to the map
+                                        var curPointLayer2 = L.geoJson(data, {
+                                            filter: function (feature, layer) {
+                                                return (feature.properties.hurName == curHurricane);
+                                            }
+                                        });
+
+                                        // update the line graph
+                                        updateLineGraph(curPointLayer2);
+
+                                    }
+                                });
 
                             }
                         });
@@ -683,7 +701,23 @@ function applySetting() {
 
                                                         // update the line graph
                                                         if (curHurIDsByLCY.length == 1) {
-                                                            updateLineGraph(curPointLayer);
+                                                            // update the line graph
+                                                            $.ajax("data/point.json", {
+                                                                dataType: "json",
+                                                                success: function (data) {
+
+                                                                    // Define the geojson layer and add it to the map
+                                                                    var curPointLayer2 = L.geoJson(data, {
+                                                                        filter: function (feature, layer) {
+                                                                            return (feature.properties.HurID == curHurIDsByLCY[0]);
+                                                                        }
+                                                                    });
+
+                                                                    // update the line graph
+                                                                    updateLineGraph(curPointLayer2);
+
+                                                                }
+                                                            });
                                                         }
                                                     }
                                                 });// end of ajax - points.json
@@ -824,7 +858,23 @@ function applySetting() {
                                     $('#mapid').show();
                                     curMap.addLayer(curPointLayer);
 
-                                    updateLineGraph(curPointLayer);
+                                    // update the line graph
+                                    $.ajax("data/point.json", {
+                                        dataType: "json",
+                                        success: function (data) {
+
+                                            // Define the geojson layer and add it to the map
+                                            var curPointLayer2 = L.geoJson(data, {
+                                                filter: function (feature, layer) {
+                                                    return (feature.properties.HurID == curHurIDsByCY[0]);
+                                                }
+                                            });
+
+                                            // update the line graph
+                                            updateLineGraph(curPointLayer2);
+
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -1126,7 +1176,7 @@ function lineOnEachFeature(feature,layer){
                         // Define the geojson layer and add it to the map
                         var curPointLayer2 = L.geoJson(data, {
                             filter: function (feature, layer) {
-                                return (feature.properties.HurID == curLineSeg.properties.HurID && feature.properties.popden > 0);
+                                return (feature.properties.HurID == curLineSeg.properties.HurID);
                             }
                         });
 
@@ -1251,12 +1301,12 @@ function createScatter(graphData) {
 
     // append the svg object to the body of the page
     var svg = d3.select("#scatterplot-div")
-        .append("svg")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 300 300")
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 300 300")
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
     var x = d3.scaleLinear()
@@ -1426,12 +1476,12 @@ function createLineGraph(data) {
 
     // append the svg object to the body of the page
     var svg = d3.select("#lineGraph-div")
-        .append("svg")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 300 300")
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 300 300")
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis --> it is a date format
     var x = d3.scaleLinear()
@@ -1530,6 +1580,31 @@ function createLineGraph(data) {
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
 
+}
+
+
+function handleChange(){
+    var optValue = document.querySelector('input[name=option]:checked').value;
+    var checkboxes = document.getElementsByName('category');
+
+    if (optValue == 'o1') {
+
+        document.getElementById("hurricaneInput").disabled = false;
+
+        for(var i=0, n=checkboxes.length; i < n; i++) {
+            checkboxes[i].disabled = true;
+        }
+
+        document.getElementById("locationInput").disabled = true;
+    }
+    else{
+        for(i=0, n=checkboxes.length; i < n; i++) {
+            checkboxes[i].disabled = false;
+        }
+
+        document.getElementById("locationInput").disabled = false;
+        document.getElementById("hurricaneInput").disabled = true;
+    }
 }
 
 window.onload = initializeSiders();

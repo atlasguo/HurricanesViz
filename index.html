@@ -26,14 +26,13 @@
         <!--the left panel section-->
         <div id="queryPanel">
 
-
-            <form>
+            <form id="Os">
                 <!--Hurricane selection-->
                 <div id="HurricaneFillIn">
                     <h3 style="margin-top: 10px;margin-left: 0px;">
                         Hurricane:
                     </h3>
-                    <input type="radio" name="colors" id="o1" checked=false;><label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filtered By Name <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label></label>
+                    <input type="radio" id="opt1" name="option" value="o1" onchange="handleChange();"><label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filtered By Name <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label></label>
 
                     <form autocomplete="off" action="/action_page.php">
                         <div class="autocomplete" style="width:300px;margin-top: 0;">
@@ -41,7 +40,7 @@
                         </div>
                     </form>
 
-                    <input type="radio" name="colors" id="o2" checked=true;><label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year</label>
+                    <input type="radio" id="opt2" name="option" value="o2" checked="checked" onchange="handleChange();"><label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year</label>
 
                     <div id="checkBoxControl">
                         <label class="container" style="color: #bd0026; padding-top: 15px;">H5: Winds >= 157 mph
@@ -57,11 +56,11 @@
                             <span class="checkmark"></span>
                         </label>
                         <label class="container" style="color: #fecc5c; padding-top: 5px;">H2: Winds 96-110 mph
-                            <input name="category" value="H2" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <input name="category" value="H2" type="checkbox" onclick="getCheckedCheckboxesFor()">
                             <span class="checkmark"></span>
                         </label>
                         <label class="container" style="color: #ffff00; padding-top: 5px;">H1: Winds 74-95 mph
-                            <input name="category" value="H1" type="checkbox" checked="checked" onclick="getCheckedCheckboxesFor()">
+                            <input name="category" value="H1" type="checkbox" onclick="getCheckedCheckboxesFor()">
                             <span class="checkmark"></span>
                         </label>
                         <label class="container" style="color: #58e095; padding-top: 5px;">TS: Tropical Storm
@@ -79,51 +78,42 @@
                     </div>
                 </div>
 
+                <!--Location selection-->
+                <div id="locationFillIn">
+                    <h3 style="margin-bottom:0px;margin-top: 25px;margin-left: 0px;">
+                        Location:
+                    </h3>
+                    <!--Make sure the form has the autocomplete function switched off:-->
+                    <form autocomplete="off" action="/action_page.php">
+                        <div class="autocomplete" style="width:300px;">
+                            <input id="locationInput" type="text" name="location" placeholder="Select a state or city">
+                        </div>
+                    </form>
+                </div>
+
+
+                <!--slider range for year-->
+                <div id="yearRange">
+                    <h3 style="margin-top: 5px;margin-left: 5px;">
+                        Year Range:
+                    </h3>
+
+                    <section class="range-slider">
+                        <span class="rangeValues"></span>
+                        <input value="2000" min="1851" max="2017" step="1" type="range">
+                        <input value="2017" min="1851" max="2017" step="1" type="range">
+                    </section>
+                </div>
+
+
+                <div id="controlButton" style="margin-top: 25px;">
+                    <button class="btn clear" onclick="clearMap()">Clear Map</button>
+                    <button class="btn apply" onclick="applySetting()" style="margin-left: 15px;">Apply Setting</button>
+                </div>
+
 
 
             </form>
-
-
-
-            <!--<label style="line-height: 1.2;">Option #1: Filtered By Name <p style="margin-top:4px;margin-bottom:0;font-size:13px;">(available when all hurricane categories below are unselected)</p></label>-->
-
-
-            <!--<label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year Range</label>-->
-
-
-
-            <!--Location selection-->
-            <div id="locationFillIn">
-                <h3 style="margin-bottom:0px;margin-top: 25px;margin-left: 0px;">
-                    Location:
-                </h3>
-                <!--Make sure the form has the autocomplete function switched off:-->
-                <form autocomplete="off" action="/action_page.php">
-                    <div class="autocomplete" style="width:300px;">
-                        <input id="locationInput" type="text" name="location" placeholder="Select a state or city">
-                    </div>
-                </form>
-            </div>
-
-
-            <!--slider range for year-->
-            <div id="yearRange">
-                <h3 style="margin-top: 5px;margin-left: 5px;">
-                    Year Range:
-                </h3>
-
-                <section class="range-slider">
-                    <span class="rangeValues"></span>
-                    <input value="2000" min="1851" max="2017" step="1" type="range">
-                    <input value="2017" min="1851" max="2017" step="1" type="range">
-                </section>
-            </div>
-
-
-            <div id="controlButton" style="margin-top: 25px;">
-                <button class="btn clear" onclick="clearMap()">Clear Map</button>
-                <button class="btn apply" onclick="applySetting()" style="margin-left: 15px;">Apply Setting</button>
-            </div>
 
         </div>
 
