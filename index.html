@@ -32,15 +32,27 @@
                     <h3 style="margin-top: 10px;margin-left: 0px;">
                         Hurricane:
                     </h3>
-                    <input type="radio" id="opt1" name="option" value="o1" onchange="handleChange();"><label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filtered By Name <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label></label>
 
-                    <form autocomplete="off" action="/action_page.php">
-                        <div class="autocomplete" style="width:300px;margin-top: 0;">
-                            <input id="hurricaneInput" type="text" name="hurricane" placeholder="Select one hurricane by name" disabled>
-                        </div>
-                    </form>
+                    <div class="radios">
 
-                    <input type="radio" id="opt2" name="option" value="o2" checked="checked" onchange="handleChange();"><label style="line-height: 1.2;">Option #2: Filtered By Category, Location, and/or Year</label>
+                        <input type="radio" id="opt1" name="option" value="o1" onchange="handleChange();">
+                        <label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filter By Name 
+                            <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label>
+                        </label>
+
+                        <span>
+                            <form autocomplete="off" action="/action_page.php">
+                                <div class="autocomplete" style="width:300px;margin-top: 0;">
+                                    <input id="hurricaneInput" type="text" name="hurricane" placeholder="Select one hurricane by name" disabled>
+                                </div>
+                            </form>
+                        </span>
+                        <span>
+                            <input type="radio" id="opt2" name="option" value="o2" checked="checked" onchange="handleChange();" style="float: none;">
+                            <label style="line-height: 1.2;">Option #2: Filter By Category,</label>
+                        </span>
+                        <label style="line-height: 1.2;">Location, and/or Year</label>
+                    </div>
 
                     <div id="checkBoxControl">
                         <label class="container" style="color: #bd0026; padding-top: 15px;">H5: Winds >= 157 mph
@@ -100,7 +112,7 @@
 
                     <section class="range-slider">
                         <span class="rangeValues"></span>
-                        <input value="2000" min="1851" max="2017" step="1" type="range">
+                        <input value="2007" min="1851" max="2017" step="1" type="range">
                         <input value="2017" min="1851" max="2017" step="1" type="range">
                     </section>
                 </div>

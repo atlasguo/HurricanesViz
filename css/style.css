@@ -88,6 +88,11 @@ h3 {
     background-color: rgba(0,0,0,0.9);
 }
 
+.radios > span
+{
+    white-space: nowrap;
+}
+
 .autocomplete {
     /*the container must be positioned relative:*/
     position: relative;
@@ -110,8 +115,9 @@ input[type=text]:enabled {
 }
 
 input[type=text]:disabled {
-    background: #dddddd;
+    background-color: #BEBEBE;
 }
+
 .autocomplete-items {
     position: absolute;
     border: 1px solid #d4d4d4;
@@ -187,6 +193,10 @@ margin: 1px;
 /* When the checkbox is checked, add a blue background */
 .container input:checked ~ .checkmark {
     background-color: #2196F3;
+}
+
+.container input[disabled] ~ .checkmark {
+    background-color: #696969;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */

@@ -1600,6 +1600,8 @@ function handleChange(){
         }
 
         document.getElementById("locationInput").disabled = true;
+        document.getElementById("locationInput").value = "";
+        document.getElementById("locationInput").placeholder="Select a state or city";
     }
     else{
         for(i=0, n=checkboxes.length; i < n; i++) {
@@ -1608,6 +1610,8 @@ function handleChange(){
 
         document.getElementById("locationInput").disabled = false;
         document.getElementById("hurricaneInput").disabled = true;
+        document.getElementById("hurricaneInput").value = "";
+        document.getElementById("hurricaneInput").placeholder="Select one hurricane by name";
     }
 }
 
