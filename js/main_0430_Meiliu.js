@@ -1113,10 +1113,10 @@ function lineOnEachFeature(feature,layer){
         },
         click: function (e) {
             if (lineSelection != e.target) {
-                
+
                 lineSelection = e.target;
                 var curLineSeg = feature;
-                
+
                 // update the line graph
                 $.ajax("data/point.json", {
                     dataType: "json",
@@ -1221,18 +1221,18 @@ function createScatter(graphData) {
 
     // set y axis min and max values
     var ymax = Math.max.apply(Math, graphData.map(function(o) {
-        return o.category;
+        return o.yOrder;
     }))
     var ymin = Math.min.apply(Math, graphData.map(function(o) {
-        return o.category;
+        return o.yOrder;
     }))
 
     // set x axis min and max values
     var xmax = Math.max.apply(Math, graphData.map(function(o) {
-        return o.date;
+        return o.xOrder;
     }))
     var xmin = Math.min.apply(Math, graphData.map(function(o) {
-        return o.date;
+        return o.xOrder;
     }))
 
     //remove previous contents
@@ -1240,27 +1240,27 @@ function createScatter(graphData) {
 
     // set the dimensions and margins of the graph
     var margin = {
-            top: 10,
-            right: 25,
-            bottom: 10,
-            left: 25
-        },
+        top: 10,
+        right: 25,
+        bottom: 10,
+        left: 25
+    },
         width = 300 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#scatterplot-div")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + 10)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom + 10)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis
     var x = d3.scaleLinear()
-        .domain([xmin - xmin / 20, xmax + xmax / 20])
-        .range([0, width]);
+    .domain([xmin - xmin / 20, xmax + xmax / 20])
+    .range([0, width]);
 
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -1282,15 +1282,15 @@ function createScatter(graphData) {
 
     // Add Y axis
     var y = d3.scaleLinear()
-        .domain([0, 8])
-        .range([height, 0]);
+    .domain([0, 8])
+    .range([height, 0]);
 
     var myAxis = d3.axisLeft()
-        .scale(y)
-        .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8])
-        .tickFormat(function(d, i) {
-            return tickLabels[i]
-        });
+    .scale(y)
+    .tickValues([0, 1, 2, 3, 4, 5, 6, 7, 8])
+    .tickFormat(function(d, i) {
+        return tickLabels[i]
+    });
 
 
     svg.append("g")
@@ -1299,14 +1299,14 @@ function createScatter(graphData) {
 
     // Add a tooltip div
     var tooltip = d3.select("#scatterplot-div")
-        .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip")
-        .style("background-color", "white")
-        .style("border", "solid")
-        .style("border-width", "1px")
-        .style("border-radius", "5px")
-        .style("padding", "5px")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
 
     // A function that change this tooltip when the user hover a point
     var mouseover = function(d) {
@@ -1385,7 +1385,13 @@ function updateLineGraph(curPointLayer){
 // line graph
 function createLineGraph(data) {
 
-    $('#lineGraphTitle').html("Indivial Hurricane Info of " + data[0].hurName + " within U.S.");
+    if (data[0].hurName != ""){
+        $('#lineGraphTitle').html("Indivial Hurricane Info of " + data[0].hurName + " within U.S.");
+    }
+    else{
+        $('#lineGraphTitle').html("Indivial Unnamed Hurricane Info within U.S.");
+    }
+
 
     var ymax = Math.max.apply(Math, data.map(function (o) {
         return o.value;
@@ -1406,27 +1412,27 @@ function createLineGraph(data) {
 
     // set the dimensions and margins of the graph
     var margin = {
-            top: 10,
-            right: 25,
-            bottom: 10,
-            left: 25
-        },
+        top: 10,
+        right: 25,
+        bottom: 10,
+        left: 25
+    },
         width = 300 - margin.left - margin.right,
         height = 220 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3.select("#lineGraph-div")
-        .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom + 10)
-        .append("g")
-        .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom + 10)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
     // Add X axis --> it is a date format
     var x = d3.scaleLinear()
-        .domain([xmin - xmin / 1200, xmax + xmax / 1200])
-        .range([0, width]);
+    .domain([xmin - xmin / 1200, xmax + xmax / 1200])
+    .range([0, width]);
 
 
     svg.append("g")
@@ -1445,8 +1451,8 @@ function createLineGraph(data) {
 
     // Add Y axis
     var y = d3.scaleLinear()
-		    .domain([ymin - 10, ymax + 10])
-		    .range([height, 0]);
+    .domain([ymin - 10, ymax + 10])
+    .range([height, 0]);
 
     svg.append("g")
         .attr("class", "axisWhite")
@@ -1509,11 +1515,11 @@ function createLineGraph(data) {
         .append("circle")
         .attr("class", "myCircle")
         .attr("cx", function(d) {
-            return x(d.date)
-        })
+        return x(d.date)
+    })
         .attr("cy", function(d) {
-            return y(d.value)
-        })
+        return y(d.value)
+    })
         .attr("r", 4)
         .style("fill", "#69b3a2")
         .style("opacity", 0.8)
@@ -1522,7 +1528,7 @@ function createLineGraph(data) {
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
 
-    }
+}
 
 window.onload = initializeSiders();
 $(document).ready(createMap);
