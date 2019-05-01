@@ -56,7 +56,7 @@ function createMap() {
 
     //call getData function
     getData(curMap);
-    createLegend(curMap)
+    createLegend(curMap);
 
 };
 
@@ -403,7 +403,7 @@ function clearMap() {
 }
 
 function applySetting() {
-
+    
     if (selection) {
         selectedLayer.resetStyle(selection);
     }
@@ -414,6 +414,13 @@ function applySetting() {
     curHurIDsByCat = [];
     curHurIDsByCY = [];
     curHurIDsByLCY = [];
+
+
+    // clear up
+    createScatter();
+    createLineGraph();
+    document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
+    document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
 
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
@@ -439,6 +446,7 @@ function applySetting() {
         if (curHurricane == "") {
             $('#img').hide();
             $('#mapid').show();
+
             alert("Empty input of hurricane name!");
         } else {
             // if found
@@ -489,7 +497,7 @@ function applySetting() {
 									},*/
                                     // filter by name
                                     filter: function (feature, layer) {
-                                        return filterPointByByName(feature, layer);
+                                        return filterPointByName(feature, layer);
                                     },
                                     // on each feature of states
                                     pointToLayer: function (feature, latlng) {
@@ -710,7 +718,7 @@ function applySetting() {
                                                             //},
                                                             // filter by name
                                                             filter: function (feature, layer) {
-                                                                return filterPointByByIDs(feature, layer);
+                                                                return filterPointByIDs(feature, layer);
                                                             },
                                                             // on each feature of states
                                                             pointToLayer: function (feature, latlng) {
@@ -801,12 +809,13 @@ function applySetting() {
 
 
                                                         });
-                                                        // console.log("HERE")
 
-                                                        createScatter(graphData);
-                                                        document.getElementById("lineGraph-div").innerHTML = "";
-
-
+                                                        if (graphData.length > 0){
+                                                            createScatter(graphData);
+                                                        }
+                                                        else {
+                                                            alert("No hurricane point is within this location.");
+                                                        }
 
                                                         // update the line graph
                                                         if (curHurIDsByLCY.length == 1) {
@@ -827,12 +836,17 @@ function applySetting() {
 
                                                                 }
                                                             });
+                                                        } else {
+
+                                                            createLineGraph();
+                                                            document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
+
                                                         }
                                                     }
                                                 });// end of ajax - points.json
 
                                             } // end of adding points in scenario #3 when the # of hurricanes is <= 5
-
+                                            
                                             curLineLayer = L.geoJson(curLineLayerJSON, {
                                                 style: function (feature, layer) {
                                                     return lineStyle(feature, layer);
@@ -865,10 +879,6 @@ function applySetting() {
 
                         $('#img').hide();
                         $('#mapid').show();
-                        createScatter();
-                        createLineGraph();
-                        document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
-                        document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
                         alert("No location named " + curLocation + "!");
                     } // end of scenario #3 if location is not found
 
@@ -876,10 +886,7 @@ function applySetting() {
 
                 // Scenario #2: if locationInput is empty, directly map the curLineLayer
                 else {
-                    createScatter();
-                    createLineGraph();
-                    document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
-                    document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
+
                     if (curHurIDsByCY.length == 0) {
                         alert("There is no resulting hurricanes based on current settings.")
                         $('#img').hide();
@@ -888,7 +895,7 @@ function applySetting() {
 
                     else{
                         // only one hurricane selected after filtering by cat and year
-                        if (curHurIDsByCY.length == 1) {
+                        if (curHurIDsByCY.length <= 5) {
                             // Map: Zoom to the hurricane line; Add points;
                             // Info panel: individual hurricane graph should update;
                             // add the points to the map
@@ -903,7 +910,7 @@ function applySetting() {
 									},*/
                                         // filter by name
                                         filter: function (feature, layer) {
-                                            return filterPointByByIDs(feature, layer);
+                                            return filterPointByIDsCY(feature, layer);
                                         },
                                         // on each feature of states
                                         pointToLayer: function (feature, latlng) {
@@ -937,23 +944,25 @@ function applySetting() {
                                     };
                                     updateLegend(curMap);
 
-                                    // update the line graph
-                                    $.ajax("data/point.json", {
-                                        dataType: "json",
-                                        success: function (data) {
+                                    if (curHurIDsByCY.length == 1) {
+                                        // update the line graph
+                                        $.ajax("data/point.json", {
+                                            dataType: "json",
+                                            success: function (data) {
 
-                                            // Define the geojson layer and add it to the map
-                                            var curPointLayer2 = L.geoJson(data, {
-                                                filter: function (feature, layer) {
-                                                    return (feature.properties.HurID == curHurIDsByCY[0]);
-                                                }
-                                            });
+                                                // Define the geojson layer and add it to the map
+                                                var curPointLayer2 = L.geoJson(data, {
+                                                    filter: function (feature, layer) {
+                                                        return (feature.properties.HurID == curHurIDsByCY[0]);
+                                                    }
+                                                });
 
-                                            // update the line graph
-                                            updateLineGraph(curPointLayer2);
+                                                // update the line graph
+                                                updateLineGraph(curPointLayer2);
 
-                                        }
-                                    });
+                                            }
+                                        });
+                                    }
                                 }
                             });
                         }
@@ -978,13 +987,17 @@ function applySetting() {
 
 }
 
-function filterPointByByName(feature, layer) {
+function filterPointByName(feature, layer) {
     return (feature.properties.hurName == curHurricane && feature.properties.popden > 0);
 }
 
-function filterPointByByIDs(feature, layer) {
+function filterPointByIDs(feature, layer) {
     return (checkValue(feature.properties.HurID, curHurIDsByLCY) && feature.properties.popden > 0);
 
+}
+
+function filterPointByIDsCY(feature, layer) {
+    return (checkValue(feature.properties.HurID, curHurIDsByCY) && feature.properties.popden > 0);
 }
 
 function pointToLayer(feature, latlng) {
@@ -1340,6 +1353,7 @@ function updateLegend(map){
         $('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
     };		
 };
+
 
 //create new sequence controls to control the years
 function createLegend(map) {
