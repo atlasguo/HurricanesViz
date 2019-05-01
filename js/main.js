@@ -501,6 +501,28 @@ function applySetting() {
                                 $('#img').hide();
                                 $('#mapid').show();
                                 curMap.addLayer(curPointLayer);
+								
+								// update popden info
+								var mean=0, max=0, min=99999, count=0;
+								curPointLayer.eachLayer(function (layer) {
+									var popden = layer.feature.properties.popden;
+									if (popden>0)
+									{
+										count++;
+										mean+=popden;
+										if (popden<min)
+											min=popden;
+										if (popden>max)
+											max=popden;
+									}
+								});
+								mean/=count;
+								popDenValue={									
+									max: max,
+									mean: mean,
+									min: min
+								};
+								updateLegend(curMap);
 
                                 // update the line graph
                                 $.ajax("data/point.json", {
@@ -698,6 +720,28 @@ function applySetting() {
                                                         });
 
                                                         curMap.addLayer(curPointLayer);
+														
+														// update popden info
+														var mean=0, max=0, min=99999, count=0;
+														curPointLayer.eachLayer(function (layer) {
+															var popden = layer.feature.properties.popden;
+															if (popden>0)
+															{
+																count++;
+																mean+=popden;
+																if (popden<min)
+																	min=popden;
+																if (popden>max)
+																	max=popden;
+															}
+														});
+														mean/=count;
+														popDenValue={									
+															max: max,
+															mean: mean,
+															min: min
+														};
+														updateLegend(curMap);
 
                                                         // update the scatterplot
                                                         $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
@@ -863,6 +907,28 @@ function applySetting() {
                                     $('#img').hide();
                                     $('#mapid').show();
                                     curMap.addLayer(curPointLayer);
+									
+									// update popden info
+									var mean=0, max=0, min=99999, count=0;
+									curPointLayer.eachLayer(function (layer) {
+										var popden = layer.feature.properties.popden;
+										if (popden>0)
+										{
+											count++;
+											mean+=popden;
+											if (popden<min)
+												min=popden;
+											if (popden>max)
+												max=popden;
+										}
+									});
+									mean/=count;
+									popDenValue={									
+										max: max,
+										mean: mean,
+										min: min
+									};
+									updateLegend(curMap);
 
                                     // update the line graph
                                     $.ajax("data/point.json", {
@@ -1224,6 +1290,50 @@ function getCheckedCheckboxesFor() {
     }
 }
 
+// check and remove element by id
+function removeElement(elementId)
+{
+	var checkElement = document.getElementById(elementId);
+	if (checkElement!=null)
+	{
+		checkElement.parentNode.removeChild(checkElement);		
+	}	
+}
+
+// update the point symbol legend
+function updateLegend(map){
+	
+	removeElement("point-text");
+	removeElement("point-legend");
+	
+	var container = document.getElementsByClassName("legend-control-container")[0];
+
+	$(container).append('<text id="point-text">Pop Density Affected</text>');
+	
+	var svg = '<svg id="point-legend" width="120px" height="70px">';	
+	var circles = {
+		max: 25,
+		mean: 45,
+		min: 65
+	};		
+	for (var circle in circles){		
+		svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
+		svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
+	};
+	svg += "</svg>";
+	
+	$(container).append(svg);
+	
+	for (var key in popDenValue){		
+		var radius = calcPropRadius(popDenValue[key]);
+		$('#'+key).attr({
+			cy: 69 - radius,
+			r: radius
+		});
+		$('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
+	};		
+};
+
 //create new sequence controls to control the years
 function createLegend(map) {
     //Create a SequenceControl object
@@ -1238,26 +1348,26 @@ function createLegend(map) {
             $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
 
             //Append the legend symbols
-            var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> city area</text><br>'
-            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> state boundary</text><br>'
+            var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> City Area</text><br>'
+            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=40></img><text> State Boundary</text><br>'
 
             // need to fixed
             var hCategory = '<text>Hurricane Categories</text><br>'
-            hCategory += '<img src = img/SVG/h5.svg width=45></img>'
+            hCategory += '<img src = img/SVG/h5.svg width=40></img>'
             hCategory += '<text> H5</text><br>'
-            hCategory += '<img src = img/SVG/h4.svg width=45>'
+            hCategory += '<img src = img/SVG/h4.svg width=40>'
             hCategory += '<text> H4</text><br>'
-            hCategory += '<img src = img/SVG/h3.svg width=45>'
+            hCategory += '<img src = img/SVG/h3.svg width=40>'
             hCategory += '<text> H3</text><br>'
-            hCategory += '<img src = img/SVG/h2.svg width=45>'
+            hCategory += '<img src = img/SVG/h2.svg width=40>'
             hCategory += '<text> H2</text><br>'
-            hCategory += '<img src = img/SVG/h1.svg width=45>'
+            hCategory += '<img src = img/SVG/h1.svg width=40>'
             hCategory += '<text> H1</text><br>'
-            hCategory += '<img src = img/SVG/ts.svg width=45>'
+            hCategory += '<img src = img/SVG/ts.svg width=40>'
             hCategory += '<text> TS</text><br>'
-            hCategory += '<img src = img/SVG/td.svg width=45>'
+            hCategory += '<img src = img/SVG/td.svg width=40>'
             hCategory += '<text> TD</text><br>'
-            hCategory += '<img src = img/SVG/ex.svg width=45>'
+            hCategory += '<img src = img/SVG/ex.svg width=40>'
             hCategory += '<text> EX</text><br>'
 
             //add attribute legend to container
