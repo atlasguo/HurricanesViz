@@ -164,7 +164,10 @@ function stateOnEachFeature(feature, layer) {
             this.closePopup();
         },
         click: function (e) {
-
+            
+            var pop = e.target.getPopup();
+            pop.setLatLng(e.latlng).openOn(curMap);
+            
             if (curLocationLayer){
                 curMap.removeLayer(curLocationLayer);
             }
@@ -202,8 +205,9 @@ function urbanOnEachFeature(feature, layer) {
 
     layer.on({
 
-        mouseover: function () {
-            this.openPopup();
+        mouseover: function (e) {
+            var pop = e.target.getPopup();
+            pop.setLatLng(e.latlng).openOn(curMap);
         },
         mouseout: function () {
             this.closePopup();
