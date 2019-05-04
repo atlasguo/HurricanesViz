@@ -17,9 +17,10 @@ h3 {
     color: #FFFFFF;
 }
 
-.myCircle:hover {
+
+/* .linepoint:hover {
     stroke: red;
-}
+} */
 
 .axisWhite line{
     stroke: white;

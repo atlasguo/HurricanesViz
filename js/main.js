@@ -1463,7 +1463,7 @@ function createScatter(graphData) {
         // text label for the y axis
         svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", margin.left - 100)
+            .attr("y", margin.left - 95)
             .attr("x",0 - (height / 2))
             .attr("dy", "1em")
             .attr("fill", "white")
@@ -1479,6 +1479,7 @@ function createScatter(graphData) {
 
         // A function that change this tooltip when the user hover a point
         var mouseover = function(d) {
+          d3.select(this).attr("r", 4).style("fill", "red");
             tooltip
                 .style("display", "inline");
         }
@@ -1494,6 +1495,7 @@ function createScatter(graphData) {
 
         // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
         var mouseleave = function (d) {
+          d3.select(this).attr("r", 4).style("fill", "#69b3a2");
             tooltip
                 .transition()
                 .duration(200)
@@ -1636,7 +1638,7 @@ function createLineGraph(data) {
         // text label for the y axis
         svg.append("text")
             .attr("transform", "rotate(-90)")
-            .attr("y", margin.left - 100)
+            .attr("y", margin.left - 95)
             .attr("x",0 - (height / 2))
             .attr("dy", "1em")
             .attr("fill", "white")
@@ -1670,11 +1672,13 @@ function createLineGraph(data) {
 
         // A function that change this tooltip when the user hover a point
         var mouseover = function(d) {
+          d3.select(this).attr("r", 3.5).style("fill", "red");
             tooltipLineGraph
                 .style("display", "inline");
         }
 
         var mousemove = function (d) {
+
             tooltipLineGraph
                 .html("<p style='font-size:12px;margin=0;padding=0;'>" +
                       "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
@@ -1685,6 +1689,8 @@ function createLineGraph(data) {
 
         // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
         var mouseleave = function (d) {
+          d3.select(this).attr("r", 2.5).style("fill", "#69b3a2");
+
             tooltipLineGraph
                 .transition()
                 .duration(200)
@@ -1709,6 +1715,7 @@ function createLineGraph(data) {
             .style("fill", "#69b3a2")
             .style("opacity", 0.8)
             .style("stroke", "white")
+            .style("stroke-width", 1)
             .on("mouseover", mouseover)
             .on("mousemove", mousemove)
             .on("mouseleave", mouseleave)
