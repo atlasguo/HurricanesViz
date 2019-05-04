@@ -1404,18 +1404,18 @@ function createScatter(graphData) {
         // set the dimensions and margins of the graph
         var margin = {
             top: 10,
-            right: 25,
+            right: 50,
             bottom: 10,
-            left: 25
+            left: 50
         },
-            width = 300 - margin.left - margin.right,
+            width = 350 - margin.left - margin.right,
             height = 220 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
         var svg = d3.select("#scatterplot-div")
         .append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 300 250")
+        .attr("viewBox", "0 0 350 250")
         .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
@@ -1425,23 +1425,21 @@ function createScatter(graphData) {
         .domain([xmin-600000000,xmax+600000000])
         .range([0, width]);
 
-        /*console.log(xmin);
-      console.log(xmax);*/
-
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
             .attr("class", "axisWhite")
             .call(d3.axisBottom(x).tickSize(0))
             .selectAll("text").remove()
 
-        // add x-axis label
+        // text label for the x axis
         svg.append("text")
-            .attr("text-anchor", "center")
+            .attr("transform",
+                  "translate(" + (width/2) + " ," +
+                                 (height + margin.top + 10) + ")")
             .attr("fill", "white")
-            .attr("transform", "translate(" + 110 + "," + 217 + ")")
-            .style("font-size", 12)
+            .style("text-anchor", "middle")
+            .style("font", "12px verdana")
             .text("Time");
-
 
         // set format y axis tick label
         var tickLabels = ["", "EX", "TD", "TS", "H1", "H2", "H3", "H4", "H5"]
@@ -1461,6 +1459,17 @@ function createScatter(graphData) {
         svg.append("g")
             .attr("class", "axisWhite")
             .call(myAxis.tickSizeOuter(0));
+
+        // text label for the y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", margin.left - 100)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1em")
+            .attr("fill", "white")
+            .style("text-anchor", "middle")
+            .style("font", "12px verdana")
+            .text("Hurricane Category");
 
         // Add a tooltip div
         var tooltip = d3.select("body")
@@ -1577,11 +1586,11 @@ function createLineGraph(data) {
         // set the dimensions and margins of the graph
         var margin = {
             top: 10,
-            right: 25,
+            right: 50,
             bottom: 10,
-            left: 25
+            left: 50
         },
-            width = 300 - margin.left - margin.right,
+            width = 325 - margin.left - margin.right,
             height = 220 - margin.top - margin.bottom;
 
         // append the svg object to the body of the page
@@ -1605,12 +1614,14 @@ function createLineGraph(data) {
             .call(d3.axisBottom(x).tickSize(0))
             .selectAll("text").remove()
 
-        // add x-axis label
+        // text label for the x axis
         svg.append("text")
-            .attr("text-anchor", "center")
+            .attr("transform",
+                  "translate(" + (width/2) + " ," +
+                                 (height + margin.top + 10) + ")")
             .attr("fill", "white")
-            .attr("transform", "translate(" + 110 + "," + 217 + ")")
-            .style("font-size", 12)
+            .style("text-anchor", "middle")
+            .style("font", "11px verdana")
             .text("Time");
 
         // Add Y axis
@@ -1621,6 +1632,17 @@ function createLineGraph(data) {
         svg.append("g")
             .attr("class", "axisWhite")
             .call(d3.axisLeft(y).tickSizeOuter(0));
+
+        // text label for the y axis
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", margin.left - 100)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1em")
+            .attr("fill", "white")
+            .style("text-anchor", "middle")
+            .style("font", "11px verdana")
+            .text("Wind Speed (kts)");
 
         // Add the line
         svg.append("path")
