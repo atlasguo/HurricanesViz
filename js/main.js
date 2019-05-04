@@ -164,10 +164,10 @@ function stateOnEachFeature(feature, layer) {
             this.closePopup();
         },
         click: function (e) {
-            
+
             var pop = e.target.getPopup();
             pop.setLatLng(e.latlng).openOn(curMap);
-            
+
             if (curLocationLayer){
                 curMap.removeLayer(curLocationLayer);
             }
@@ -350,42 +350,6 @@ function autocomplete(inp, arr) {
     });
 }
 
-
-function getVals() {
-    // Get slider values
-    var parent = this.parentNode;
-    var slides = parent.getElementsByTagName("input");
-    var slide1 = parseFloat(slides[0].value);
-    var slide2 = parseFloat(slides[1].value);
-    // Neither slider will clip the other, so make sure we determine which is larger
-    if (slide1 > slide2) {
-        var tmp = slide2;
-        slide2 = slide1;
-        slide1 = tmp;
-    }
-
-    curYearMin = slide1;
-    curYearMax = slide2;
-
-    var displayElement = parent.getElementsByClassName("rangeValues")[0];
-    displayElement.innerHTML = slide1 + " - " + slide2;
-}
-
-function initializeSiders() {
-    // Initialize Sliders
-    var sliderSections = document.getElementsByClassName("range-slider");
-    for (var x = 0; x < sliderSections.length; x++) {
-        var sliders = sliderSections[x].getElementsByTagName("input");
-        for (var y = 0; y < sliders.length; y++) {
-            if (sliders[y].type === "range") {
-                sliders[y].oninput = getVals;
-                // Manually trigger event first time to display values
-                sliders[y].oninput();
-            }
-        }
-    }
-}
-
 function updateExtent(layer) {
     curMap.fitBounds(layer.getBounds());
 }
@@ -407,7 +371,7 @@ function clearMap() {
 }
 
 function applySetting() {
-    
+
     if (selection) {
         selectedLayer.resetStyle(selection);
     }
@@ -429,6 +393,8 @@ function applySetting() {
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
+    curYearMin = document.getElementById("yearInputMin").value;
+    curYearMax = document.getElementById("yearInputMax").value;
 
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
@@ -528,7 +494,7 @@ function applySetting() {
                                     }
                                 });
                                 mean/=count;
-                                popDenValue={									
+                                popDenValue={
                                     max: max,
                                     mean: mean,
                                     min: min
@@ -570,6 +536,9 @@ function applySetting() {
     // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
     else {
         // "values" is a vector containing all the selected categories
+
+
+
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
             values = [];
         Array.prototype.forEach.call(checkboxes, function (el) {
@@ -747,7 +716,7 @@ function applySetting() {
                                                             }
                                                         });
                                                         mean/=count;
-                                                        popDenValue={									
+                                                        popDenValue={
                                                             max: max,
                                                             mean: mean,
                                                             min: min
@@ -850,7 +819,7 @@ function applySetting() {
                                                 });// end of ajax - points.json
 
                                             } // end of adding points in scenario #3 when the # of hurricanes is <= 5
-                                            
+
                                             curLineLayer = L.geoJson(curLineLayerJSON, {
                                                 style: function (feature, layer) {
                                                     return lineStyle(feature, layer);
@@ -941,7 +910,7 @@ function applySetting() {
                                         }
                                     });
                                     mean/=count;
-                                    popDenValue={									
+                                    popDenValue={
                                         max: max,
                                         mean: mean,
                                         min: min
@@ -1320,8 +1289,8 @@ function removeElement(elementId)
     var checkElement = document.getElementById(elementId);
     if (checkElement!=null)
     {
-        checkElement.parentNode.removeChild(checkElement);		
-    }	
+        checkElement.parentNode.removeChild(checkElement);
+    }
 }
 
 // update the point symbol legend
@@ -1334,13 +1303,13 @@ function updateLegend(map){
 
     $(container).append('<text id="point-text">Pop Density Affected</text>');
 
-    var svg = '<svg id="point-legend" width="120px" height="70px">';	
+    var svg = '<svg id="point-legend" width="120px" height="70px">';
     var circles = {
         max: 25,
         mean: 45,
         min: 65
-    };		
-    for (var circle in circles){		
+    };
+    for (var circle in circles){
         svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
         svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
     };
@@ -1348,14 +1317,14 @@ function updateLegend(map){
 
     $(container).append(svg);
 
-    for (var key in popDenValue){		
+    for (var key in popDenValue){
         var radius = calcPropRadius(popDenValue[key]);
         $('#'+key).attr({
             cy: 69 - radius,
             r: radius
         });
         $('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
-    };		
+    };
 };
 
 
@@ -1756,5 +1725,4 @@ function handleChange(){
     }
 }
 
-window.onload = initializeSiders();
 $(document).ready(createMap);

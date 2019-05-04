@@ -36,7 +36,7 @@
                     <div class="radios">
 
                         <input type="radio" id="opt1" name="option" value="o1" onchange="handleChange();">
-                        <label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filter By Name 
+                        <label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filter By Name
                             <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label>
                         </label>
 
@@ -103,18 +103,17 @@
                     </form>
                 </div>
 
-
-                <!--slider range for year-->
-                <div id="yearRange">
+                <!--Year range selection-->
+                <div id="yearFillIn">
                     <h3 style="margin-top: 5px;margin-left: 5px;">
                         Year Range:
                     </h3>
-
-                    <section class="range-slider">
-                        <span class="rangeValues"></span>
-                        <input value="2007" min="1851" max="2017" step="1" type="range">
-                        <input value="2017" min="1851" max="2017" step="1" type="range">
-                    </section>
+                      <table>
+                        <tr>
+                          <td><input id="yearInputMin" type="text" name="year" placeholder="2010" min="1851" max="2017" style="width: 50px;"></td>le>
+                          <td><input id="yearInputMax" type="text" name="year" placeholder="2017" min="1851" max="2017" style="width: 50px;"></td>
+                        </tr>
+                      </table>
                 </div>
 
 
