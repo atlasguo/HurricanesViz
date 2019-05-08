@@ -1313,6 +1313,9 @@ function updateLegend(map){
 	removeElement("point-text");
 	removeElement("point-legend");
 	
+	if (popDenValue['max']==0)
+		return;
+	
 	var container = document.getElementsByClassName("legend-control-container")[0];
 
 	$(container).append('<text id="point-text">Pop Density Affected</text>');
