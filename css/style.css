@@ -363,3 +363,15 @@ section.range-slider input[type=range]::-moz-focus-outer {
     background: #fff;
     pointer-events: none;
 }
+
+#scatterplot-div
+{
+	background: #303030;	
+	margin-bottom: 15px;
+}
+
+#lineGraph-div
+{
+	background: #303030;	
+	margin-bottom: 15px;
+}
