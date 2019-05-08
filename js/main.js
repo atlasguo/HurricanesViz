@@ -25,6 +25,20 @@ var curHurricane;
 var curYearMin;
 var curYearMax;
 
+window.alert = function(message){
+	$(document.createElement("div"))
+	.attr({title: "Warning", "class": "alert"})
+	.html(message)
+	.dialog({
+	buttons: {OK: function(){$(this).dialog("close");}},
+	close: function(){$(this).remove();},
+	draggable: true,
+	modal: true,
+	resizable: false,
+	width: "auto"
+	});
+};
+
 //function to instantiate the Leaflet map
 function createMap() {
 
@@ -447,12 +461,12 @@ function applySetting() {
     curHurricane = document.getElementById("hurricaneInput").value;
 
     if ((document.getElementById("yearInputMax").value > 2017) | (document.getElementById("yearInputMax").value < 1851)){
-        alert("max year must be within the year range (1851-2017)")
+        alert("End year must be within the year range (1851-2017).")
     } else{
         curYearMax = document.getElementById("yearInputMax").value;
     }
     if ((document.getElementById("yearInputMin").value > curYearMax) | (document.getElementById("yearInputMin").value < 1851)){
-        alert("min year must be between 1851 and max year");
+        alert("Start year must be between 1851 and end year.");
     } else{
         curYearMin = document.getElementById("yearInputMin").value;
     }
