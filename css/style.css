@@ -264,6 +264,14 @@ section.range-slider input[type=range]::-moz-focus-outer {
     border: 0;
 }
 
+.from{
+  color: white;
+}
+
+.to{
+  color: white;
+}
+
 .btn {
     border: none;
     background-color: black;
