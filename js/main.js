@@ -445,8 +445,17 @@ function applySetting() {
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-    curYearMin = document.getElementById("yearInputMin").value;
-    curYearMax = document.getElementById("yearInputMax").value;
+
+    if ((document.getElementById("yearInputMax").value > 2017) | (document.getElementById("yearInputMax").value < 1851)){
+        alert("max year must be within the year range (1851-2017)")
+    } else{
+        curYearMax = document.getElementById("yearInputMax").value;
+    }
+    if ((document.getElementById("yearInputMin").value > curYearMax) | (document.getElementById("yearInputMin").value < 1851)){
+        alert("min year must be between 1851 and max year");
+    } else{
+        curYearMin = document.getElementById("yearInputMin").value;
+    }
 
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
