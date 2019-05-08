@@ -29,7 +29,7 @@
             <form id="Os">
                 <!--Hurricane selection-->
                 <div id="HurricaneFillIn">
-                    <h3 style="margin-top: 10px;margin-left: 0px;">
+                    <h3 style="margin-top: 0px;margin-left: 0px;">
                         HURRICANE:
                     </h3>
 
@@ -106,14 +106,19 @@
                 <!--Year range selection-->
                 <div id="yearFillIn">
                     <h3 style="margin-top: 5px;margin-left: 0px;">YEAR RANGE (1851-2017):</h3>
-                      <table>
+                    <table>
                         <tr>
-                          <td class="from" style="padding: 10px;font-weight: bold;">From</td>
-                          <td><input id="yearInputMin" type="text" name="year" value="2010" min="1851" max="2017" style="width: 50px;"></td>
-                          <td class="to" style="padding: 10px;font-weight: bold;"> To </td>
-                          <td><input id="yearInputMax" type="text" name="year" value="2017" min="1851" max="2017" style="width: 50px;"></td>
+                            <td class="from" style="padding: 5px;font-weight: bold;">From</td>
+                            <td><input id="yearInputMin" type="text" name="year" value="2010" min="1851" max="2017" style="width: 50px;" oninput="yearMinInputChangeRange()"></td>
+                            <td class="to" style="padding: 5px;font-weight: bold;"> To </td>
+                            <td><input id="yearInputMax" type="text" name="year" value="2017" min="1851" max="2017" style="width: 50px;" oninput="yearMaxInputChangeRange()"></td>
                         </tr>
                     </table>
+                    <section class="range-slider">
+                        <span class="rangeValues"></span>
+                        <input id="minYearRange" value="2010" min="1851" max="2017" step="1" type="range">
+                        <input id="maxYearRange" value="2017" min="1851" max="2017" step="1" type="range">
+                    </section>
                 </div>
 
 
@@ -135,42 +140,42 @@
         <!--the right panel section-->
 
         <div id="infoPanel">
-			<div id="infoPanelFrame">
-            <!--chart section-->
-            <h3 id="scatterplotTitle" style="margin-top: 0px;margin-left: 0px;">
-                Historical Hurricanes by Location
-            </h3>
-            <div id='scatterplot-div'>
-                <svg id='scatterplotAffordance' width = 250px height = 200px >
-                    <text font-size="15px" fill="white">
-                        <tspan x="50" y="50" >Select a location</tspan>
-                        <tspan x="50" y="70" >in query panel</tspan>
-                    </text>
-                </svg>
+            <div id="infoPanelFrame">
+                <!--chart section-->
+                <h3 id="scatterplotTitle" style="margin-top: 0px;margin-left: 0px;">
+                    Historical Hurricanes by Location
+                </h3>
+                <div id='scatterplot-div'>
+                    <svg id='scatterplotAffordance' width = 250px height = 200px >
+                        <text font-size="15px" fill="white">
+                            <tspan x="50" y="50" >Select a location</tspan>
+                            <tspan x="50" y="70" >in query panel</tspan>
+                        </text>
+                    </svg>
 
-            </div>
+                </div>
 
-            <h3 id="lineGraphTitle" style="margin-top: 0px;margin-left: 0px;">
-                Individual Hurricane Info
-            </h3>
-            <div id='lineGraph-div'>
-                <svg id='lineGraphAffordance' width = 250px height = 200px >
-                    <text font-size="15px" fill="white">
-                        <tspan x="50" y="50" >Select a hurricane in</tspan>
-                        <tspan x="50" y="70" >query panel option #1</tspan>
-                        <tspan x="50" y="90" >or on the map</tspan>
-                    </text>
-                </svg>
+                <h3 id="lineGraphTitle" style="margin-top: 0px;margin-left: 0px;">
+                    Individual Hurricane Info
+                </h3>
+                <div id='lineGraph-div'>
+                    <svg id='lineGraphAffordance' width = 250px height = 200px >
+                        <text font-size="15px" fill="white">
+                            <tspan x="50" y="50" >Select a hurricane in</tspan>
+                            <tspan x="50" y="70" >query panel option #1</tspan>
+                            <tspan x="50" y="90" >or on the map</tspan>
+                        </text>
+                    </svg>
 
-            </div>
+                </div>
 
-            <!--metadata section-->
-            <div id='metadata'>
-                <p style='font-size:12px;margin-top: 10px;color: white'><b>Background: </b></p>
-                <p style='font-size:12px;margin-top: 10px;color: white'><b>Data Source: </b></p>
+                <!--metadata section-->
+                <div id='metadata'>
+                    <p style='font-size:12px;margin-top: 10px;color: white'><b>Background: </b></p>
+                    <p style='font-size:12px;margin-top: 10px;color: white'><b>Data Source: </b></p>
+                </div>
             </div>
         </div>
-		</div>
 
         <!--you can also use this space for internal scripts or stylesheets;
 place these within <script> or <style> tags-->
