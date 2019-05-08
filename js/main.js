@@ -1744,12 +1744,15 @@ function handleChange(){
         document.getElementById("locationInput").disabled = true;
         document.getElementById("locationInput").value = "";
         document.getElementById("locationInput").placeholder="Select a state or city";
+        document.getElementById("yearInputMin").disabled = true;
+        document.getElementById("yearInputMax").disabled = true;
     }
     else{
         for(i=0, n=checkboxes.length; i < n; i++) {
             checkboxes[i].disabled = false;
         }
-
+        document.getElementById("yearInputMin").disabled = false;
+        document.getElementById("yearInputMax").disabled = false;
         document.getElementById("locationInput").disabled = false;
         document.getElementById("hurricaneInput").disabled = true;
         document.getElementById("hurricaneInput").value = "";
