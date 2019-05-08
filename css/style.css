@@ -1,21 +1,24 @@
 /* Stylesheet by Meiliu, Jamp, Atlas, 2019 */
 
 h3 {
+	font-size:15px;
     margin: 15px;
+	color: #FFFFFF;
 }
 
 h4 {
+	font-size: 13px;
     margin-top: 0;
     margin-bottom: 10px;
 }
 
 label {
+	font-size: 13px;
     color: #FFFFFF;
+
 }
 
-h3 {
-    color: #FFFFFF;
-}
+
 
 
 .axisWhite line{
@@ -41,13 +44,14 @@ h3 {
     outline: 2px solid white;
     padding: 10px;
     text-align: left;
+	border-radius: 10px;
 }
 
 .navbar-brand{
     margin:0;
     display: inline-block;
     color: white;
-    text-decoration: none;
+    text-decoration: none;	
 }
 
 .navbar-brand:hover {
@@ -56,7 +60,7 @@ h3 {
 
 .navbar-text{
     color: white;
-    font-size: 25px;
+    font-size: 20px;
     padding: 7px;
     font-family: verdana;
     background-color: #133562;
@@ -66,7 +70,7 @@ h3 {
 
 #queryPanel {
     margin:0px;
-    height: 610px;
+    height: 600px;
     width: 18%;
     padding: 20px;
     display: inline-block;
@@ -145,7 +149,7 @@ input[type=text]:disabled {
     padding-left: 35px;
     margin-bottom: 10px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 13px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -289,7 +293,8 @@ section.range-slider input[type=range]::-moz-focus-outer {
 
 /* Blue */
 .apply {
-	width:140px;
+	font-size:14px;
+	width:123px;
 	background: #2196F3;
     color: white;
 }
@@ -298,9 +303,11 @@ section.range-slider input[type=range]::-moz-focus-outer {
     background: #FFFFFF;
     color: #2196F3;
 }
+
 /* Red */
 .clear {
-	width:140px;
+	font-size:14px;
+	width:123px;
 	background: #f44336;
     color: white;
 }
@@ -321,8 +328,8 @@ section.range-slider input[type=range]::-moz-focus-outer {
 #mapid {
     margin: 0;
     position: relative;
-    height: 650px;
-    width: 57%;
+    height: 640px;
+    width: 55%;
     display: inline-block;
     z-index: 10;
 	border-radius: 10px;
@@ -331,8 +338,8 @@ section.range-slider input[type=range]::-moz-focus-outer {
 #infoPanel {
     margin: 0;
     position: relative;
-    height: 610px;
-    width: 20%;
+    height: 600px;
+    width: 21%;
     padding: 20px;
     display: inline-block;
     vertical-align: top;
