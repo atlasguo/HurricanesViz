@@ -603,9 +603,6 @@ function applySetting() {
     // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
     else {
         // "values" is a vector containing all the selected categories
-
-
-
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
             values = [];
         Array.prototype.forEach.call(checkboxes, function (el) {
