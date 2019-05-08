@@ -405,6 +405,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
 {
 	font-size: 13px;
 	padding: 1em;
+	padding: 0em;
 	text-align: center;
 	white-space: nowrap;
 	width: auto;
