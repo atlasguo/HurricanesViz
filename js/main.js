@@ -461,17 +461,18 @@ function applySetting() {
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-
+	
 	// Check the year input
-	var yearEnd = document.getElementById("yearInputMax").value;
-	var yearStart = document.getElementById("yearInputMin").value;
-    if (yearStart<1851 || yearStart>2017 || yearEnd<1851 || yearEnd>2017){
+	var curYearMin = document.getElementById("yearInputMin").value;
+	var curYearMax = document.getElementById("yearInputMax").value;
+
+    if (curYearMin<1851 || curYearMin>2017 || curYearMax<1851 || curYearMax>2017){
 		$('#img').hide();
         $('#mapid').show();
         alert("All years must be within the year range (1851-2017).","Alert");
 		return;
     }else
-	if (yearStart>yearEnd)
+	if (curYearMin>curYearMax)
 	{
 		$('#img').hide();
         $('#mapid').show();

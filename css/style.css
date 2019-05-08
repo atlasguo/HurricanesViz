@@ -401,8 +401,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
 	border-radius: 10px;
 }
 
-.alert
-{
+.alert{
 	font-size: 13px;
 	padding: 0em;
 	text-align: center;
