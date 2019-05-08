@@ -787,72 +787,7 @@ function applySetting() {
                                                         };
                                                         updateLegend(curMap);
 
-                                                        // update the scatterplot
-                                                        $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
-                                                        graphData = []
-                                                        curPointLayer.eachLayer(function (layer) {
-                                                            /*tempLine = layer.feature.geometry.coordinates;*/
-                                                            var isOverlap = turf.booleanPointInPolygon(layer.feature, curLocationJSON);
 
-                                                            if (isOverlap) {
-                                                                /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
-                                                                var day = layer.feature.properties.DD;
-                                                                var month = layer.feature.properties.MM;
-                                                                var year = layer.feature.properties.YYYY;
-                                                                var hour = layer.feature.properties.HH;
-
-                                                                var show_date = year + "-" + month + "-" + day + " " + hour + ":00";
-
-                                                                var category = layer.feature.properties.Cat;
-                                                                var hurName = layer.feature.properties.hurName;
-                                                                var cur_wind = layer.feature.properties.Wind;
-
-                                                                var check = 0;
-                                                                if (category == "H5") {
-                                                                    check = 8
-                                                                } else if (category == "H4") {
-                                                                    check = 7
-                                                                } else if (category == "H3") {
-                                                                    check = 6
-                                                                } else if (category == "H2") {
-                                                                    check = 5
-                                                                } else if (category == "H1") {
-                                                                    check = 4
-                                                                } else if (category == "TS") {
-                                                                    check = 3
-                                                                } else if (category == "TD") {
-                                                                    check = 2
-                                                                } else if (category == "EX") {
-                                                                    check = 1
-                                                                }
-
-                                                                var xDate = month + "-" + day + " " + hour + ":00";
-                                                                xDate = d3.timeParse("%m-%d %I:%M")(xDate);
-
-                                                                if (check != 0) {
-                                                                    var new_entry = {
-                                                                        "show_date": show_date,
-                                                                        "xOrder": xDate,
-                                                                        "value": cur_wind,
-                                                                        "category": category,
-                                                                        "yOrder": check,
-                                                                        "hurName": hurName
-                                                                    }
-                                                                    graphData.push(new_entry)
-                                                                }
-
-
-                                                            }
-
-
-                                                        });
-
-                                                        if (graphData.length > 0){
-                                                            createScatter(graphData);
-                                                        }
-                                                        else {
-                                                            alert("No hurricane point is within this location.");
-                                                        }
 
                                                         // update the line graph
                                                         if (curHurIDsByLCY.length == 1) {
@@ -910,6 +845,85 @@ function applySetting() {
                                             $('#img').hide();
                                             $('#mapid').show();
                                             curMap.addLayer(curLineLayer);
+
+                                            // create tempPointLayer for scatterplot update
+                                            var tempPointLayer;
+                                            $.ajax("data/point.json", {
+                                                dataType: "json",
+                                                success: function (data) {
+
+                                                    // Define the geojson layer and add it to the map
+                                                    tempPointLayer = L.geoJson(data, {
+                                                        //style: function(feature,layer){
+                                                        //    return pointStyle(feature,layer);
+                                                        //},
+                                                        // filter by name
+                                                        filter: function (feature, layer) {
+                                                            return filterPointByLCY(feature, layer);
+                                                        },
+                                                    });
+
+                                                    // update the scatterplot
+                                                    $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
+                                                    graphData = []
+                                                    tempPointLayer.eachLayer(function (layer) {
+
+                                                        /*if (curHurIDsByLCY.includes(layer.feature.properties.HurID) && isOverlap.features.length > 0) {*/
+                                                        var day = layer.feature.properties.DD;
+                                                        var month = layer.feature.properties.MM;
+                                                        var year = layer.feature.properties.YYYY;
+                                                        var hour = layer.feature.properties.HH;
+
+                                                        var show_date = year + "-" + month + "-" + day + " " + hour + ":00";
+
+                                                        var category = layer.feature.properties.Cat;
+                                                        var hurName = layer.feature.properties.hurName;
+                                                        var cur_wind = layer.feature.properties.Wind;
+
+                                                        var check = 0;
+                                                        if (category == "H5") {
+                                                            check = 8
+                                                        } else if (category == "H4") {
+                                                            check = 7
+                                                        } else if (category == "H3") {
+                                                            check = 6
+                                                        } else if (category == "H2") {
+                                                            check = 5
+                                                        } else if (category == "H1") {
+                                                            check = 4
+                                                        } else if (category == "TS") {
+                                                            check = 3
+                                                        } else if (category == "TD") {
+                                                            check = 2
+                                                        } else if (category == "EX") {
+                                                            check = 1
+                                                        }
+
+                                                        var xDate = month + "-" + day + " " + hour + ":00";
+                                                        xDate = d3.timeParse("%m-%d %I:%M")(xDate);
+
+                                                        if (check != 0) {
+                                                            var new_entry = {
+                                                                "show_date": show_date,
+                                                                "xOrder": xDate,
+                                                                "value": cur_wind,
+                                                                "category": category,
+                                                                "yOrder": check,
+                                                                "hurName": hurName
+                                                            }
+                                                            graphData.push(new_entry)
+                                                        }
+
+                                                    });
+
+                                                    if (graphData.length > 0){
+                                                        createScatter(graphData);
+                                                    }
+                                                    else {
+                                                        alert("No hurricane is within this location.");
+                                                    }
+                                                }
+                                            });// end of ajax - points.json
 
 
                                         } // end of scenario #3 if location is found and resulting hurricane # > 0
@@ -1041,6 +1055,12 @@ function filterPointByName(feature, layer) {
 function filterPointByIDs(feature, layer) {
     return (checkValue(feature.properties.HurID, curHurIDsByLCY) && feature.properties.popden > 0);
 
+}
+
+function filterPointByLCY(feature, layer) {
+    return (checkValue(feature.properties.HurID, curHurIDsByLCY) && 
+            feature.properties.popden > 0) && 
+        turf.booleanPointInPolygon(feature, curLocationJSON);
 }
 
 function filterPointByIDsCY(feature, layer) {
@@ -1453,7 +1473,7 @@ function createLegend(map) {
 function createScatter(graphData) {
 
     try{
-        $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation);
+        $('#scatterplotTitle').html("Historical Hurricanes of " + curLocation + ", " + curYearMin + "-" + curYearMax);
         // set y axis min and max values
         var ymax = Math.max.apply(Math, graphData.map(function(o) {
             return o.yOrder;
@@ -1463,13 +1483,20 @@ function createScatter(graphData) {
         }))
 
         // set x axis min and max values
-        var xmax = Math.max.apply(Math, graphData.map(function(o) {
+
+        var xDateMin = "1-1 00:00";
+        xDateMin = d3.timeParse("%m-%d %I:%M")(xDateMin);
+        var xDateMax = "12-31 23:59";
+        xDateMax = d3.timeParse("%m-%d %I:%M")(xDateMax);
+        
+        /*var xmax = Math.max.apply(Math, graphData.map(function(o) {
             return o.xOrder;
         }))
         var xmin = Math.min.apply(Math, graphData.map(function(o) {
             return o.xOrder;
         }))
-
+        */
+        
         //remove previous contents
         document.getElementById("scatterplot-div").innerHTML = "";
 
@@ -1494,7 +1521,7 @@ function createScatter(graphData) {
 
         // Add X axis
         var x = d3.scaleLinear()
-        .domain([xmin-600000000,xmax+600000000])
+        .domain([xDateMin,xDateMax])
         .range([0, width]);
 
         svg.append("g")
@@ -1511,7 +1538,7 @@ function createScatter(graphData) {
             .attr("fill", "white")
             .style("text-anchor", "middle")
             .style("font", "12px verdana")
-            .text("Time");
+            .text("Month (Jan-Dec)");
 
         // set format y axis tick label
         var tickLabels = ["", "EX", "TD", "TS", "H1", "H2", "H3", "H4", "H5"]
