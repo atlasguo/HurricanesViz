@@ -114,7 +114,7 @@ function getData(map) {
 
 function stateStyle(feature) {
     return {
-        fillColor: 'blue',
+        fillColor: '#3f8adb',
         weight: 0.5,
         opacity: 0.3,
         color: 'white', //Outline color
@@ -124,7 +124,7 @@ function stateStyle(feature) {
 
 function selectedStyle(feature) {
     return {
-        fillColor: 'blue',
+        fillColor: '#3f8adb',
         weight: 0.5,
         opacity: 0.5,
         color: 'White', //Outline color
@@ -612,8 +612,8 @@ function applySetting() {
                                     // update curLocationJSON
                                     curLocationLayer = L.geoJson(curUrbanLayer.toGeoJSON(), {
                                         style: {
-                                            "fillColor": 'blue',
-                                            "fillOpacity": 0.7,
+                                            "fillColor": '#3f8adb',
+                                            "fillOpacity": 0.6,
                                             "weight": 0
                                         },
                                         // filter by location
@@ -628,8 +628,8 @@ function applySetting() {
                                     // update curLocationJSON
                                     curLocationLayer = L.geoJson(data, {
                                         style: {
-                                            "fillColor": 'blue',
-                                            "fillOpacity": 0.7,
+                                            "fillColor": '#3f8adb',
+                                            "fillOpacity": 0.6,
                                             "weight": 0
                                         },
                                         // filter by location
