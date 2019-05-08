@@ -108,9 +108,9 @@
                     <h3 style="margin-top: 5px;margin-left: 0px;">YEAR RANGE (1851-2017):</h3>
                       <table>
                         <tr>
-                          <td class="from" style="padding: 10px;font-weight: bold;">From</td>
+                          <td class="from" style="padding: 10px;font-size:15px">From</td>
                           <td><input id="yearInputMin" type="text" name="year" value="2010" min="1851" max="2017" style="width: 50px;"></td>
-                          <td class="to" style="padding: 10px;font-weight: bold;"> To </td>
+                          <td class="to" style="padding: 10px;font-size:15px "> To </td>
                           <td><input id="yearInputMax" type="text" name="year" value="2017" min="1851" max="2017" style="width: 50px;"></td>
                         </tr>
                     </table>
@@ -133,9 +133,9 @@
         <div id="mapid"></div>
 
         <!--the right panel section-->
-
-        <div id="infoPanel">
-			<div id="infoPanelFrame">
+		<div id="infoPanelFrame">
+			<div id="infoPanel">
+			
             <!--chart section-->
             <h3 id="scatterplotTitle" style="margin-top: 0px;margin-left: 0px;">
                 Historical Hurricanes by Location
@@ -150,7 +150,7 @@
 
             </div>
 
-            <h3 id="lineGraphTitle" style="margin-top: 0px;margin-left: 0px;">
+            <h3 id="lineGraphTitle" style="margin-top: 15px;margin-left: 0px;">
                 Individual Hurricane Info
             </h3>
             <div id='lineGraph-div'>
@@ -166,8 +166,12 @@
 
             <!--metadata section-->
             <div id='metadata'>
-                <p style='font-size:12px;margin-top: 10px;color: white'><b>Background: </b></p>
-                <p style='font-size:12px;margin-top: 10px;color: white'><b>Data Source: </b></p>
+				<h3 style="margin-top: 15px;margin-left: 0px;">
+					Data Source
+				</h3>
+                <p style='font-size:12px;color: white;line-height: 1.5'><b>Background Map:</b>  ArcGIS Online - World Imagery
+                <br><b>Hurricane:</b>  NOAA Best Track Data (HURDAT2)
+				<br><b>Boundary and Population:</b>  U.S. Census Bureau</p>
             </div>
         </div>
 		</div>

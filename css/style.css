@@ -335,22 +335,26 @@ section.range-slider input[type=range]::-moz-focus-outer {
 	border-radius: 10px;
 }
 
+#infoPanelFrame{
+	background-color: rgba(0,0,0,0.9);
+	display: inline-block;
+	border-radius: 0px;
+	width: 22.25%;
+	padding:20px;
+	padding-right:0px;
+	vertical-align: top;
+	border-radius: 10px;
+}
 #infoPanel {
-    margin: 0;
     position: relative;
     height: 600px;
-    width: 21%;
-    padding: 20px;
-    display: inline-block;
     vertical-align: top;
     font-family: verdana;
     text-align:left;
     line-height: 1.2;
-    /*background-color: lightcyan;*/
-    background-color: rgba(0,0,0,0.9);
     word-wrap:break-word;
-    overflow: scroll;
-	border-radius: 10px;
+    overflow-y: scroll;
+
 }
 
 .tooltip {
@@ -383,6 +387,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
 {
 	background: #303030;
 	margin-bottom: 15px;
+	margin-right:20px;
 	border-radius: 10px;
 }
 
@@ -390,5 +395,6 @@ section.range-slider input[type=range]::-moz-focus-outer {
 {
 	background: #303030;
 	margin-bottom: 15px;
+	margin-right: 20px;
 	border-radius: 10px;
 }
