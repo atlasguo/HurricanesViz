@@ -25,11 +25,9 @@ var curHurricane;
 var curYearMin;
 var curYearMax;
 
-window.alert = function(message){
 //overwrite the alert using jQuery UI library
 window.alert = function(message,type){
 	$(document.createElement("div"))
-	.attr({title: "Warning", "class": "alert"})
 	.attr({title: type, "class": "alert"})
 	.html(message)
 	.dialog({
@@ -163,6 +161,7 @@ function urbanStyle(feature) {
 /*function filterStateByName(feature, layer){
     return feature.properties.NAME == curLocation; // the selected state
 }*/
+
 var countSelectState = 0;
 
 function stateOnEachFeature(feature, layer) {
@@ -463,16 +462,6 @@ function applySetting() {
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
 
-    if ((document.getElementById("yearInputMax").value > 2017) | (document.getElementById("yearInputMax").value < 1851)){
-        alert("End year must be within the year range (1851-2017).")
-    } else{
-        curYearMax = document.getElementById("yearInputMax").value;
-    }
-    if ((document.getElementById("yearInputMin").value > curYearMax) | (document.getElementById("yearInputMin").value < 1851)){
-        alert("Start year must be between 1851 and end year.");
-    } else{
-        curYearMin = document.getElementById("yearInputMin").value;
-    }
 	// Check the year input
 	var yearEnd = document.getElementById("yearInputMax").value;
 	var yearStart = document.getElementById("yearInputMin").value;
@@ -510,8 +499,6 @@ function applySetting() {
         if (curHurricane == "") {
             $('#img').hide();
             $('#mapid').show();
-
-            alert("Empty input of hurricane name!");
             alert("Empty input of hurricane name!","Alert");
         } else {
             // if found
@@ -624,8 +611,7 @@ function applySetting() {
             else {
                 $('#img').hide();
                 $('#mapid').show();
-                alert("No hurricane named " + curHurricane + "!");
-                alert("No hurricane named " + curHurricane + "!","Alert");
+                alert("No hurricane named " + curHurricane + "!","Result");
             }
         }
     }
@@ -761,11 +747,9 @@ function applySetting() {
 
                                         // if there is no resulting hurricanes
                                         if (curHurIDsByLCY.length == 0) {
-                                            alert("There is no resulting hurricanes based on current settings.")
-                                            $('#img').hide();
 											$('#img').hide();
                                             $('#mapid').show();
-                                            alert("There is no resulting hurricanes based on current settings.","Alert")                                            
+                                            alert("There is no resulting hurricanes based on current settings.","Result")                                            
                                         }
 
                                         // if there is hurricane
@@ -882,10 +866,9 @@ function applySetting() {
                                                             createScatter(graphData);
                                                         }
                                                         else {
-                                                            alert("No hurricane point is within this location.");
 															$('#img').hide();
 															$('#mapid').show();
-                                                            alert("No hurricane point is within this location.","Alert");
+                                                            alert("No hurricane point is within this location.","Result");
                                                         }
 
                                                         // update the line graph
@@ -957,11 +940,9 @@ function applySetting() {
                     } // end of scenario #3 if location is found
                     // if not found:
                     else {
-
                         $('#img').hide();
                         $('#mapid').show();
-                        alert("No location named " + curLocation + "!");
-                        alert("No location named " + curLocation + "!","Alert");
+                        alert("No hurricane is found in " + curLocation + "!","Result");
                     } // end of scenario #3 if location is not found
 
                 } // end of scenario #3
@@ -970,11 +951,9 @@ function applySetting() {
                 else {
 
                     if (curHurIDsByCY.length == 0) {
-                        alert("There is no resulting hurricanes based on current settings.")
-                        $('#img').hide();
 						$('#img').hide();
                         $('#mapid').show();
-                        alert("There is no resulting hurricanes based on current settings.","Alert")
+                        alert("There is no resulting hurricanes based on current settings.","Result")
                     }
 
                     else{
@@ -1059,7 +1038,6 @@ function applySetting() {
                         updateExtent(curLineLayer);
 
                         if (curHurIDsByCY.length >= 100) {
-                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
                             alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow.\n You can consider selecting less hurricane categories or making the year range smaller.","Warning");
                         }
 
