@@ -20,7 +20,7 @@
         <!--put the initial page content here-->
         <!--title section-->
         <div class="navbar-header">
-            <h4 class="navbar-text"><a class="navbar-brand" href="../index.html">U.S. Hurricanes Geovisualization, 1851 - 2017</a></h4>
+            <h4 class="navbar-text"><a class="navbar-brand" href="../index.html">U.S. Historical Hurricanes Geovisualization, 1851 - 2017</a></h4>
         </div>
 
         <!--the left panel section-->
@@ -36,8 +36,8 @@
                     <div class="radios">
 
                         <input type="radio" id="opt1" name="option" value="o1" onchange="handleChange();">
-                        <label style="line-height: 1.2;margin-bottom:0;"> Option #1: Filter By Name
-                            <label style="margin-top:4px;font-size:13px;">(available when all hurricane categories below are unselected)</label>
+                        <label style="line-height: 1.3;margin-bottom:0;"> <b>Option 1:</b> Filter By Name
+                            <label style="margin-top:4px;font-size:12px;">(available when all hurricane categories below are unselected)</label>
                         </label>
 
                         <span>
@@ -49,9 +49,9 @@
                         </span>
                         <span>
                             <input type="radio" id="opt2" name="option" value="o2" checked="checked" onchange="handleChange();" style="float: none;">
-                            <label style="line-height: 1.2;">Option #2: Filter By Category,</label>
+                            <label style="line-height: 1.3;;"><b>Option 2:</b> Filter By Category,<br> Location, and/or Year</label>
                         </span>
-                        <label style="line-height: 1.2;">Location, and/or Year</label>
+
                     </div>
 
                     <div id="checkBoxControl">
@@ -105,10 +105,8 @@
 
                 <!--Year range selection-->
                 <div id="yearFillIn">
-                    <h3 style="margin-top: 5px;margin-left: 5px;">
-                        Year Range:
-                    </h3>
-                    <table>
+                    <h3 style="margin-top: 5px;margin-left: 0px;">Year Range (1851-2017):</h3>
+                      <table>
                         <tr>
                           <td class="from" style="padding: 10px;font-weight: bold;">From</td>
                           <td><input id="yearInputMin" type="text" name="year" placeholder="2010" min="1851" max="2017" style="width: 50px;"></td>
@@ -135,7 +133,9 @@
         <div id="mapid"></div>
 
         <!--the right panel section-->
+
         <div id="infoPanel">
+			<div id="infoPanelFrame">
             <!--chart section-->
             <h3 id="scatterplotTitle" style="margin-top: 0px;margin-left: 0px;">
                 Historical Hurricanes by Location
@@ -170,7 +170,7 @@
                 <p style='font-size:12px;margin-top: 10px;color: white'><b>Data Source: </b></p>
             </div>
         </div>
-
+		</div>
 
         <!--you can also use this space for internal scripts or stylesheets;
 place these within <script> or <style> tags-->

@@ -51,22 +51,22 @@ h3 {
 }
 
 .navbar-brand:hover {
-    color: #00FFFF;
+    color: #70b9d8;
 }
 
 .navbar-text{
     color: white;
     font-size: 25px;
-    padding: 4px;
+    padding: 7px;
     font-family: verdana;
-    border: 3px solid white;
-    background-color: darkblue;
+    background-color: #133562;
     text-align:center;
+	border-radius: 10px;
 }
 
 #queryPanel {
-    margin:0;
-    height: 600px;
+    margin:0px;
+    height: 610px;
     width: 18%;
     padding: 20px;
     display: inline-block;
@@ -75,6 +75,7 @@ h3 {
     text-align:left;
     line-height: 10px;
     background-color: rgba(0,0,0,0.9);
+	border-radius: 10px;
 }
 
 .radios > span
@@ -274,32 +275,39 @@ section.range-slider input[type=range]::-moz-focus-outer {
 
 .btn {
     border: none;
-    background-color: black;
-    outline: 1px solid white;
+    background-color: #eeeeee;
     padding: 7px 14px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     display: inline-block;
+	border-radius: 5px;
+	-webkit-transition-duration: 0.4s;
+    transition-duration: 0.4s;
 }
+
 
 /* Blue */
 .apply {
-    color: dodgerblue;
+	width:140px;
+	background: #2196F3;
+    color: white;
 }
 
 .apply:hover {
-    background: #2196F3;
-    color: white;
+    background: #FFFFFF;
+    color: #2196F3;
 }
 /* Red */
 .clear {
-    color: red;
+	width:140px;
+	background: #f44336;
+    color: white;
 }
 
 .clear:hover {
-    background: #f44336;
-    color: white;
+    background: #FFFFFF;
+    color: #f44336;
 }
 
 #img {
@@ -313,17 +321,18 @@ section.range-slider input[type=range]::-moz-focus-outer {
 #mapid {
     margin: 0;
     position: relative;
-    height: 640px;
+    height: 650px;
     width: 57%;
     display: inline-block;
     z-index: 10;
+	border-radius: 10px;
 }
 
 #infoPanel {
     margin: 0;
     position: relative;
-    height: 600px;
-    width: 19%;
+    height: 610px;
+    width: 20%;
     padding: 20px;
     display: inline-block;
     vertical-align: top;
@@ -334,6 +343,7 @@ section.range-slider input[type=range]::-moz-focus-outer {
     background-color: rgba(0,0,0,0.9);
     word-wrap:break-word;
     overflow: scroll;
+	border-radius: 10px;
 }
 
 .tooltip {
@@ -360,4 +370,18 @@ section.range-slider input[type=range]::-moz-focus-outer {
     font: 8px sans-serif;
     background: #fff;
     pointer-events: none;
+}
+
+#scatterplot-div
+{
+	background: #303030;
+	margin-bottom: 15px;
+	border-radius: 10px;
+}
+
+#lineGraph-div
+{
+	background: #303030;
+	margin-bottom: 15px;
+	border-radius: 10px;
 }
