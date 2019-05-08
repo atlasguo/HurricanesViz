@@ -358,6 +358,56 @@ var curHurIDsByCat = [];
 var curHurIDsByCY = [];
 var curHurIDsByLCY = [];
 
+
+window.onload = initializeSiders();
+function getVals() {
+    // Get slider values
+    var parent = this.parentNode;
+    var slides = parent.getElementsByTagName("input");
+    var slide1 = parseFloat(slides[0].value);
+    var slide2 = parseFloat(slides[1].value);
+    // Neither slider will clip the other, so make sure we determine which is larger
+    if (slide1 > slide2) {
+        var tmp = slide2;
+        slide2 = slide1;
+        slide1 = tmp;
+    }
+
+    curYearMin = slide1;
+    curYearMax = slide2;
+
+    //var displayElement = parent.getElementsByClassName("rangeValues")[0];
+    //displayElement.innerHTML = slide1 + " - " + slide2;
+    document.getElementById("yearInputMin").value = curYearMin;
+    document.getElementById("yearInputMax").value = curYearMax;
+}
+
+function initializeSiders() {
+    // Initialize Sliders
+    var sliderSections = document.getElementsByClassName("range-slider");
+    for (var x = 0; x < sliderSections.length; x++) {
+        var sliders = sliderSections[x].getElementsByTagName("input");
+        for (var y = 0; y < sliders.length; y++) {
+            if (sliders[y].type === "range") {
+                sliders[y].oninput = getVals;
+                // Manually trigger event first time to display values
+                sliders[y].oninput();
+            }
+        }
+    }
+    
+    
+}
+
+function yearMinInputChangeRange(){
+    document.getElementById("minYearRange").value = document.getElementById("yearInputMin").value;
+}
+
+function yearMaxInputChangeRange(){
+    document.getElementById("maxYearRange").value = document.getElementById("yearInputMax").value;
+}
+
+
 function clearMap() {
     if (curPointLayer) {
         curMap.removeLayer(curPointLayer);
@@ -395,8 +445,17 @@ function applySetting() {
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-    curYearMin = document.getElementById("yearInputMin").value;
-    curYearMax = document.getElementById("yearInputMax").value;
+
+    if ((document.getElementById("yearInputMax").value > 2017) | (document.getElementById("yearInputMax").value < 1851)){
+        alert("max year must be within the year range (1851-2017)")
+    } else{
+        curYearMax = document.getElementById("yearInputMax").value;
+    }
+    if ((document.getElementById("yearInputMin").value > curYearMax) | (document.getElementById("yearInputMin").value < 1851)){
+        alert("min year must be between 1851 and max year");
+    } else{
+        curYearMin = document.getElementById("yearInputMin").value;
+    }
 
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!

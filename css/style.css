@@ -222,21 +222,23 @@ margin: 1px;
 section.range-slider {
     position: relative;
     width: 250px;
-    height: 35px;
+    height: 25px;
     text-align: center;
-
+    margin-bottom: 5px;
+    margin-top: 0px;
 }
+
 section.range-slider input {
     pointer-events: none;
     position: absolute;
     overflow: hidden;
     left: 0;
-    top: 15px;
+    top: 0px;
     width: 250px;
     outline: none;
     height: 18px;
     margin-bottom: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 8px;
     background-color: transparent;
 }
 section.range-slider input::-webkit-slider-thumb {
