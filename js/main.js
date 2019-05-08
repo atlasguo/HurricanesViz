@@ -1413,7 +1413,7 @@ function createLegend(map) {
             $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
 
             //Append the legend symbols
-            var cityArea = '<img src = img/SVG/cityArea.svg width=45></img><text> City Area</text><br>'
+            var cityArea = '<img src = img/SVG/cityarea.svg width=45></img><text> City Area</text><br>'
             var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> State Boundary</text><br>'
             var hCategory = '<text>Hurricane Categories</text><br>'
             hCategory += '<img src = img/SVG/h5.svg width=45></img>'
