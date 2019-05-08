@@ -409,8 +409,8 @@ function initializeSiders() {
             }
         }
     }
-    
-    
+
+
 }
 
 function yearMinInputChangeRange(){
@@ -447,8 +447,8 @@ function applySetting() {
     curHurIDsByCY = [];
     curHurIDsByLCY = [];
 
-	removeElement("point-text");
-	removeElement("point-legend");
+    removeElement("point-text");
+    removeElement("point-legend");
 
     // clear up
     createScatter();
@@ -611,9 +611,6 @@ function applySetting() {
     // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
     else {
         // "values" is a vector containing all the selected categories
-
-
-
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
             values = [];
         Array.prototype.forEach.call(checkboxes, function (el) {
@@ -894,16 +891,16 @@ function applySetting() {
                                                 });// end of ajax - points.json
 
                                             } // end of adding points in scenario #3 when the # of hurricanes is <= 5
-											else
-											{
-												popDenValue={
-													max: 0,
-													mean: 0,
-													min: 0
-												};
-												updateLegend(curMap);
-												
-											}
+                                            else
+                                            {
+                                                popDenValue={
+                                                    max: 0,
+                                                    mean: 0,
+                                                    min: 0
+                                                };
+                                                updateLegend(curMap);
+
+                                            }
 
                                             curLineLayer = L.geoJson(curLineLayerJSON, {
                                                 style: function (feature, layer) {
@@ -1380,36 +1377,36 @@ function removeElement(elementId)
 
 // update the point symbol legend
 function updateLegend(map){
-	
-	if (popDenValue['max']==0)
-		return;
 
-	var container = document.getElementsByClassName("legend-control-container")[0];
+    if (popDenValue['max']==0)
+        return;
 
-	$(container).append('<text id="point-text">Pop Density Affected</text>');
+    var container = document.getElementsByClassName("legend-control-container")[0];
 
-	var svg = '<svg id="point-legend" width="120px" height="70px">';
-	var circles = {
-		max: 25,
-		mean: 45,
-		min: 65
-	};
-	for (var circle in circles){
-		svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
-		svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
-	};
-	svg += "</svg>";
+    $(container).append('<text id="point-text">Pop Density Affected</text>');
 
-	$(container).append(svg);
+    var svg = '<svg id="point-legend" width="120px" height="70px">';
+    var circles = {
+        max: 25,
+        mean: 45,
+        min: 65
+    };
+    for (var circle in circles){
+        svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
+        svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
+    };
+    svg += "</svg>";
 
-	for (var key in popDenValue){
-		var radius = calcPropRadius(popDenValue[key]);
-		$('#'+key).attr({
-			cy: 69 - radius,
-			r: radius
-		});
-		$('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
-	};
+    $(container).append(svg);
+
+    for (var key in popDenValue){
+        var radius = calcPropRadius(popDenValue[key]);
+        $('#'+key).attr({
+            cy: 69 - radius,
+            r: radius
+        });
+        $('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
+    };
 };
 
 
@@ -1518,7 +1515,7 @@ function createScatter(graphData) {
         svg.append("text")
             .attr("transform",
                   "translate(" + (width/2) + " ," +
-                                 (height + margin.top + 10) + ")")
+                  (height + margin.top + 10) + ")")
             .attr("fill", "white")
             .style("text-anchor", "middle")
             .style("font", "12px verdana")
@@ -1562,7 +1559,7 @@ function createScatter(graphData) {
 
         // A function that change this tooltip when the user hover a point
         var mouseover = function(d) {
-          d3.select(this).attr("r", 4).style("fill", "red");
+            d3.select(this).attr("r", 4).style("fill", "red");
             tooltip
                 .style("display", "inline");
         }
@@ -1578,7 +1575,7 @@ function createScatter(graphData) {
 
         // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
         var mouseleave = function (d) {
-          d3.select(this).attr("r", 4).style("fill", "#69b3a2");
+            d3.select(this).attr("r", 4).style("fill", "#69b3a2");
             tooltip
                 .transition()
                 .duration(200)
@@ -1703,7 +1700,7 @@ function createLineGraph(data) {
         svg.append("text")
             .attr("transform",
                   "translate(" + (width/2) + " ," +
-                                 (height + margin.top + 10) + ")")
+                  (height + margin.top + 10) + ")")
             .attr("fill", "white")
             .style("text-anchor", "middle")
             .style("font", "11px verdana")
@@ -1755,7 +1752,7 @@ function createLineGraph(data) {
 
         // A function that change this tooltip when the user hover a point
         var mouseover = function(d) {
-          d3.select(this).attr("r", 3.5).style("fill", "red");
+            d3.select(this).attr("r", 3.5).style("fill", "red");
             tooltipLineGraph
                 .style("display", "inline");
         }
@@ -1772,7 +1769,7 @@ function createLineGraph(data) {
 
         // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
         var mouseleave = function (d) {
-          d3.select(this).attr("r", 2.5).style("fill", "#69b3a2");
+            d3.select(this).attr("r", 2.5).style("fill", "#69b3a2");
 
             tooltipLineGraph
                 .transition()
