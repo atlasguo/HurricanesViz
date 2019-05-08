@@ -108,10 +108,10 @@
                     <h3 style="margin-top: 5px;margin-left: 0px;">YEAR RANGE (1851-2017):</h3>
                     <table>
                         <tr>
-                          <td class="from" style="padding: 10px;font-size:15px">From</td>
-                          <td><input id="yearInputMin" type="text" name="year" value="2010" min="1851" max="2017" style="width: 50px;"></td>
-                          <td class="to" style="padding: 10px;font-size:15px "> To </td>
-                          <td><input id="yearInputMax" type="text" name="year" value="2017" min="1851" max="2017" style="width: 50px;"></td>
+                            <td class="from" style="padding: 10px;font-size:15px">From</td>
+                            <td><input id="yearInputMin" type="text" name="year" value="2010" min="1851" max="2017" style="width: 50px;" oninput="yearMinInputChangeRange()"></td>
+                            <td class="to" style="padding: 10px;font-size:15px "> To </td>
+                            <td><input id="yearInputMax" type="text" name="year" value="2017" min="1851" max="2017" style="width: 50px;" oninput="yearMaxInputChangeRange()"></td>
                         </tr>
                     </table>
                     <section class="range-slider">
@@ -138,48 +138,48 @@
         <div id="mapid"></div>
 
         <!--the right panel section-->
-		<div id="infoPanelFrame">
-			<div id="infoPanel">
+        <div id="infoPanelFrame">
+            <div id="infoPanel">
 
-            <!--chart section-->
-            <h3 id="scatterplotTitle" style="margin-top: 0px;margin-left: 0px;">
-                Historical Hurricanes by Location
-            </h3>
-            <div id='scatterplot-div'>
-                <svg id='scatterplotAffordance' width = 250px height = 200px >
-                    <text font-size="15px" fill="white">
-                        <tspan x="50" y="50" >Select a location</tspan>
-                        <tspan x="50" y="70" >in query panel</tspan>
-                    </text>
-                </svg>
-
-                </div>
-
-            <h3 id="lineGraphTitle" style="margin-top: 15px;margin-left: 0px;">
-                Individual Hurricane Info
-            </h3>
-            <div id='lineGraph-div'>
-                <svg id='lineGraphAffordance' width = 250px height = 200px >
-                    <text font-size="15px" fill="white">
-                        <tspan x="50" y="50" >Select a hurricane in</tspan>
-                        <tspan x="50" y="70" >query panel option #1</tspan>
-                        <tspan x="50" y="90" >or on the map</tspan>
-                    </text>
-                </svg>
+                <!--chart section-->
+                <h3 id="scatterplotTitle" style="margin-top: 0px;margin-left: 0px;">
+                    Historical Hurricanes by Location
+                </h3>
+                <div id='scatterplot-div'>
+                    <svg id='scatterplotAffordance' width = 250px height = 200px >
+                        <text font-size="15px" fill="white">
+                            <tspan x="50" y="50" >Select a location</tspan>
+                            <tspan x="50" y="70" >in query panel</tspan>
+                        </text>
+                    </svg>
 
                 </div>
 
-            <!--metadata section-->
-            <div id='metadata'>
-				<h3 style="margin-top: 15px;margin-left: 0px;">
-					Data Source
-				</h3>
-                <p style='font-size:12px;color: white;line-height: 1.5'><b>Background Map:</b>  ArcGIS Online - World Imagery
-                <br><b>Hurricane:</b>  NOAA Best Track Data (HURDAT2)
-				<br><b>Boundary and Population:</b>  U.S. Census Bureau</p>
+                <h3 id="lineGraphTitle" style="margin-top: 15px;margin-left: 0px;">
+                    Individual Hurricane Info
+                </h3>
+                <div id='lineGraph-div'>
+                    <svg id='lineGraphAffordance' width = 250px height = 200px >
+                        <text font-size="15px" fill="white">
+                            <tspan x="50" y="50" >Select a hurricane in</tspan>
+                            <tspan x="50" y="70" >query panel option #1</tspan>
+                            <tspan x="50" y="90" >or on the map</tspan>
+                        </text>
+                    </svg>
+
+                </div>
+
+                <!--metadata section-->
+                <div id='metadata'>
+                    <h3 style="margin-top: 15px;margin-left: 0px;">
+                        Data Source
+                    </h3>
+                    <p style='font-size:12px;color: white;line-height: 1.5'><b>Background Map:</b>  ArcGIS Online - World Imagery
+                        <br><b>Hurricane:</b>  NOAA Best Track Data (HURDAT2)
+                        <br><b>Boundary and Population:</b>  U.S. Census Bureau</p>
+                </div>
             </div>
         </div>
-
         <!--you can also use this space for internal scripts or stylesheets;
 place these within <script> or <style> tags-->
 
