@@ -25,6 +25,23 @@ var curHurricane;
 var curYearMin;
 var curYearMax;
 
+window.alert = function(message){
+//overwrite the alert using jQuery UI library
+window.alert = function(message,type){
+	$(document.createElement("div"))
+	.attr({title: "Warning", "class": "alert"})
+	.attr({title: type, "class": "alert"})
+	.html(message)
+	.dialog({
+	buttons: {OK: function(){$(this).dialog("close");}},
+	close: function(){$(this).remove();},
+	draggable: true,
+	modal: true,
+	resizable: false,
+	width: "auto"
+	});
+};
+
 //function to instantiate the Leaflet map
 function createMap() {
 
@@ -395,8 +412,8 @@ function initializeSiders() {
             }
         }
     }
-    
-    
+
+
 }
 
 function yearMinInputChangeRange(){
@@ -433,8 +450,8 @@ function applySetting() {
     curHurIDsByCY = [];
     curHurIDsByLCY = [];
 
-	removeElement("point-text");
-	removeElement("point-legend");
+    removeElement("point-text");
+    removeElement("point-legend");
 
     // clear up
     createScatter();
@@ -447,15 +464,31 @@ function applySetting() {
     curHurricane = document.getElementById("hurricaneInput").value;
 
     if ((document.getElementById("yearInputMax").value > 2017) | (document.getElementById("yearInputMax").value < 1851)){
-        alert("max year must be within the year range (1851-2017)")
+        alert("End year must be within the year range (1851-2017).")
     } else{
         curYearMax = document.getElementById("yearInputMax").value;
     }
     if ((document.getElementById("yearInputMin").value > curYearMax) | (document.getElementById("yearInputMin").value < 1851)){
-        alert("min year must be between 1851 and max year");
+        alert("Start year must be between 1851 and end year.");
     } else{
         curYearMin = document.getElementById("yearInputMin").value;
     }
+	// Check the year input
+	var yearEnd = document.getElementById("yearInputMax").value;
+	var yearStart = document.getElementById("yearInputMin").value;
+    if (yearStart<1851 || yearStart>2017 || yearEnd<1851 || yearEnd>2017){
+		$('#img').hide();
+        $('#mapid').show();
+        alert("All years must be within the year range (1851-2017).","Alert");
+		return;
+    }else
+	if (yearStart>yearEnd)
+	{
+		$('#img').hide();
+        $('#mapid').show();
+		alert("Start year must not be larger than end year.","Alert");
+		return;
+	}	
 
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
@@ -479,6 +512,7 @@ function applySetting() {
             $('#mapid').show();
 
             alert("Empty input of hurricane name!");
+            alert("Empty input of hurricane name!","Alert");
         } else {
             // if found
             if (checkValue(curHurricane, hurricanes)) {
@@ -591,15 +625,13 @@ function applySetting() {
                 $('#img').hide();
                 $('#mapid').show();
                 alert("No hurricane named " + curHurricane + "!");
+                alert("No hurricane named " + curHurricane + "!","Alert");
             }
         }
     }
     // Scenario #2 or #3: if hurricane name is disabled, check checkboxes and year range;
     else {
         // "values" is a vector containing all the selected categories
-
-
-
         var checkboxes = document.querySelectorAll('input[name="category"]:checked'),
             values = [];
         Array.prototype.forEach.call(checkboxes, function (el) {
@@ -662,7 +694,7 @@ function applySetting() {
                         console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
 
                         if (curLineLayerJSON.features.length > 5000){
-                            alert("The location-based analysis needs a few more seconds.");
+                            alert("The location-based analysis needs a few more seconds.","Warning");
                         }
 
                         $.ajax("data/polygons.json", {
@@ -731,7 +763,9 @@ function applySetting() {
                                         if (curHurIDsByLCY.length == 0) {
                                             alert("There is no resulting hurricanes based on current settings.")
                                             $('#img').hide();
+											$('#img').hide();
                                             $('#mapid').show();
+                                            alert("There is no resulting hurricanes based on current settings.","Alert")                                            
                                         }
 
                                         // if there is hurricane
@@ -849,6 +883,9 @@ function applySetting() {
                                                         }
                                                         else {
                                                             alert("No hurricane point is within this location.");
+															$('#img').hide();
+															$('#mapid').show();
+                                                            alert("No hurricane point is within this location.","Alert");
                                                         }
 
                                                         // update the line graph
@@ -880,16 +917,16 @@ function applySetting() {
                                                 });// end of ajax - points.json
 
                                             } // end of adding points in scenario #3 when the # of hurricanes is <= 5
-											else
-											{
-												popDenValue={
-													max: 0,
-													mean: 0,
-													min: 0
-												};
-												updateLegend(curMap);
-												
-											}
+                                            else
+                                            {
+                                                popDenValue={
+                                                    max: 0,
+                                                    mean: 0,
+                                                    min: 0
+                                                };
+                                                updateLegend(curMap);
+
+                                            }
 
                                             curLineLayer = L.geoJson(curLineLayerJSON, {
                                                 style: function (feature, layer) {
@@ -924,6 +961,7 @@ function applySetting() {
                         $('#img').hide();
                         $('#mapid').show();
                         alert("No location named " + curLocation + "!");
+                        alert("No location named " + curLocation + "!","Alert");
                     } // end of scenario #3 if location is not found
 
                 } // end of scenario #3
@@ -934,7 +972,9 @@ function applySetting() {
                     if (curHurIDsByCY.length == 0) {
                         alert("There is no resulting hurricanes based on current settings.")
                         $('#img').hide();
+						$('#img').hide();
                         $('#mapid').show();
+                        alert("There is no resulting hurricanes based on current settings.","Alert")
                     }
 
                     else{
@@ -1020,6 +1060,7 @@ function applySetting() {
 
                         if (curHurIDsByCY.length >= 100) {
                             alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
+                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow.\n You can consider selecting less hurricane categories or making the year range smaller.","Warning");
                         }
 
                     }
@@ -1366,36 +1407,36 @@ function removeElement(elementId)
 
 // update the point symbol legend
 function updateLegend(map){
-	
-	if (popDenValue['max']==0)
-		return;
 
-	var container = document.getElementsByClassName("legend-control-container")[0];
+    if (popDenValue['max']==0)
+        return;
 
-	$(container).append('<text id="point-text">Pop Density Affected</text>');
+    var container = document.getElementsByClassName("legend-control-container")[0];
 
-	var svg = '<svg id="point-legend" width="120px" height="70px">';
-	var circles = {
-		max: 25,
-		mean: 45,
-		min: 65
-	};
-	for (var circle in circles){
-		svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
-		svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
-	};
-	svg += "</svg>";
+    $(container).append('<text id="point-text">Pop Density Affected</text>');
 
-	$(container).append(svg);
+    var svg = '<svg id="point-legend" width="120px" height="70px">';
+    var circles = {
+        max: 25,
+        mean: 45,
+        min: 65
+    };
+    for (var circle in circles){
+        svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
+        svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
+    };
+    svg += "</svg>";
 
-	for (var key in popDenValue){
-		var radius = calcPropRadius(popDenValue[key]);
-		$('#'+key).attr({
-			cy: 69 - radius,
-			r: radius
-		});
-		$('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
-	};
+    $(container).append(svg);
+
+    for (var key in popDenValue){
+        var radius = calcPropRadius(popDenValue[key]);
+        $('#'+key).attr({
+            cy: 69 - radius,
+            r: radius
+        });
+        $('#'+key+'-text').text(Math.round(popDenValue[key]*100)/100);
+    };
 };
 
 
@@ -1504,7 +1545,7 @@ function createScatter(graphData) {
         svg.append("text")
             .attr("transform",
                   "translate(" + (width/2) + " ," +
-                                 (height + margin.top + 10) + ")")
+                  (height + margin.top + 10) + ")")
             .attr("fill", "white")
             .style("text-anchor", "middle")
             .style("font", "12px verdana")
@@ -1548,7 +1589,7 @@ function createScatter(graphData) {
 
         // A function that change this tooltip when the user hover a point
         var mouseover = function(d) {
-          d3.select(this).attr("r", 4).style("fill", "red");
+            d3.select(this).attr("r", 4).style("fill", "red");
             tooltip
                 .style("display", "inline");
         }
@@ -1564,7 +1605,7 @@ function createScatter(graphData) {
 
         // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
         var mouseleave = function (d) {
-          d3.select(this).attr("r", 4).style("fill", "#69b3a2");
+            d3.select(this).attr("r", 4).style("fill", "#69b3a2");
             tooltip
                 .transition()
                 .duration(200)
@@ -1689,7 +1730,7 @@ function createLineGraph(data) {
         svg.append("text")
             .attr("transform",
                   "translate(" + (width/2) + " ," +
-                                 (height + margin.top + 10) + ")")
+                  (height + margin.top + 10) + ")")
             .attr("fill", "white")
             .style("text-anchor", "middle")
             .style("font", "11px verdana")
@@ -1741,7 +1782,7 @@ function createLineGraph(data) {
 
         // A function that change this tooltip when the user hover a point
         var mouseover = function(d) {
-          d3.select(this).attr("r", 3.5).style("fill", "red");
+            d3.select(this).attr("r", 3.5).style("fill", "red");
             tooltipLineGraph
                 .style("display", "inline");
         }
@@ -1758,7 +1799,7 @@ function createLineGraph(data) {
 
         // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
         var mouseleave = function (d) {
-          d3.select(this).attr("r", 2.5).style("fill", "#69b3a2");
+            d3.select(this).attr("r", 2.5).style("fill", "#69b3a2");
 
             tooltipLineGraph
                 .transition()
