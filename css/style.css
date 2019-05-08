@@ -17,9 +17,10 @@ h3 {
     color: #FFFFFF;
 }
 
-.myCircle:hover {
+
+/* .linepoint:hover {
     stroke: red;
-}
+} */
 
 .axisWhite line{
     stroke: white;
@@ -343,6 +344,19 @@ section.range-slider input[type=range]::-moz-focus-outer {
     text-align: left;
     width: 200px;
     height: 60px;
+    padding: 8px;
+    margin: 3px;
+    font: 8px sans-serif;
+    background: #fff;
+    pointer-events: none;
+}
+
+.tooltipLineGraph {
+    z-index: 99 !important;
+    position: absolute;
+    text-align: left;
+    width: 200px;
+    height: 45px;
     padding: 8px;
     margin: 3px;
     font: 8px sans-serif;
