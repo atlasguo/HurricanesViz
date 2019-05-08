@@ -383,6 +383,8 @@ function applySetting() {
     curHurIDsByCY = [];
     curHurIDsByLCY = [];
 
+	removeElement("point-text");
+	removeElement("point-legend");
 
     // clear up
     createScatter();
@@ -828,6 +830,16 @@ function applySetting() {
                                                 });// end of ajax - points.json
 
                                             } // end of adding points in scenario #3 when the # of hurricanes is <= 5
+											else
+											{
+												popDenValue={
+													max: 0,
+													mean: 0,
+													min: 0
+												};
+												updateLegend(curMap);
+												
+											}
 
                                             curLineLayer = L.geoJson(curLineLayerJSON, {
                                                 style: function (feature, layer) {
@@ -1296,7 +1308,7 @@ function getCheckedCheckboxesFor() {
 function removeElement(elementId)
 {
     var checkElement = document.getElementById(elementId);
-    if (checkElement!=null)
+    if (checkElement!==null)
     {
         checkElement.parentNode.removeChild(checkElement);
     }
@@ -1304,10 +1316,7 @@ function removeElement(elementId)
 
 // update the point symbol legend
 function updateLegend(map){
-
-	removeElement("point-text");
-	removeElement("point-legend");
-
+	
 	if (popDenValue['max']==0)
 		return;
 
@@ -1354,26 +1363,24 @@ function createLegend(map) {
             $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
 
             //Append the legend symbols
-            var cityArea = '<img src = img/SVG/cityArea.svg width=40></img><text> City Area</text><br>'
-            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=40></img><text> State Boundary</text><br>'
-
-            // need to fixed
+            var cityArea = '<img src = img/SVG/cityArea.svg width=45></img><text> City Area</text><br>'
+            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> State Boundary</text><br>'
             var hCategory = '<text>Hurricane Categories</text><br>'
-            hCategory += '<img src = img/SVG/h5.svg width=40></img>'
+            hCategory += '<img src = img/SVG/h5.svg width=45></img>'
             hCategory += '<text> H5</text><br>'
-            hCategory += '<img src = img/SVG/h4.svg width=40>'
+            hCategory += '<img src = img/SVG/h4.svg width=45></img>'
             hCategory += '<text> H4</text><br>'
-            hCategory += '<img src = img/SVG/h3.svg width=40>'
+            hCategory += '<img src = img/SVG/h3.svg width=45></img>'
             hCategory += '<text> H3</text><br>'
-            hCategory += '<img src = img/SVG/h2.svg width=40>'
+            hCategory += '<img src = img/SVG/h2.svg width=45></img>'
             hCategory += '<text> H2</text><br>'
-            hCategory += '<img src = img/SVG/h1.svg width=40>'
+            hCategory += '<img src = img/SVG/h1.svg width=45></img>'
             hCategory += '<text> H1</text><br>'
-            hCategory += '<img src = img/SVG/ts.svg width=40>'
+            hCategory += '<img src = img/SVG/ts.svg width=45></img>'
             hCategory += '<text> TS</text><br>'
-            hCategory += '<img src = img/SVG/td.svg width=40>'
+            hCategory += '<img src = img/SVG/td.svg width=45></img>'
             hCategory += '<text> TD</text><br>'
-            hCategory += '<img src = img/SVG/ex.svg width=40>'
+            hCategory += '<img src = img/SVG/ex.svg width=45></img>'
             hCategory += '<text> EX</text><br>'
 
             //add attribute legend to container
