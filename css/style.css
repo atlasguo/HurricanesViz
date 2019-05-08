@@ -400,3 +400,13 @@ section.range-slider input[type=range]::-moz-focus-outer {
 	margin-right: 20px;
 	border-radius: 10px;
 }
+
+.alert
+{
+	font-size: 13px;
+	padding: 0em;
+	text-align: center;
+	white-space: nowrap;
+	width: auto;
+	word-wrap: normal;
+}

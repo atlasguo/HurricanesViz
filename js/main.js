@@ -25,6 +25,21 @@ var curHurricane;
 var curYearMin;
 var curYearMax;
 
+//overwrite the alert using jQuery UI library
+window.alert = function(message,type){
+	$(document.createElement("div"))
+	.attr({title: type, "class": "alert"})
+	.html(message)
+	.dialog({
+	buttons: {OK: function(){$(this).dialog("close");}},
+	close: function(){$(this).remove();},
+	draggable: true,
+	modal: true,
+	resizable: false,
+	width: "auto"
+	});
+};
+
 //function to instantiate the Leaflet map
 function createMap() {
 
@@ -146,6 +161,7 @@ function urbanStyle(feature) {
 /*function filterStateByName(feature, layer){
     return feature.properties.NAME == curLocation; // the selected state
 }*/
+
 var countSelectState = 0;
 
 function stateOnEachFeature(feature, layer) {
@@ -446,22 +462,22 @@ function applySetting() {
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
 
-    if ((document.getElementById("yearInputMax").value > 2017) | (document.getElementById("yearInputMax").value < 1851)){
-        alert("max year must be within the year range (1851-2017)");
-        $('#img').hide();
+	// Check the year input
+	var yearEnd = document.getElementById("yearInputMax").value;
+	var yearStart = document.getElementById("yearInputMin").value;
+    if (yearStart<1851 || yearStart>2017 || yearEnd<1851 || yearEnd>2017){
+		$('#img').hide();
         $('#mapid').show();
-        return;
-    } else{
-        curYearMax = document.getElementById("yearInputMax").value;
-    }
-    if ((document.getElementById("yearInputMin").value > curYearMax) | (document.getElementById("yearInputMin").value < 1851)){
-        alert("min year must be between 1851 and the specified max year");
-        $('#img').hide();
+        alert("All years must be within the year range (1851-2017).","Alert");
+		return;
+    }else
+	if (yearStart>yearEnd)
+	{
+		$('#img').hide();
         $('#mapid').show();
-        return;
-    } else{
-        curYearMin = document.getElementById("yearInputMin").value;
-    }
+		alert("Start year must not be larger than end year.","Alert");
+		return;
+	}
 
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
@@ -483,8 +499,7 @@ function applySetting() {
         if (curHurricane == "") {
             $('#img').hide();
             $('#mapid').show();
-
-            alert("Empty input of hurricane name!");
+            alert("Empty input of hurricane name!","Alert");
         } else {
             // if found
             if (checkValue(curHurricane, hurricanes)) {
@@ -596,7 +611,7 @@ function applySetting() {
             else {
                 $('#img').hide();
                 $('#mapid').show();
-                alert("No hurricane named " + curHurricane + "!");
+                alert("No hurricane named " + curHurricane + "!","Result");
             }
         }
     }
@@ -665,7 +680,7 @@ function applySetting() {
                         console.log(curLineLayerJSON.features.length + " of hurricane segments after cat and year");
 
                         if (curLineLayerJSON.features.length > 5000){
-                            alert("The location-based analysis needs a few more seconds.");
+                            alert("The location-based analysis needs a few more seconds.","Warning");
                         }
 
                         $.ajax("data/polygons.json", {
@@ -732,9 +747,9 @@ function applySetting() {
 
                                         // if there is no resulting hurricanes
                                         if (curHurIDsByLCY.length == 0) {
-                                            alert("There is no resulting hurricanes based on current settings.")
-                                            $('#img').hide();
+											$('#img').hide();
                                             $('#mapid').show();
+                                            alert("There is no resulting hurricanes based on current settings.","Result")
                                         }
 
                                         // if there is hurricane
@@ -937,10 +952,9 @@ function applySetting() {
                     } // end of scenario #3 if location is found
                     // if not found:
                     else {
-
                         $('#img').hide();
                         $('#mapid').show();
-                        alert("No location named " + curLocation + "!");
+                        alert("No hurricane is found in " + curLocation + "!","Result");
                     } // end of scenario #3 if location is not found
 
                 } // end of scenario #3
@@ -949,9 +963,9 @@ function applySetting() {
                 else {
 
                     if (curHurIDsByCY.length == 0) {
-                        alert("There is no resulting hurricanes based on current settings.")
-                        $('#img').hide();
+						$('#img').hide();
                         $('#mapid').show();
+                        alert("There is no resulting hurricanes based on current settings.","Result")
                     }
 
                     else{
@@ -1036,7 +1050,7 @@ function applySetting() {
                         updateExtent(curLineLayer);
 
                         if (curHurIDsByCY.length >= 100) {
-                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow. You can consider selecting less hurricane categories or making the year range smaller.");
+                            alert("The number of resulting hurricanes is more than 100, therefore the interaction with the map will be slow.\n You can consider selecting less hurricane categories or making the year range smaller.","Warning");
                         }
 
                     }
@@ -1058,8 +1072,8 @@ function filterPointByIDs(feature, layer) {
 }
 
 function filterPointByLCY(feature, layer) {
-    return (checkValue(feature.properties.HurID, curHurIDsByLCY) && 
-            feature.properties.popden > 0) && 
+    return (checkValue(feature.properties.HurID, curHurIDsByLCY) &&
+            feature.properties.popden > 0) &&
         turf.booleanPointInPolygon(feature, curLocationJSON);
 }
 
@@ -1436,7 +1450,7 @@ function createLegend(map) {
             $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
 
             //Append the legend symbols
-            var cityArea = '<img src = img/SVG/cityArea.svg width=45></img><text> City Area</text><br>'
+            var cityArea = '<img src = img/SVG/cityarea.svg width=45></img><text> City Area</text><br>'
             var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> State Boundary</text><br>'
             var hCategory = '<text>Hurricane Categories</text><br>'
             hCategory += '<img src = img/SVG/h5.svg width=45></img>'
@@ -1488,7 +1502,7 @@ function createScatter(graphData) {
         xDateMin = d3.timeParse("%m-%d %I:%M")(xDateMin);
         var xDateMax = "12-31 23:59";
         xDateMax = d3.timeParse("%m-%d %I:%M")(xDateMax);
-        
+
         /*var xmax = Math.max.apply(Math, graphData.map(function(o) {
             return o.xOrder;
         }))
@@ -1496,7 +1510,7 @@ function createScatter(graphData) {
             return o.xOrder;
         }))
         */
-        
+
         //remove previous contents
         document.getElementById("scatterplot-div").innerHTML = "";
 
