@@ -1365,6 +1365,28 @@ function lineOnEachFeature(feature,layer){
                         });
 
                         curMap.addLayer(curPointLayer2);
+						
+						// update popden info
+						var mean=0, max=0, min=99999, count=0;
+						curPointLayer2.eachLayer(function (layer) {
+							var popden = layer.feature.properties.popden;
+							if (popden>0)
+							{
+								count++;
+								mean+=popden;
+								if (popden<min)
+									min=popden;
+								if (popden>max)
+									max=popden;
+							}
+						});
+						mean/=count;
+						popDenValue={
+							max: max,
+							mean: mean,
+							min: min
+						};
+						updateLegend(curMap);
 
                         var tempPointLayer = L.geoJson(data, {
                             filter: function (feature, layer) {
@@ -1424,6 +1446,9 @@ function removeElement(elementId)
 // update the point symbol legend
 function updateLegend(map){
 
+    removeElement("point-text");
+    removeElement("point-legend");
+	
     if (popDenValue['max']==0)
         return;
 
@@ -1438,7 +1463,7 @@ function updateLegend(map){
         min: 65
     };
     for (var circle in circles){
-        svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#FFFFFF" stroke-width="2" opacity="1" cx="35"/>';
+        svg += '<circle class="legend-circle" id="' + circle + '" fill="#000000" fill-opacity="0" stroke="#666666" stroke-width="2" opacity="1" cx="35"/>';
         svg += '<text id="' + circle + '-text" fill="#FFFFFF" x="75" y="' + circles[circle] + '"></text>';
     };
     svg += "</svg>";
