@@ -433,6 +433,9 @@ function clearMap() {
     if (curLocationLayer) {
         curMap.removeLayer(curLocationLayer);
     };
+	if (selection) {
+        selectedLayer.resetStyle(selection);
+    }
     document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
     document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
     removeElement("point-text");
@@ -1451,7 +1454,7 @@ function createLegend(map) {
             //Create a DOM container to append to on to the map
             var container = L.DomUtil.create('div', 'legend-control-container');
             //Append the title
-            $(container).append('<div id="temporal-legend"><b>LEGEND</b></div>')
+            $(container).append('<div id="temporal-legend" style="font-size:15px; text-align:center; margin:2px"><b>LEGEND</b></div>')
 
             //Append the legend symbols
             var cityArea = '<img src = img/SVG/cityarea.svg width=40></img><text> City Area</text><br>'
