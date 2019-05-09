@@ -434,6 +434,10 @@ function clearMap() {
     if (curLocationLayer) {
         curMap.removeLayer(curLocationLayer);
     };
+    document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
+    document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
+    removeElement("point-text");
+    removeElement("point-legend");
 }
 
 function applySetting() {
