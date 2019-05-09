@@ -1646,9 +1646,9 @@ function createScatter(graphData) {
 
         var mousemove = function (d) {
             tooltip
-                .html("<p style='font-size:12px;margin-left=3px;padding-left=10px;'><b>Hurricane Name: </b>: " + d.hurName + "<br/>" +
-                      "<b>Date</b>: " + d.show_date + "<br/>"  +
-                      "<b>Category</b>: " + d.category + "</p>")
+                .html("<p style='font-size:12px;margin-left=3px;padding-left=10px;'><b>Hurricane Name: </b>" + d.hurName + "<br/>" +
+                      "<b>Date:</b> " + d.show_date + " UTC<br/>"  +
+                      "<b>Category:</b> " + d.category + "</p>")
                 .style("left", (d3.event.pageX - 150) + "px")
                 .style("top", (d3.event.pageY - 90) + "px");
         }
@@ -1841,8 +1841,8 @@ function createLineGraph(data) {
 
             tooltipLineGraph
                 .html("<p style='font-size:12px;margin=0;padding=0;'>" +
-                      "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + "<br>"
-                      + "<b>Wind :</b>&nbsp" + d.value + "</p>")
+                      "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + " UTC<br>"
+                      + "<b>Wind :</b>&nbsp" + d.value + " kts</p>")
                 .style("left", (d3.event.pageX - 150) + "px")
                 .style("top", (d3.event.pageY - 70) + "px");
         }
