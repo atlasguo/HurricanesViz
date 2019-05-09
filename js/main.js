@@ -436,6 +436,7 @@ function clearMap() {
     };
 	if (selection) {
         selectedLayer.resetStyle(selection);
+	}
     if (curPointLayer2) {
         curMap.removeLayer(curPointLayer2);
     }
