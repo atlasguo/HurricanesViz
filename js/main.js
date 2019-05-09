@@ -1452,29 +1452,29 @@ function createLegend(map) {
             //Create a DOM container to append to on to the map
             var container = L.DomUtil.create('div', 'legend-control-container');
             //Append the title
-            $(container).append('<div id="temporal-legend" ><b>Legend</b></div>')
+            $(container).append('<div id="temporal-legend"><b>LEGEND</b></div>')
 
             //Append the legend symbols
-            var cityArea = '<img src = img/SVG/cityarea.svg width=45></img><text> City Area</text><br>'
-            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> State Boundary</text><br>'
-            var hCategory = '<text>Hurricane Categories</text><br>'
-            hCategory += '<img src = img/SVG/h5.png width=45 height=4.65></img>'
+            var cityArea = '<img src = img/SVG/cityarea.svg width=40></img><text> City Area</text><br>'
+            var stateBoundary = '<img src = img/SVG/stateboundary.svg width=40></img><text> State Boundary</text><br>'
+            var hCategory = '<text><b>Hurricane Categories</b></text><br>'
+            hCategory += '<img src = img/SVG/h5.png width=40 height=4.65></img>'
             hCategory += '<text> H5</text><br>'
-            hCategory += '<img src = img/SVG/h4.png width=45 height=4.15></img>'
+            hCategory += '<img src = img/SVG/h4.png width=40 height=4.15></img>'
             hCategory += '<text> H4</text><br>'
-            hCategory += '<img src = img/SVG/h3.png width=45 height=3.65></img>'
+            hCategory += '<img src = img/SVG/h3.png width=40 height=3.65></img>'
             hCategory += '<text> H3</text><br>'
-            hCategory += '<img src = img/SVG/h2.png width=45 height=3.15></img>'
+            hCategory += '<img src = img/SVG/h2.png width=40 height=3.15></img>'
             hCategory += '<text> H2</text><br>'
-            hCategory += '<img src = img/SVG/h1.png width=45 height=2.65></img>'
+            hCategory += '<img src = img/SVG/h1.png width=40 height=2.65></img>'
             hCategory += '<text> H1</text><br>'
-            hCategory += '<img src = img/SVG/ts.png width=45 height=2.15></img>'
+            hCategory += '<img src = img/SVG/ts.png width=40 height=2.15></img>'
             hCategory += '<text> TS</text><br>'
-            hCategory += '<img src = img/SVG/td.png width=45 height=2.15></img>'
+            hCategory += '<img src = img/SVG/td.png width=40 height=2.15></img>'
             hCategory += '<text> TD</text><br>'
-            hCategory += '<img src = img/SVG/ex.png width=45 height=2.15></img>'
+            hCategory += '<img src = img/SVG/ex.png width=40 height=2.15></img>'
             hCategory += '<text> EX</text><br>'
-            hCategory += '<img src = img/SVG/other.png width=45 height=1.15></img>'
+            hCategory += '<img src = img/SVG/other.png width=40 height=1.15></img>'
             hCategory += '<text> Others</text><br>'
 
             //add attribute legend to container
