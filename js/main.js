@@ -1366,8 +1366,13 @@ function lineOnEachFeature(feature,layer){
 
                         curMap.addLayer(curPointLayer2);
 
+                        var tempPointLayer = L.geoJson(data, {
+                            filter: function (feature, layer) {
+                                return (feature.properties.HurID == curLineSeg.properties.HurID);
+                            }
+                        });
                         // update the line graph
-                        updateLineGraph(curPointLayer2);
+                        updateLineGraph(tempPointLayer);
 
                     }
                 });
