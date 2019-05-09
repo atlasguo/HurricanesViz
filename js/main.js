@@ -463,8 +463,8 @@ function applySetting() {
     curHurricane = document.getElementById("hurricaneInput").value;
 	
 	// Check the year input
-	var curYearMin = document.getElementById("yearInputMin").value;
-	var curYearMax = document.getElementById("yearInputMax").value;
+	curYearMin = document.getElementById("yearInputMin").value;
+	curYearMax = document.getElementById("yearInputMax").value;
 
     if (curYearMin<1851 || curYearMin>2017 || curYearMax<1851 || curYearMax>2017){
 		$('#img').hide();
