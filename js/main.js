@@ -1842,7 +1842,7 @@ function createLineGraph(data) {
             tooltipLineGraph
                 .html("<p style='font-size:12px;margin=0;padding=0;'>" +
                       "<b>Date:</b>&nbsp" + d.y + "-" + d.month + "-" + d.day + "&nbsp&nbsp" + d.hour + ":00" + " UTC<br>"
-                      + "<b>Wind :</b>&nbsp" + d.value + " kts</p>")
+                      + "<b>Wind:</b>&nbsp" + d.value + " kts</p>")
                 .style("left", (d3.event.pageX - 150) + "px")
                 .style("top", (d3.event.pageY - 70) + "px");
         }
