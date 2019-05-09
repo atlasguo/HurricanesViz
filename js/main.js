@@ -374,7 +374,6 @@ var curHurIDsByCat = [];
 var curHurIDsByCY = [];
 var curHurIDsByLCY = [];
 
-
 window.onload = initializeSiders();
 function getVals() {
     // Get slider values
