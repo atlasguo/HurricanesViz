@@ -1462,7 +1462,7 @@ function createLegend(map) {
             //Create a DOM container to append to on to the map
             var container = L.DomUtil.create('div', 'legend-control-container');
             //Append the title
-            $(container).append('<div id="temporal-legend" style="font-size:15px; text-align:center; margin:2px"><b>LEGEND</b></div>')
+            $(container).append('<div id="temporal-legend" style="font-size:15px;  margin:2px"><b>LEGEND</b></div>')
 
             //Append the legend symbols
             var cityArea = '<img src = img/SVG/cityarea.svg width=40></img><text> City Area</text><br>'
