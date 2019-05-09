@@ -433,6 +433,10 @@ function clearMap() {
     if (curLocationLayer) {
         curMap.removeLayer(curLocationLayer);
     };
+    document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
+    document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
+    removeElement("point-text");
+    removeElement("point-legend");
 }
 
 function applySetting() {
@@ -1452,24 +1456,25 @@ function createLegend(map) {
             //Append the legend symbols
             var cityArea = '<img src = img/SVG/cityarea.svg width=45></img><text> City Area</text><br>'
             var stateBoundary = '<img src = img/SVG/stateboundary.svg width=45></img><text> State Boundary</text><br>'
-            var thickness = [1, 2, 2.5, 3, 3.5, 4, 5]
             var hCategory = '<text>Hurricane Categories</text><br>'
-            hCategory += '<img src = img/SVG/h5.png width=45 height=thickness[6]></img>'
+            hCategory += '<img src = img/SVG/h5.png width=45 height=4.65></img>'
             hCategory += '<text> H5</text><br>'
-            hCategory += '<img src = img/SVG/h4.png width=45 height=thickness[5]></img>'
+            hCategory += '<img src = img/SVG/h4.png width=45 height=4.15></img>'
             hCategory += '<text> H4</text><br>'
-            hCategory += '<img src = img/SVG/h3.png width=45 height=thickness[4]></img>'
+            hCategory += '<img src = img/SVG/h3.png width=45 height=3.65></img>'
             hCategory += '<text> H3</text><br>'
-            hCategory += '<img src = img/SVG/h2.png width=45 height=thickness[3]></img>'
+            hCategory += '<img src = img/SVG/h2.png width=45 height=3.15></img>'
             hCategory += '<text> H2</text><br>'
-            hCategory += '<img src = img/SVG/h1.png width=45 height=thickness[2]></img>'
+            hCategory += '<img src = img/SVG/h1.png width=45 height=2.65></img>'
             hCategory += '<text> H1</text><br>'
-            hCategory += '<img src = img/SVG/ts.png width=45 height=thickness[1]></img>'
+            hCategory += '<img src = img/SVG/ts.png width=45 height=2.15></img>'
             hCategory += '<text> TS</text><br>'
-            hCategory += '<img src = img/SVG/td.png width=45 height=thickness[1]></img>'
+            hCategory += '<img src = img/SVG/td.png width=45 height=2.15></img>'
             hCategory += '<text> TD</text><br>'
-            hCategory += '<img src = img/SVG/ex.png width=45 height=thickness[1]></img>'
+            hCategory += '<img src = img/SVG/ex.png width=45 height=2.15></img>'
             hCategory += '<text> EX</text><br>'
+            hCategory += '<img src = img/SVG/other.png width=45 height=1.15></img>'
+            hCategory += '<text> Others</text><br>'
 
             //add attribute legend to container
             $(container).append(cityArea);
