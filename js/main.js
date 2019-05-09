@@ -15,6 +15,7 @@ var selectedLayer;
 var curLineLayer;
 var curPointLayer;
 var curLocationLayer;
+var curPointLayer2;
 
 var curMap;
 
@@ -27,17 +28,17 @@ var curYearMax;
 
 //overwrite the alert using jQuery UI library
 window.alert = function(message,type){
-	$(document.createElement("div"))
-	.attr({title: type, "class": "alert"})
-	.html(message)
-	.dialog({
-	buttons: {OK: function(){$(this).dialog("close");}},
-	close: function(){$(this).remove();},
-	draggable: true,
-	modal: true,
-	resizable: false,
-	width: "auto"
-	});
+    $(document.createElement("div"))
+        .attr({title: type, "class": "alert"})
+        .html(message)
+        .dialog({
+        buttons: {OK: function(){$(this).dialog("close");}},
+        close: function(){$(this).remove();},
+        draggable: true,
+        modal: true,
+        resizable: false,
+        width: "auto"
+    });
 };
 
 //function to instantiate the Leaflet map
@@ -435,6 +436,8 @@ function clearMap() {
     };
 	if (selection) {
         selectedLayer.resetStyle(selection);
+    if (curPointLayer2) {
+        curMap.removeLayer(curPointLayer2);
     }
     document.getElementById("scatterplot-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a location</tspan><tspan x=50 y=70 >in query panel</tspan></text></svg>";
     document.getElementById("lineGraph-div").innerHTML = "<svg width = 250px height = 200px ><text font-size=15px fill=white><tspan x=50 y=50 >Select a hurricane in</tspan><tspan x=50 y=70 >query panel option #1</tspan><tspan x=50 y=90 >or on the map</tspan></text></svg>";
@@ -443,6 +446,20 @@ function clearMap() {
 }
 
 function applySetting() {
+
+    // remove current layer if exists
+    if (curPointLayer) {
+        curMap.removeLayer(curPointLayer);
+    };
+    if (curLineLayer) {
+        curMap.removeLayer(curLineLayer);
+    };
+    if (curLocationLayer) {
+        curMap.removeLayer(curLocationLayer);
+    };
+    if (curPointLayer2) {
+        curMap.removeLayer(curPointLayer2);
+    }
 
     if (selection) {
         selectedLayer.resetStyle(selection);
@@ -467,24 +484,24 @@ function applySetting() {
     // Apply setting after click the button
     curLocation = document.getElementById("locationInput").value;
     curHurricane = document.getElementById("hurricaneInput").value;
-	
-	// Check the year input
-	curYearMin = document.getElementById("yearInputMin").value;
-	curYearMax = document.getElementById("yearInputMax").value;
+
+    // Check the year input
+    curYearMin = document.getElementById("yearInputMin").value;
+    curYearMax = document.getElementById("yearInputMax").value;
 
     if (curYearMin<1851 || curYearMin>2017 || curYearMax<1851 || curYearMax>2017){
-		$('#img').hide();
+        $('#img').hide();
         $('#mapid').show();
         alert("All years must be within the year range (1851-2017).","Alert");
-		return;
+        return;
     }else
-	if (curYearMin>curYearMax)
-	{
-		$('#img').hide();
-        $('#mapid').show();
-		alert("Start year must not be larger than end year.","Alert");
-		return;
-	}
+        if (curYearMin>curYearMax)
+        {
+            $('#img').hide();
+            $('#mapid').show();
+            alert("Start year must not be larger than end year.","Alert");
+            return;
+        }
 
     // Scenario #1: check if hurricane name is disabled, if yes, jump to option 2, if not, then option #1: check if it is empty
     //      0-yes, alert: empty input of hurricane name!
@@ -516,16 +533,7 @@ function applySetting() {
                 $.ajax("data/line.json", {
                     dataType: "json",
                     success: function (data) {
-                        // remove current layer if exists
-                        if (curPointLayer) {
-                            curMap.removeLayer(curPointLayer);
-                        };
-                        if (curLineLayer) {
-                            curMap.removeLayer(curLineLayer);
-                        };
-                        if (curLocationLayer) {
-                            curMap.removeLayer(curLocationLayer);
-                        };
+
 
                         // Define the geojson layer and add it to the map
                         curLineLayer = L.geoJson(data, {
@@ -596,7 +604,7 @@ function applySetting() {
                                     success: function (data) {
 
                                         // Define the geojson layer and add it to the map
-                                        var curPointLayer2 = L.geoJson(data, {
+                                        curPointLayer2 = L.geoJson(data, {
                                             filter: function (feature, layer) {
                                                 return (feature.properties.hurName == curHurricane);
                                             }
@@ -642,17 +650,6 @@ function applySetting() {
         $.ajax("data/line.json", {
             dataType: "json",
             success: function(data) {
-                // remove current layer if exists
-                if (curPointLayer) {
-                    curMap.removeLayer(curPointLayer);
-                };
-                if (curLineLayer) {
-                    curMap.removeLayer(curLineLayer);
-                };
-                if (curLocationLayer) {
-                    curMap.removeLayer(curLocationLayer);
-                };
-
                 // update curHurIDsByCat values
                 L.geoJson(data, {
                     filter: function(feature, layer) {
@@ -754,7 +751,7 @@ function applySetting() {
 
                                         // if there is no resulting hurricanes
                                         if (curHurIDsByLCY.length == 0) {
-											$('#img').hide();
+                                            $('#img').hide();
                                             $('#mapid').show();
                                             alert("There is no resulting hurricanes based on current settings.","Result")
                                         }
@@ -819,7 +816,7 @@ function applySetting() {
                                                                 success: function (data) {
 
                                                                     // Define the geojson layer and add it to the map
-                                                                    var curPointLayer2 = L.geoJson(data, {
+                                                                    curPointLayer2 = L.geoJson(data, {
                                                                         filter: function (feature, layer) {
                                                                             return (feature.properties.HurID == curHurIDsByLCY[0]);
                                                                         }
@@ -970,7 +967,7 @@ function applySetting() {
                 else {
 
                     if (curHurIDsByCY.length == 0) {
-						$('#img').hide();
+                        $('#img').hide();
                         $('#mapid').show();
                         alert("There is no resulting hurricanes based on current settings.","Result")
                     }
@@ -1033,7 +1030,7 @@ function applySetting() {
                                             success: function (data) {
 
                                                 // Define the geojson layer and add it to the map
-                                                var curPointLayer2 = L.geoJson(data, {
+                                                curPointLayer2 = L.geoJson(data, {
                                                     filter: function (feature, layer) {
                                                         return (feature.properties.HurID == curHurIDsByCY[0]);
                                                     }
@@ -1354,17 +1351,24 @@ function lineOnEachFeature(feature,layer){
                     success: function (data) {
 
                         // Define the geojson layer and add it to the map
-                        var curPointLayer2 = L.geoJson(data, {
+                        curPointLayer2 = L.geoJson(data, {
                             filter: function (feature, layer) {
-                                return (feature.properties.HurID == curLineSeg.properties.HurID);
+                                return (feature.properties.HurID == curLineSeg.properties.HurID && feature.properties.popden > 0);
+                            },
+                            pointToLayer: function (feature, latlng) {
+                                return pointToLayer(feature, latlng);
                             }
                         });
+
+                        curMap.addLayer(curPointLayer2);
 
                         // update the line graph
                         updateLineGraph(curPointLayer2);
 
                     }
                 });
+
+
             }
         }
     });
