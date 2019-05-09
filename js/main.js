@@ -1352,6 +1352,9 @@ function lineOnEachFeature(feature,layer){
                     success: function (data) {
 
                         // Define the geojson layer and add it to the map
+                        if (curPointLayer2) {
+                            curMap.removeLayer(curPointLayer2);
+                        }
                         curPointLayer2 = L.geoJson(data, {
                             filter: function (feature, layer) {
                                 return (feature.properties.HurID == curLineSeg.properties.HurID && feature.properties.popden > 0);
