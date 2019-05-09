@@ -612,7 +612,7 @@ function applySetting() {
             else {
                 $('#img').hide();
                 $('#mapid').show();
-                alert("No hurricane named " + curHurricane + "!","Result");
+                alert("No hurricane named " + curHurricane + " (case sensitive). Please choose a hurricane with specific year in the dropdown list.","Alert");
             }
         }
     }
@@ -955,7 +955,7 @@ function applySetting() {
                     else {
                         $('#img').hide();
                         $('#mapid').show();
-                        alert("No hurricane is found in " + curLocation + "!","Result");
+                        alert("The location " + curLocation + " is not found (case sensitive). Please choose a location (state or city) in the dropdown list.","Alert");
                     } // end of scenario #3 if location is not found
 
                 } // end of scenario #3
