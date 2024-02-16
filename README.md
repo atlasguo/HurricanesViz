@@ -1,3 +1,3 @@
 # HurricanesViz
 
-Website (github as server): https://mwu233.github.io/HurricanesViz/index.html
+https://atlasguo.github.io/HurricanesViz/
